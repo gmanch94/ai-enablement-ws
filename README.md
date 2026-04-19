@@ -26,15 +26,17 @@ ai-enablement-ws/
 │   ├── aws-ai-mlops-cheatsheet.md     ← AWS AI/MLOps stack
 │   ├── gcp-ai-mlops-cheatsheet.md     ← GCP / Vertex AI stack
 │   ├── cross-cloud-ai-comparison.md   ← Side-by-side service mapping across all three clouds
-│   └── cloud-ai-course-business-cheatsheet.md  ← Business/non-technical AI reference
+│   ├── cloud-ai-course-business-cheatsheet.md  ← Business/non-technical AI reference
+│   └── opensource-ai-mlops-cheatsheet.md  ← Open-source LLM, serving, RAG, eval, MLOps tools (cloud-agnostic)
 │
-├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0030)
+├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0031)
 │   ├── ADR-0001-langgraph-multi-agent-orchestration.md
 │   ├── ADR-0002-retailer-x-azure-primary-ai-platform.md
 │   ├── ADR-0003-retailer-x-agentic-replenishment.md
 │   ├── ADR-0004 – ADR-0012  (Azure: LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
 │   ├── ADR-0013 – ADR-0021  (AWS:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
-│   └── ADR-0022 – ADR-0030  (GCP:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
+│   ├── ADR-0022 – ADR-0030  (GCP:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
+│   └── ADR-0031-claude-enterprise-rollout.md  [llm][governance] Proposed
 │
 ├── templates/
 │   └── adr/
@@ -81,6 +83,7 @@ Run these with `/command-name` in any Claude Code session:
 | `/update-cheatsheet` | Web-search Azure AI updates, diff, propose changes |
 | `/update-cheatsheet-aws` | Web-search AWS AI updates, diff, propose changes |
 | `/update-cheatsheet-gcp` | Web-search GCP AI updates, diff, propose changes |
+| `/update-cheatsheet-opensource` | Web-search OSS AI/MLOps releases, diff, propose changes |
 | `/cross-cloud` | Compare services across Azure, AWS, and GCP |
 
 ---
@@ -96,6 +99,7 @@ Each cheatsheet covers 1st-party services and key SDKs, organised by concern:
 | [GCP AI/MLOps](reference/gcp-ai-mlops-cheatsheet.md) | Vertex AI, Gemini, Agent Engine, ADK, BigQuery, Model Armor |
 | [Cross-Cloud Comparison](reference/cross-cloud-ai-comparison.md) | Service-to-service mapping and key differentiators |
 | [Cloud AI — Business](reference/cloud-ai-course-business-cheatsheet.md) | Non-technical / executive reference for cloud AI concepts |
+| [Open-Source AI/MLOps](reference/opensource-ai-mlops-cheatsheet.md) | OSS LLMs, inference engines, RAG, eval, observability, MLOps (cloud-agnostic) |
 
 Cheatsheets are verified against official release notes and event announcements (re:Invent, Google Cloud Next, Microsoft Ignite/Build). Last verified: **April 2026**.
 

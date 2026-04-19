@@ -55,6 +55,7 @@ Run these with `/command-name` in any session:
 | `/update-cheatsheet` | Web-search for Azure AI/MLOps updates, diff against cheatsheet, propose changes for approval |
 | `/update-cheatsheet-aws` | Web-search for AWS AI/MLOps updates, diff against AWS cheatsheet, propose changes for approval |
 | `/update-cheatsheet-gcp` | Web-search for GCP AI/MLOps updates, diff against GCP cheatsheet, propose changes for approval |
+| `/update-cheatsheet-opensource` | Web-search for OSS AI/MLOps releases, diff against opensource cheatsheet, propose changes for approval |
 | `/cross-cloud` | Compare services or architectural approaches across Azure, AWS, and GCP using cross-cloud-ai-comparison.md |
 | `/eval-design` | Scaffold an evaluation framework — metrics, test sets, pass/fail gates, and drift triggers for an LLM feature |
 | `/prompt-review` | Audit a prompt for clarity, injection risk, token efficiency, hallucination surface, and fallback behavior |
