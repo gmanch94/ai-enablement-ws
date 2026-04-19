@@ -1,7 +1,6 @@
 # Retail AI Enablement — Template Guide
 
 This folder is a **reusable template** for a large-format retailer AI Enablement programme.
-Every Kroger-specific value has been replaced with a named placeholder.
 Fill in the placeholders, choose your cloud stack, and you have a complete programme brief.
 
 ---
