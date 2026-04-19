@@ -42,7 +42,7 @@ ai-enablement-ws/
 │   └── adr/
 │       └── ADR-TEMPLATE.md            ← Blank ADR template
 │
-├── skills/                            ← Skill files for Claude commands (subset of commands below)
+├── .claude/commands/                  ← Slash commands (type /command-name in Claude Code)
 │   ├── review.md                      ← /review
 │   ├── adr.md                         ← /adr
 │   ├── tradeoff.md                    ← /tradeoff
