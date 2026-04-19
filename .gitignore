@@ -1,5 +1,6 @@
 # Claude Code — local settings (personal permission overrides, not team config)
 .claude/settings.local.json
+.claude/hooks/context-cleanup.sh
 
 # Active project briefs — may contain sensitive client/internal context
 context/*
