@@ -28,10 +28,13 @@ ai-enablement-ws/
 │   ├── cross-cloud-ai-comparison.md   ← Side-by-side service mapping across all three clouds
 │   └── cloud-ai-course-business-cheatsheet.md  ← Business/non-technical AI reference
 │
-├── decisions/                         ← Architecture Decision Records
+├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0030)
 │   ├── ADR-0001-langgraph-multi-agent-orchestration.md
 │   ├── ADR-0002-kroger-azure-primary-ai-platform.md
-│   └── ADR-0003-kroger-agentic-replenishment.md
+│   ├── ADR-0003-kroger-agentic-replenishment.md
+│   ├── ADR-0004 – ADR-0012  (Azure: LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
+│   ├── ADR-0013 – ADR-0021  (AWS:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
+│   └── ADR-0022 – ADR-0030  (GCP:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
 │
 ├── templates/
 │   └── adr/

@@ -56,6 +56,16 @@ projects/generic-retailer/
 | P2 — Customer-Facing | Conversational Shopping Assistant, Retail Media AI | Month 9–15 |
 | P3 — Specialised | Fresh & Perishables, Pharmacy Copilot *(optional)*, Supply Chain Agent | Month 15+ |
 
+## Related ADRs
+
+Select the ADR set matching your chosen cloud stack:
+
+| Cloud | ADR Range | Categories |
+|---|---|---|
+| Azure | [ADR-0004 – ADR-0012](../../decisions/) | LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance |
+| AWS | [ADR-0013 – ADR-0021](../../decisions/) | LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance |
+| GCP | [ADR-0022 – ADR-0030](../../decisions/) | LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance |
+
 ## Key Context
 
 - **Cloud:** `[CLOUD_PRIMARY]` primary, `[CLOUD_SECONDARY]` secondary (update or remove if single-cloud)
