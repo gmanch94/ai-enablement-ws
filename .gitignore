@@ -1,0 +1,13 @@
+# Claude Code — local settings (personal permission overrides, not team config)
+.claude/settings.local.json
+
+# Active project briefs — may contain sensitive client/internal context
+context/*
+!context/.gitkeep
+
+# Per-project folders — gitignore all content except project READMEs
+projects/kroger/*
+
+# Project-specific ADRs in /decisions/ — named by convention: ADR-XXXX-<project>-*.md
+# Global/reusable ADRs (e.g. ADR-0001-langgraph) remain tracked
+decisions/ADR-*-kroger-*.md
