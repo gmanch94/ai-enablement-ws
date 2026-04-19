@@ -4,6 +4,7 @@
 
 # Active project briefs — may contain sensitive client/internal context
 context/*
+!context/claude-rollout-plan.md
 !context/.gitkeep
 
 # Per-project folders — gitignore all content except project READMEs
