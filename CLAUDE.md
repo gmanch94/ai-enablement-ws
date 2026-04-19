@@ -52,7 +52,7 @@ Run these with `/command-name` in any session:
 | `/diagram` | Suggest Mermaid diagram for a described system |
 | `/threat-model` | Run AI-specific threat model on a described component |
 | `/cost-model` | Estimate token + infra cost for a described AI workload |
-| `/update-cheatsheet` | Web-search for Azure AI/MLOps updates, diff against cheatsheet, propose changes for approval |
+| `/update-cheatsheet-azure` | Web-search for Azure AI/MLOps updates, diff against cheatsheet, propose changes for approval |
 | `/update-cheatsheet-aws` | Web-search for AWS AI/MLOps updates, diff against AWS cheatsheet, propose changes for approval |
 | `/update-cheatsheet-gcp` | Web-search for GCP AI/MLOps updates, diff against GCP cheatsheet, propose changes for approval |
 | `/update-cheatsheet-opensource` | Web-search for OSS AI/MLOps releases, diff against opensource cheatsheet, propose changes for approval |

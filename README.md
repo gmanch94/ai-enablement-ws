@@ -47,7 +47,7 @@ ai-enablement-ws/
 │   ├── adr.md                         ← /adr
 │   ├── tradeoff.md                    ← /tradeoff
 │   ├── threat-model.md                ← /threat-model
-│   ├── update-cheatsheet.md           ← /update-cheatsheet (Azure)
+│   ├── update-cheatsheet-azure.md     ← /update-cheatsheet-azure
 │   ├── update-cheatsheet-aws.md       ← /update-cheatsheet-aws
 │   └── update-cheatsheet-gcp.md       ← /update-cheatsheet-gcp
 │                                        (note: /rfc, /diagram, /cost-model are Claude-native — no skill file needed)
@@ -80,7 +80,7 @@ Run these with `/command-name` in any Claude Code session:
 | `/diagram` | Suggest a Mermaid diagram for a described system |
 | `/threat-model` | AI-specific threat model for a described component |
 | `/cost-model` | Estimate token + infra cost for an AI workload |
-| `/update-cheatsheet` | Web-search Azure AI updates, diff, propose changes |
+| `/update-cheatsheet-azure` | Web-search Azure AI updates, diff, propose changes |
 | `/update-cheatsheet-aws` | Web-search AWS AI updates, diff, propose changes |
 | `/update-cheatsheet-gcp` | Web-search GCP AI updates, diff, propose changes |
 | `/update-cheatsheet-opensource` | Web-search OSS AI/MLOps releases, diff, propose changes |
@@ -105,7 +105,7 @@ Cheatsheets are verified against official release notes and event announcements 
 
 ### Automated Monitoring
 
-A monthly scheduled agent ([`ai-cheatsheet-monitor-all-clouds`](https://claude.ai/code/scheduled/trig_01CjsAenUy7bcsWnypCwp2cT)) clones this repo on the 1st of each month, searches for updates across all three clouds, and produces a diff report. Run `/update-cheatsheet`, `/update-cheatsheet-aws`, or `/update-cheatsheet-gcp` to review and apply flagged changes.
+A monthly scheduled agent ([`ai-cheatsheet-monitor-all-clouds`](https://claude.ai/code/scheduled/trig_01CjsAenUy7bcsWnypCwp2cT)) clones this repo on the 1st of each month, searches for updates across all three clouds, and produces a diff report. Run `/update-cheatsheet-azure`, `/update-cheatsheet-aws`, or `/update-cheatsheet-gcp` to review and apply flagged changes.
 
 ---
 

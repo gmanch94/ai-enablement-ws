@@ -1,4 +1,4 @@
-# /update-cheatsheet
+# /update-cheatsheet-azure
 
 Keep `context/azure-ai-mlops-cheatsheet.md` current with the latest Azure AI and MLOps announcements.
 
