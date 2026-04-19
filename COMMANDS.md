@@ -36,6 +36,57 @@ Rough order-of-magnitude cost estimate: token usage + infra.
 Surfaces the top cost drivers and optimization levers.
 > Best for: pre-proposal sizing, budget conversations with leadership
 
+### `/eval-design [LLM feature description]`
+Scaffolds an evaluation framework: metrics, test sets, pass/fail gates, drift triggers.
+> Best for: before shipping any LLM feature, establishing eval baselines
+
+### `/prompt-review [prompt]`
+Audits a prompt for clarity, injection risk, token efficiency, hallucination surface, and fallback behavior.
+> Best for: pre-production prompt audits, red-teaming new prompts
+
+### `/rag-design [use case]`
+Designs a RAG architecture: chunking strategy, embedding model, retrieval pattern, re-ranking, and observability.
+> Best for: new search/retrieval features, improving existing RAG quality
+
+### `/agent-design [agent description]`
+Designs an agentic loop: tools, memory, termination conditions, guardrails, and fallback paths.
+> Best for: new autonomous agents, multi-step LLM workflows
+
+### `/model-card [model or system description]`
+Generates a model card template: overview, intended use, evals, limitations, and governance.
+> Best for: shipping models or AI features that need documentation
+
+### `/rollout [feature description]`
+Designs a phased rollout: shadow → canary → limited GA → full GA, with eval gates and rollback triggers.
+> Best for: any AI feature going to production
+
+### `/pii-scan [system or data flow description]`
+Maps PII exposure points across the AI data lifecycle: ingest, embed, prompt, log, cache, export.
+> Best for: pre-launch privacy reviews, compliance audits
+
+### `/runbook [system description]`
+Generates an AI incident runbook covering model degradation, hallucination spikes, cost blowouts, and more.
+> Best for: on-call prep, new AI systems going live
+
+---
+
+## Cheatsheet Update Commands
+
+### `/update-cheatsheet-azure`
+Web-searches for Azure AI/MLOps updates, diffs against the Azure cheatsheet, proposes changes for approval.
+
+### `/update-cheatsheet-aws`
+Web-searches for AWS AI/MLOps updates, diffs against the AWS cheatsheet, proposes changes for approval.
+
+### `/update-cheatsheet-gcp`
+Web-searches for GCP AI/MLOps updates, diffs against the GCP cheatsheet, proposes changes for approval.
+
+### `/update-cheatsheet-opensource`
+Web-searches for OSS AI/MLOps releases, diffs against the open-source cheatsheet, proposes changes for approval.
+
+### `/cross-cloud [service or approach]`
+Compares services or architectural approaches across Azure, AWS, and GCP using the cross-cloud comparison reference.
+
 ---
 
 ## Useful Claude Code Native Commands

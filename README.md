@@ -47,10 +47,19 @@ ai-enablement-ws/
 │   ├── adr.md                         ← /adr
 │   ├── tradeoff.md                    ← /tradeoff
 │   ├── threat-model.md                ← /threat-model
+│   ├── eval-design.md                 ← /eval-design
+│   ├── prompt-review.md               ← /prompt-review
+│   ├── rag-design.md                  ← /rag-design
+│   ├── agent-design.md                ← /agent-design
+│   ├── model-card.md                  ← /model-card
+│   ├── rollout.md                     ← /rollout
+│   ├── pii-scan.md                    ← /pii-scan
+│   ├── runbook.md                     ← /runbook
 │   ├── update-cheatsheet-azure.md     ← /update-cheatsheet-azure
 │   ├── update-cheatsheet-aws.md       ← /update-cheatsheet-aws
-│   └── update-cheatsheet-gcp.md       ← /update-cheatsheet-gcp
-│                                        (note: /rfc, /diagram, /cost-model are Claude-native — no skill file needed)
+│   ├── update-cheatsheet-gcp.md       ← /update-cheatsheet-gcp
+│   └── update-cheatsheet-opensource.md ← /update-cheatsheet-opensource
+│                                        (note: /rfc, /diagram, /cost-model, /cross-cloud are Claude-native — no skill file needed)
 │
 ├── context/                           ← Active project briefs (short-lived, drop here when working a task)
 ├── diagrams/                          ← Mermaid diagrams
@@ -80,6 +89,14 @@ Run these with `/command-name` in any Claude Code session:
 | `/diagram` | Suggest a Mermaid diagram for a described system |
 | `/threat-model` | AI-specific threat model for a described component |
 | `/cost-model` | Estimate token + infra cost for an AI workload |
+| `/eval-design` | Scaffold evaluation framework — metrics, test sets, drift triggers |
+| `/prompt-review` | Audit prompt for clarity, injection risk, token efficiency, hallucination surface |
+| `/rag-design` | Design RAG architecture — chunking, embedding, retrieval, re-ranking |
+| `/agent-design` | Design agentic loop — tools, memory, termination, guardrails, fallbacks |
+| `/model-card` | Generate model card — overview, intended use, evals, limitations, governance |
+| `/rollout` | Design phased rollout — shadow → canary → limited GA → full GA |
+| `/pii-scan` | Map PII exposure across AI data lifecycle |
+| `/runbook` | Generate AI incident runbook — degradation, hallucination, cost blowout |
 | `/update-cheatsheet-azure` | Web-search Azure AI updates, diff, propose changes |
 | `/update-cheatsheet-aws` | Web-search AWS AI updates, diff, propose changes |
 | `/update-cheatsheet-gcp` | Web-search GCP AI updates, diff, propose changes |
