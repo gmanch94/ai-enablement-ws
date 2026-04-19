@@ -56,6 +56,14 @@ Run these with `/command-name` in any session:
 | `/update-cheatsheet-aws` | Web-search for AWS AI/MLOps updates, diff against AWS cheatsheet, propose changes for approval |
 | `/update-cheatsheet-gcp` | Web-search for GCP AI/MLOps updates, diff against GCP cheatsheet, propose changes for approval |
 | `/cross-cloud` | Compare services or architectural approaches across Azure, AWS, and GCP using cross-cloud-ai-comparison.md |
+| `/eval-design` | Scaffold an evaluation framework — metrics, test sets, pass/fail gates, and drift triggers for an LLM feature |
+| `/prompt-review` | Audit a prompt for clarity, injection risk, token efficiency, hallucination surface, and fallback behavior |
+| `/rag-design` | Design a RAG architecture — chunking, embedding, retrieval pattern, re-ranking, and observability |
+| `/agent-design` | Design an agentic loop — tools, memory, termination conditions, guardrails, and fallback paths |
+| `/model-card` | Generate a model card template covering overview, intended use, evals, limitations, and governance |
+| `/rollout` | Design a phased AI feature rollout (shadow → canary → limited GA → full GA) with eval gates and rollback triggers |
+| `/pii-scan` | Map PII exposure points across the AI data lifecycle (ingest, embed, prompt, log, cache, export) |
+| `/runbook` | Generate an AI-specific incident runbook covering model degradation, hallucination spikes, cost blowouts, and more |
 
 ## Response Style
 - Lead with the most important finding or risk

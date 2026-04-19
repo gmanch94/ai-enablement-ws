@@ -30,8 +30,8 @@ ai-enablement-ws/
 │
 ├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0030)
 │   ├── ADR-0001-langgraph-multi-agent-orchestration.md
-│   ├── ADR-0002-kroger-azure-primary-ai-platform.md
-│   ├── ADR-0003-kroger-agentic-replenishment.md
+│   ├── ADR-0002-retailer-x-azure-primary-ai-platform.md
+│   ├── ADR-0003-retailer-x-agentic-replenishment.md
 │   ├── ADR-0004 – ADR-0012  (Azure: LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
 │   ├── ADR-0013 – ADR-0021  (AWS:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
 │   └── ADR-0022 – ADR-0030  (GCP:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
@@ -53,13 +53,13 @@ ai-enablement-ws/
 ├── context/                           ← Active project briefs (short-lived, drop here when working a task)
 ├── diagrams/                          ← Mermaid diagrams
 └── projects/                          ← Per-project artefacts
-    ├── kroger/                        ← Kroger AI enablement work
+    ├── retailer-x/                    ← Retailer-X AI enablement work
     │   ├── brief.md / executive-brief.md / okrs.md / org-design.md
     │   ├── platform-enablement/       ← Runbooks, guides, templates (onboarding, eval, PII, etc.)
     │   └── prds/
     └── generic-retailer/              ← Generic retailer pattern (reusable)
         ├── brief.md / executive-brief.md / okrs.md / org-design.md
-        ├── platform-enablement/       ← Same runbook set as kroger
+        ├── platform-enablement/       ← Same runbook set as retailer-x
         └── prds/
 ```
 
