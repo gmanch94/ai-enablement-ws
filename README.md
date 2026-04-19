@@ -25,16 +25,19 @@ ai-enablement-ws/
 │   ├── azure-ai-mlops-cheatsheet.md   ← Azure / Microsoft Foundry AI stack
 │   ├── aws-ai-mlops-cheatsheet.md     ← AWS AI/MLOps stack
 │   ├── gcp-ai-mlops-cheatsheet.md     ← GCP / Vertex AI stack
-│   └── cross-cloud-ai-comparison.md   ← Side-by-side service mapping across all three clouds
+│   ├── cross-cloud-ai-comparison.md   ← Side-by-side service mapping across all three clouds
+│   └── cloud-ai-course-business-cheatsheet.md  ← Business/non-technical AI reference
 │
 ├── decisions/                         ← Architecture Decision Records
-│   └── ADR-0001-langgraph-multi-agent-orchestration.md
+│   ├── ADR-0001-langgraph-multi-agent-orchestration.md
+│   ├── ADR-0002-kroger-azure-primary-ai-platform.md
+│   └── ADR-0003-kroger-agentic-replenishment.md
 │
 ├── templates/
 │   └── adr/
 │       └── ADR-TEMPLATE.md            ← Blank ADR template
 │
-├── skills/                            ← Custom Claude command definitions
+├── skills/                            ← Skill files for Claude commands (subset of commands below)
 │   ├── review.md                      ← /review
 │   ├── adr.md                         ← /adr
 │   ├── tradeoff.md                    ← /tradeoff
@@ -42,10 +45,19 @@ ai-enablement-ws/
 │   ├── update-cheatsheet.md           ← /update-cheatsheet (Azure)
 │   ├── update-cheatsheet-aws.md       ← /update-cheatsheet-aws
 │   └── update-cheatsheet-gcp.md       ← /update-cheatsheet-gcp
+│                                        (note: /rfc, /diagram, /cost-model are Claude-native — no skill file needed)
 │
 ├── context/                           ← Active project briefs (short-lived, drop here when working a task)
-├── projects/                          ← Per-project review outputs
-└── diagrams/                          ← Mermaid diagrams
+├── diagrams/                          ← Mermaid diagrams
+└── projects/                          ← Per-project artefacts
+    ├── kroger/                        ← Kroger AI enablement work
+    │   ├── brief.md / executive-brief.md / okrs.md / org-design.md
+    │   ├── platform-enablement/       ← Runbooks, guides, templates (onboarding, eval, PII, etc.)
+    │   └── prds/
+    └── generic-retailer/              ← Generic retailer pattern (reusable)
+        ├── brief.md / executive-brief.md / okrs.md / org-design.md
+        ├── platform-enablement/       ← Same runbook set as kroger
+        └── prds/
 ```
 
 ---
@@ -80,6 +92,7 @@ Each cheatsheet covers 1st-party services and key SDKs, organised by concern:
 | [AWS AI/MLOps](reference/aws-ai-mlops-cheatsheet.md) | Amazon Bedrock, SageMaker AI, AgentCore, Nova, Guardrails |
 | [GCP AI/MLOps](reference/gcp-ai-mlops-cheatsheet.md) | Vertex AI, Gemini, Agent Engine, ADK, BigQuery, Model Armor |
 | [Cross-Cloud Comparison](reference/cross-cloud-ai-comparison.md) | Service-to-service mapping and key differentiators |
+| [Cloud AI — Business](reference/cloud-ai-course-business-cheatsheet.md) | Non-technical / executive reference for cloud AI concepts |
 
 Cheatsheets are verified against official release notes and event announcements (re:Invent, Google Cloud Next, Microsoft Ignite/Build). Last verified: **April 2026**.
 

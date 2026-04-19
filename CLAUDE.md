@@ -15,7 +15,7 @@ and always think in systems, not just components.
 - **Languages:** Python (primary), TypeScript/Node
 - **Infrastructure:** Kubernetes, Docker, Helm
 - **Cloud:** AWS, GCP, Azure (multi-cloud aware)
-- **Key frameworks:** LangChain, LlamaIndex, FastAPI, Pydantic, Ray, MLflow
+- **Key frameworks:** LangGraph, LangChain, LlamaIndex, FastAPI, Pydantic, Ray, MLflow
 
 ## Architecture Principles (non-negotiable defaults)
 1. **Separation of concerns** — LLM layer ≠ orchestration layer ≠ data layer
