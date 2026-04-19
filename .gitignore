@@ -6,9 +6,9 @@ context/*
 !context/.gitkeep
 
 # Per-project folders — gitignore all content except project READMEs
-projects/kroger/*
+projects/k*/*
 projects/*/context/*
 
 # Project-specific ADRs in /decisions/ — named by convention: ADR-XXXX-<project>-*.md
 # Global/reusable ADRs (e.g. ADR-0001-langgraph) remain tracked
-decisions/ADR-*-kroger-*.md
+decisions/ADR-*-k*-*.md
