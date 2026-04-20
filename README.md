@@ -29,14 +29,15 @@ ai-enablement-ws/
 │   ├── cloud-ai-course-business-cheatsheet.md  ← Business/non-technical AI reference
 │   └── opensource-ai-mlops-cheatsheet.md  ← Open-source LLM, serving, RAG, eval, MLOps tools (cloud-agnostic)
 │
-├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0031)
+├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0041)
 │   ├── ADR-0001-langgraph-multi-agent-orchestration.md
 │   ├── ADR-0002-retailer-x-azure-primary-ai-platform.md
 │   ├── ADR-0003-retailer-x-agentic-replenishment.md
 │   ├── ADR-0004 – ADR-0012  (Azure: LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
 │   ├── ADR-0013 – ADR-0021  (AWS:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
 │   ├── ADR-0022 – ADR-0030  (GCP:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
-│   └── ADR-0031-claude-enterprise-rollout.md  [llm][governance] Proposed
+│   ├── ADR-0031-claude-enterprise-rollout.md  [llm][governance] Proposed
+│   └── ADR-0032 – ADR-0041  (OSS:   LLM Selection, Inference, Agents, RAG, Vector DBs, Eval, Observability, MLOps, Fine-Tuning, SDKs)
 │
 ├── templates/
 │   └── adr/
