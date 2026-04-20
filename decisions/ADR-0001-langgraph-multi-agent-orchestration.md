@@ -1,10 +1,11 @@
 # ADR-0001: Use LangGraph for Multi-Agent Orchestration
 
 **Date:** 2026-04-17
-**Status:** Proposed
+**Status:** Superseded
 **Domain:** [llm] [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
+**Superseded by:** ADR-0034 (OSS Agent & Orchestration)
 
 ---
 
