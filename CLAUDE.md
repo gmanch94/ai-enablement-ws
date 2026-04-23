@@ -65,6 +65,9 @@ Run these with `/command-name` in any session:
 | `/rollout` | Design a phased AI feature rollout (shadow → canary → limited GA → full GA) with eval gates and rollback triggers |
 | `/pii-scan` | Map PII exposure points across the AI data lifecycle (ingest, embed, prompt, log, cache, export) |
 | `/runbook` | Generate an AI-specific incident runbook covering model degradation, hallucination spikes, cost blowouts, and more |
+| `/red-team` | Execute a structured adversarial test battery (OWASP LLM Top 10 2025 + ATLAS v5.1) against an AI system |
+| `/supply-chain-review` | Audit AI supply chain — model provenance, AI-BOM, dependency integrity, third-party API trust |
+| `/dataset-readiness` | Audit retail ML dataset readiness — data contracts, PII training consent, temporal split strategy, cold-start coverage |
 
 ## Response Style
 - Lead with the most important finding or risk

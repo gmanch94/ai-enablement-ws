@@ -4,6 +4,7 @@
 User runs `/pii-scan` followed by a system description, data flow diagram, or architecture description.
 
 ## Behavior
+0. **Before accepting input:** Ask the user to redact actual sensitive values from their description — replace real API keys, endpoint URLs, dataset names, and individual records with placeholders (e.g. `[API_KEY]`, `[ENDPOINT]`). The analysis requires *categories* and *flows*, not real values.
 1. Extract all data elements mentioned or implied by the description
 2. Map each element across the AI data lifecycle stages
 3. Assign a risk level per intersection (data element × lifecycle stage)
