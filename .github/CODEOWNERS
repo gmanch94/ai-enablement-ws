@@ -1,0 +1,3 @@
+# Changes to custom commands require explicit owner review.
+# Prevents silent tampering with slash command definitions (see ADR-0042).
+.claude/commands/ @girish-manchaiah
