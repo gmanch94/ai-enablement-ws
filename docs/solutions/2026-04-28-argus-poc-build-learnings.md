@@ -6,7 +6,7 @@
 - Requirements: `docs/brainstorms/2026-04-25-argus-catalog-agent-requirements.md`
 - Plan: `docs/plans/2026-04-25-001-feat-argus-catalog-agent-poc-plan.md`
 - Demo flows: `docs/solutions/2026-04-26-argus-demo-happy-paths.md`
-- Runbook: `docs/runbooks/argus-local-dev-runbook.md`
+- Runbook: `projects/argus/docs/runbooks/argus-local-dev-runbook.md`
 - Code: `projects/argus/`
 
 ---

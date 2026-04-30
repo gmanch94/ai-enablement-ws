@@ -48,21 +48,14 @@ wheels = [
 name = "aiohttp"
 version = "3.13.4"
 source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'emscripten'",
-    "python_full_version >= '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'emscripten'",
-    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
 dependencies = [
-    { name = "aiohappyeyeballs", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "aiosignal", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "attrs", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "frozenlist", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "multidict", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "propcache", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "yarl", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
+    { name = "aiohappyeyeballs" },
+    { name = "aiosignal" },
+    { name = "attrs" },
+    { name = "frozenlist" },
+    { name = "multidict" },
+    { name = "propcache" },
+    { name = "yarl" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/45/4a/064321452809dae953c1ed6e017504e72551a26b6f5708a5a80e4bf556ff/aiohttp-3.13.4.tar.gz", hash = "sha256:d97a6d09c66087890c2ab5d49069e1e570583f7ac0314ecf98294c1b6aaebd38", size = 7859748, upload-time = "2026-03-28T17:19:40.6Z" }
 wheels = [
@@ -117,32 +110,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/17/7d/5873e98230bde59f493bf1f7c3e327486a4b5653fa401144704df5d00211/aiohttp-3.13.4-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:1c946f10f413836f82ea4cfb90200d2a59578c549f00857e03111cf45ad01ca5", size = 1740752, upload-time = "2026-03-28T17:17:17.387Z" },
     { url = "https://files.pythonhosted.org/packages/7b/f2/13e46e0df051494d7d3c68b7f72d071f48c384c12716fc294f75d5b1a064/aiohttp-3.13.4-cp313-cp313-win32.whl", hash = "sha256:48708e2706106da6967eff5908c78ca3943f005ed6bcb75da2a7e4da94ef8c70", size = 433187, upload-time = "2026-03-28T17:17:19.523Z" },
     { url = "https://files.pythonhosted.org/packages/ea/c0/649856ee655a843c8f8664592cfccb73ac80ede6a8c8db33a25d810c12db/aiohttp-3.13.4-cp313-cp313-win_amd64.whl", hash = "sha256:74a2eb058da44fa3a877a49e2095b591d4913308bb424c418b77beb160c55ce3", size = 459778, upload-time = "2026-03-28T17:17:21.964Z" },
-]
-
-[[package]]
-name = "aiohttp"
-version = "3.13.5"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'win32'",
-]
-dependencies = [
-    { name = "aiohappyeyeballs", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "aiosignal", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "attrs", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "frozenlist", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "multidict", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "propcache", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "yarl", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/77/9a/152096d4808df8e4268befa55fba462f440f14beab85e8ad9bf990516918/aiohttp-3.13.5.tar.gz", hash = "sha256:9d98cc980ecc96be6eb4c1994ce35d28d8b1f5e5208a23b421187d1209dbb7d1", size = 7858271, upload-time = "2026-03-31T22:01:03.343Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/88/06/e4a2e49255ea23fa4feeb5ab092d90240d927c15e47b5b5c48dff5a9ce29/aiohttp-3.13.5-cp311-cp311-win32.whl", hash = "sha256:77dfa48c9f8013271011e51c00f8ada19851f013cde2c48fca1ba5e0caf5bb06", size = 439069, upload-time = "2026-03-31T21:57:32.388Z" },
-    { url = "https://files.pythonhosted.org/packages/c0/43/8c7163a596dab4f8be12c190cf467a1e07e4734cf90eebb39f7f5d53fc6a/aiohttp-3.13.5-cp311-cp311-win_amd64.whl", hash = "sha256:d3a4834f221061624b8887090637db9ad4f61752001eae37d56c52fddade2dc8", size = 462859, upload-time = "2026-03-31T21:57:34.455Z" },
-    { url = "https://files.pythonhosted.org/packages/98/de/cf2f44ff98d307e72fb97d5f5bbae3bfcb442f0ea9790c0bf5c5c2331404/aiohttp-3.13.5-cp312-cp312-win32.whl", hash = "sha256:8bd3ec6376e68a41f9f95f5ed170e2fcf22d4eb27a1f8cb361d0508f6e0557f3", size = 433534, upload-time = "2026-03-31T21:58:08.712Z" },
-    { url = "https://files.pythonhosted.org/packages/aa/ca/eadf6f9c8fa5e31d40993e3db153fb5ed0b11008ad5d9de98a95045bed84/aiohttp-3.13.5-cp312-cp312-win_amd64.whl", hash = "sha256:110e448e02c729bcebb18c60b9214a87ba33bac4a9fa5e9a5f139938b56c6cb1", size = 460446, upload-time = "2026-03-31T21:58:10.945Z" },
-    { url = "https://files.pythonhosted.org/packages/e4/85/fc8601f59dfa8c9523808281f2da571f8b4699685f9809a228adcc90838d/aiohttp-3.13.5-cp313-cp313-win32.whl", hash = "sha256:329f292ed14d38a6c4c435e465f48bebb47479fd676a0411936cc371643225cc", size = 432637, upload-time = "2026-03-31T21:58:46.167Z" },
-    { url = "https://files.pythonhosted.org/packages/c0/1b/ac685a8882896acf0f6b31d689e3792199cfe7aba37969fa91da63a7fa27/aiohttp-3.13.5-cp313-cp313-win_amd64.whl", hash = "sha256:69f571de7500e0557801c0b51f4780482c0ec5fe2ac851af5a92cfce1af1cb83", size = 458896, upload-time = "2026-03-31T21:58:48.119Z" },
 ]
 
 [[package]]
@@ -224,13 +191,13 @@ dependencies = [
     { name = "httpx" },
     { name = "nest-asyncio" },
     { name = "opentelemetry-instrumentation-google-genai" },
+    { name = "python-dotenv" },
 ]
 
 [package.optional-dependencies]
 eval = [
     { name = "google-adk", extra = ["eval"] },
-    { name = "litellm", version = "1.83.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "litellm", version = "1.83.14", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
+    { name = "litellm" },
 ]
 lint = [
     { name = "codespell" },
@@ -257,6 +224,7 @@ requires-dist = [
     { name = "litellm", marker = "extra == 'eval'", specifier = ">=1.83.7" },
     { name = "nest-asyncio", specifier = ">=1.6.0,<2.0.0" },
     { name = "opentelemetry-instrumentation-google-genai", specifier = ">=0.1.0,<1.0.0" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "ruff", marker = "extra == 'lint'", specifier = ">=0.4.6,<1.0.0" },
     { name = "ty", marker = "extra == 'lint'", specifier = ">=0.0.1a0" },
 ]
@@ -669,8 +637,7 @@ name = "gcsfs"
 version = "2026.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "aiohttp", version = "3.13.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "aiohttp", version = "3.13.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
+    { name = "aiohttp" },
     { name = "decorator" },
     { name = "fsspec" },
     { name = "google-auth" },
@@ -731,8 +698,7 @@ dependencies = [
     { name = "pyarrow" },
     { name = "pydantic" },
     { name = "python-dateutil" },
-    { name = "python-dotenv", version = "1.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "python-dotenv", version = "1.2.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
+    { name = "python-dotenv" },
     { name = "pyyaml" },
     { name = "requests" },
     { name = "sqlalchemy" },
@@ -870,8 +836,7 @@ wheels = [
 
 [package.optional-dependencies]
 agent-engines = [
-    { name = "aiohttp", version = "3.13.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "aiohttp", version = "3.13.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
+    { name = "aiohttp" },
     { name = "cloudpickle" },
     { name = "google-cloud-iam" },
     { name = "google-cloud-logging" },
@@ -886,8 +851,7 @@ agent-engines = [
 ]
 evaluation = [
     { name = "jsonschema" },
-    { name = "litellm", version = "1.83.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "litellm", version = "1.83.14", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
+    { name = "litellm" },
     { name = "pandas" },
     { name = "pyyaml" },
     { name = "ruamel-yaml" },
@@ -1673,54 +1637,21 @@ wheels = [
 
 [[package]]
 name = "litellm"
-version = "1.83.7"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'win32'",
-]
-dependencies = [
-    { name = "aiohttp", version = "3.13.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "click", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "fastuuid", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "httpx", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "importlib-metadata", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "jinja2", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "jsonschema", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "openai", version = "2.30.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "pydantic", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "python-dotenv", version = "1.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "tiktoken", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "tokenizers", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/77/2b/b58bf6bbcbc3d0e55d0a84fdf9128e5b1436517f46fce89b1cd8948ebb81/litellm-1.83.7.tar.gz", hash = "sha256:e2f2cb99df2e2b2eab63f1354faa45c88dd7c8d40c18eb648afb1b349c689633", size = 17791694, upload-time = "2026-04-13T17:35:01.606Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/75/80/caeb4cdcad96451ba83ad3ba2a9da08b1e1a915fa845c489f56ea044488b/litellm-1.83.7-py3-none-any.whl", hash = "sha256:5784a1d9a9a4a8acd6ca1e347003a5e2e1b3c749b4d41e7da4904577adade111", size = 16069807, upload-time = "2026-04-13T17:34:58.36Z" },
-]
-
-[[package]]
-name = "litellm"
 version = "1.83.14"
 source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'emscripten'",
-    "python_full_version >= '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'emscripten'",
-    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
 dependencies = [
-    { name = "aiohttp", version = "3.13.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "click", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "fastuuid", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "httpx", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "importlib-metadata", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "jinja2", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "jsonschema", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "openai", version = "2.24.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "pydantic", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "python-dotenv", version = "1.2.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "tiktoken", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "tokenizers", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
+    { name = "aiohttp" },
+    { name = "click" },
+    { name = "fastuuid" },
+    { name = "httpx" },
+    { name = "importlib-metadata" },
+    { name = "jinja2" },
+    { name = "jsonschema" },
+    { name = "openai" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "tiktoken" },
+    { name = "tokenizers" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/8d/7c/c095649380adc96c8630273c1768c2ad1e74aa2ee1dd8dd05d218a60569f/litellm-1.83.14.tar.gz", hash = "sha256:24aef9b47cdc424c833e32f3727f411741c690832cd1fe4405e0077144fe09c9", size = 14836599, upload-time = "2026-04-26T03:16:10.176Z" }
 wheels = [
@@ -2074,48 +2005,19 @@ wheels = [
 name = "openai"
 version = "2.24.0"
 source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'emscripten'",
-    "python_full_version >= '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'emscripten'",
-    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
 dependencies = [
-    { name = "anyio", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "distro", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "httpx", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "jiter", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "pydantic", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "sniffio", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "tqdm", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
+    { name = "anyio" },
+    { name = "distro" },
+    { name = "httpx" },
+    { name = "jiter" },
+    { name = "pydantic" },
+    { name = "sniffio" },
+    { name = "tqdm" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/55/13/17e87641b89b74552ed408a92b231283786523edddc95f3545809fab673c/openai-2.24.0.tar.gz", hash = "sha256:1e5769f540dbd01cb33bc4716a23e67b9d695161a734aff9c5f925e2bf99a673", size = 658717, upload-time = "2026-02-24T20:02:07.958Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c9/30/844dc675ee6902579b8eef01ed23917cc9319a1c9c0c14ec6e39340c96d0/openai-2.24.0-py3-none-any.whl", hash = "sha256:fed30480d7d6c884303287bde864980a4b137b60553ffbcf9ab4a233b7a73d94", size = 1120122, upload-time = "2026-02-24T20:02:05.669Z" },
-]
-
-[[package]]
-name = "openai"
-version = "2.30.0"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'win32'",
-]
-dependencies = [
-    { name = "anyio", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "distro", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "httpx", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "jiter", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "pydantic", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "sniffio", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "tqdm", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "typing-extensions", marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/88/15/52580c8fbc16d0675d516e8749806eda679b16de1e4434ea06fb6feaa610/openai-2.30.0.tar.gz", hash = "sha256:92f7661c990bda4b22a941806c83eabe4896c3094465030dd882a71abe80c885", size = 676084, upload-time = "2026-03-25T22:08:59.96Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/9e/5bfa2270f902d5b92ab7d41ce0475b8630572e71e349b2a4996d14bdda93/openai-2.30.0-py3-none-any.whl", hash = "sha256:9a5ae616888eb2748ec5e0c5b955a51592e0b201a11f4262db920f2a78c5231d", size = 1146656, upload-time = "2026-03-25T22:08:58.2Z" },
 ]
 
 [[package]]
@@ -2618,8 +2520,7 @@ version = "2.14.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
-    { name = "python-dotenv", version = "1.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'win32'" },
-    { name = "python-dotenv", version = "1.2.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13' or sys_platform != 'win32'" },
+    { name = "python-dotenv" },
     { name = "typing-inspection" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/98/c8345dccdc31de4228c039a98f6467a941e39558da41c1744fbe29fa5666/pydantic_settings-2.14.0.tar.gz", hash = "sha256:24285fd4b0e0c06507dd9fdfd331ee23794305352aaec8fc4eb92d4047aeb67d", size = 235709, upload-time = "2026-04-20T13:37:40.293Z" }
@@ -2715,27 +2616,8 @@ wheels = [
 
 [[package]]
 name = "python-dotenv"
-version = "1.0.1"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'win32'",
-]
-sdist = { url = "https://files.pythonhosted.org/packages/bc/57/e84d88dfe0aec03b7a2d4327012c1627ab5f03652216c63d49846d7a6c58/python-dotenv-1.0.1.tar.gz", hash = "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca", size = 39115, upload-time = "2024-01-23T06:33:00.505Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6a/3e/b68c118422ec867fa7ab88444e1274aa40681c606d59ac27de5a5588f082/python_dotenv-1.0.1-py3-none-any.whl", hash = "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a", size = 19863, upload-time = "2024-01-23T06:32:58.246Z" },
-]
-
-[[package]]
-name = "python-dotenv"
 version = "1.2.2"
 source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'emscripten'",
-    "python_full_version >= '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'emscripten'",
-    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
 sdist = { url = "https://files.pythonhosted.org/packages/82/ed/0301aeeac3e5353ef3d94b6ec08bbcabd04a72018415dcb29e588514bba8/python_dotenv-1.2.2.tar.gz", hash = "sha256:2c371a91fbd7ba082c2c1dc1f8bf89ca22564a087c2c287cd9b662adde799cf3", size = 50135, upload-time = "2026-03-01T16:00:26.196Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0b/d7/1959b9648791274998a9c3526f6d0ec8fd2233e4d4acce81bbae76b44b2a/python_dotenv-1.2.2-py3-none-any.whl", hash = "sha256:1d8214789a24de455a8b8bd8ae6fe3c6b69a5e3d64aa8a8e5d68e694bbcb285a", size = 22101, upload-time = "2026-03-01T16:00:25.09Z" },
