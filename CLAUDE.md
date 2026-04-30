@@ -66,6 +66,12 @@ Run these with `/skill-name` in any session. Skills live in `.claude/skills/<nam
 | `/update-cheatsheet-opensource` | Web-search OSS AI/MLOps releases, diff against OSS cheatsheet, propose for approval |
 | `/compound` | Capture session learnings as a solution doc in `docs/solutions/` — the knowledge flywheel |
 | `/track` | Append raw session findings to `docs/daily/YYYY-MM-DD.md` — lightweight scratch capture that feeds `/compound` |
+| `/adk-tool-audit` | Audit a Google ADK tool file against the five known gotchas (DI, thin wrapper, `_j` helper, async wrap, httpx ctx mgr) |
+| `/doc-framing-check` | Scan a project's docs (README, CLAUDE.md, ADRs, runbooks) for inconsistent project naming, scope, or framing |
+| `/adr-link` | After creating an ADR, run cross-referencing checklist — README Artifacts row, source-proposal Related Decisions, sibling backlinks |
+| `/demo-prep` | Generate + verify a pre-demo checklist (env, gcloud, embedding swap, ngrok, dry-run) tailored to project shape |
+| `/checkpoint` | Mid-task durability — dump current state and next-step file before context fills, so next session resumes cleanly |
+| `/project-status` | Refresh a project's status memory from primary sources (code, tests, git) — never trust the existing memory |
 
 ## Response Style
 - Lead with the most important finding or risk
