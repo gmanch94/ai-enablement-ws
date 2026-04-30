@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Model Evaluation Canvas</title>
+<style>
+  :root {
+    --m2: #4CAF50;
+    --m2-dark: #2E7D32;
+    --bg: #fafafa;
+    --card: #fff;
+    --border: #e0e0e0;
+    --text: #1a1a1a;
+    --muted: #666;
+    --warn: #c62828;
+    --ok: #2E7D32;
+    --med: #E65100;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; max-width: 1100px; margin: 0 auto; }
+  h1 { color: var(--m2-dark); border-bottom: 3px solid var(--m2); padding-bottom: 8px; }
+  h2 { color: var(--m2-dark); margin-top: 32px; }
+  h3 { color: var(--m2-dark); margin-top: 24px; font-size: 17px; }
+  .lede { background: var(--card); border-left: 4px solid var(--m2); padding: 16px 20px; border-radius: 4px; margin: 16px 0 24px; }
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 16px 0; }
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  input[type=text], input[type=number], textarea, select {
+    width: 100%; padding: 8px 10px; font-size: 14px;
+    border: 1px solid var(--border); border-radius: 4px; font-family: inherit;
+  }
+  textarea { min-height: 60px; resize: vertical; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .question { background: #F1F8E9; border-left: 3px solid var(--m2); padding: 10px 14px; margin: 8px 0; font-size: 14px; }
+  .question b { color: var(--m2-dark); }
+  .check { display: flex; align-items: flex-start; gap: 8px; margin: 6px 0; font-size: 14px; }
+  .check input { margin-top: 3px; }
+  .verdict { padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 15px; }
+  .verdict.go { background: #E8F5E9; border: 2px solid var(--ok); }
+  .verdict.maybe { background: #FFF3E0; border: 2px solid var(--med); }
+  .verdict.no { background: #FFEBEE; border: 2px solid var(--warn); }
+  .verdict h3 { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+  th { background: var(--m2); color: #fff; }
+  button { background: var(--m2); color: #fff; border: 0; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px; }
+  button:hover { background: var(--m2-dark); }
+  .doc { background: #fff; border-left: 4px solid var(--m2-dark); padding: 12px 16px; margin: 8px 0; font-size: 13px; }
+  .doc b { color: var(--m2-dark); }
+  .red-flag { color: var(--warn); font-weight: 600; }
+  .ok-sign { color: var(--ok); font-weight: 600; }
+  @media print {
+    button, .actions { display: none; }
+    body { padding: 0; }
+    .panel { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<h1>Model Evaluation Canvas</h1>
+<div class="lede">
+  Help leaders evaluate vendor model claims and internal pilot results without writing any code. Use during vendor demos, pilot review meetings, and pre-deployment sign-offs. Pairs with the <code>/eval-design</code> and <code>/review</code> skills in this workspace.
+</div>
+
+<h2>1. Before the meeting — pre-fill the context</h2>
+<div class="panel">
+  <div class="grid2">
+    <div>
+      <label>Use case / decision the model drives</label>
+      <input type="text" placeholder="e.g., Auto-route inbound support tickets">
+    </div>
+    <div>
+      <label>Vendor or internal team</label>
+      <input type="text" placeholder="e.g., Acme NLP Co. / Internal data science">
+    </div>
+  </div>
+  <div class="grid3">
+    <div>
+      <label>Action the prediction triggers</label>
+      <input type="text" placeholder="e.g., Auto-assign to Tier-2 queue">
+    </div>
+    <div>
+      <label>Cost of a false positive</label>
+      <input type="text" placeholder="e.g., Annoyed customer routed wrong">
+    </div>
+    <div>
+      <label>Cost of a false negative</label>
+      <input type="text" placeholder="e.g., Urgent ticket missed">
+    </div>
+  </div>
+</div>
+
+<h2>2. The 7 questions to ask in the meeting</h2>
+
+<h3>Q1. What baseline did you compare to?</h3>
+<div class="question"><b>Why ask:</b> If they can't tell you, the headline accuracy is meaningless.</div>
+<div class="grid2">
+  <div>
+    <label>Their baseline</label>
+    <select id="q1_baseline">
+      <option value="none">No baseline given (red flag)</option>
+      <option value="random">Random / coin flip</option>
+      <option value="majority">Always predict majority class</option>
+      <option value="rule">Existing rule engine / status quo</option>
+      <option value="human">Current human process</option>
+    </select>
+  </div>
+  <div>
+    <label>Their model's score vs. baseline</label>
+    <input type="text" id="q1_lift" placeholder="e.g., +18% accuracy over rule engine">
+  </div>
+</div>
+<div class="doc"><b>Verdict pattern:</b> If lift over baseline is &lt; 5% on the metric that drives the decision, the engineering and maintenance cost rarely justifies shipping. <span class="red-flag">No baseline given = stop the meeting.</span></div>
+
+<h3>Q2. What metric did you optimize, and why that one?</h3>
+<div class="question"><b>Why ask:</b> Accuracy hides the failure modes that hurt your business. Wrong metric → great-looking model that destroys value.</div>
+<div class="grid2">
+  <div>
+    <label>Metric reported</label>
+    <select id="q2_metric">
+      <option value="accuracy">Accuracy only</option>
+      <option value="precision">Precision</option>
+      <option value="recall">Recall</option>
+      <option value="f1">F1</option>
+      <option value="auc">AUC / ROC</option>
+      <option value="rmse">RMSE / MAE</option>
+      <option value="business">Business KPI ($, hours saved)</option>
+    </select>
+  </div>
+  <div>
+    <label>Should it be precision-heavy or recall-heavy?</label>
+    <select id="q2_should">
+      <option value="precision">Precision-heavy (false positives hurt more)</option>
+      <option value="recall">Recall-heavy (false negatives hurt more)</option>
+      <option value="balanced">Balanced</option>
+    </select>
+  </div>
+</div>
+<div class="doc"><b>Pattern:</b> Fraud, cancer screening → recall matters. Spam, ad targeting → precision matters. <span class="red-flag">"Accuracy" alone on imbalanced classes is a tell of a weak presentation.</span></div>
+
+<h3>Q3. Show me the confusion matrix</h3>
+<div class="question"><b>Why ask:</b> A single accuracy number hides whether errors fall on the rare-but-expensive class.</div>
+<div class="grid2">
+  <div>
+    <label>Did they show one?</label>
+    <select id="q3_shown">
+      <option value="no">No / refused</option>
+      <option value="hand-wave">Hand-waved past it</option>
+      <option value="yes">Yes, with class-level numbers</option>
+    </select>
+  </div>
+  <div>
+    <label>Class imbalance in your data</label>
+    <select id="q3_imbalance">
+      <option value="balanced">Balanced (e.g., 40/60)</option>
+      <option value="moderate">Moderate (e.g., 90/10)</option>
+      <option value="extreme">Extreme (e.g., 99/1 — fraud, churn)</option>
+    </select>
+  </div>
+</div>
+<div class="doc"><b>Pattern:</b> 99% accuracy on a 99/1 class = the trivial "always say no" model. Demand class-level recall numbers. <span class="red-flag">No confusion matrix on imbalanced data = the model is hiding something.</span></div>
+
+<h3>Q4. How did you split train, validation, and test?</h3>
+<div class="question"><b>Why ask:</b> Train/test leakage is the #1 cause of "model great in dev, garbage in production."</div>
+<div class="grid2">
+  <div>
+    <label>Split type</label>
+    <select id="q4_split">
+      <option value="random">Random split</option>
+      <option value="time">Time-based split (train older, test newer)</option>
+      <option value="entity">Entity-based (no customer in both)</option>
+      <option value="kfold">K-fold cross-validation</option>
+      <option value="unknown">Couldn't say</option>
+    </select>
+  </div>
+  <div>
+    <label>Is your data time-dependent?</label>
+    <select id="q4_time">
+      <option value="yes">Yes (forecasting, sales, anything seasonal)</option>
+      <option value="no">No (static classification)</option>
+    </select>
+  </div>
+</div>
+<div class="doc"><b>Pattern:</b> Time-series problem with random split = optimistic accuracy. Customer-level prediction with same customer in train + test = leakage. <span class="red-flag">"Random split" on time-series data is a red flag.</span></div>
+
+<h3>Q5. Where does the training data come from, and is it representative?</h3>
+<div class="question"><b>Why ask:</b> Training distribution ≠ production distribution = silent failure on day 1.</div>
+<div class="grid2">
+  <div>
+    <label>Data source</label>
+    <input type="text" id="q5_source" placeholder="e.g., Last 18 months of in-house tickets">
+  </div>
+  <div>
+    <label>Distribution match to production</label>
+    <select id="q5_match">
+      <option value="exact">Same source as production</option>
+      <option value="similar">Same domain, different time window</option>
+      <option value="different">Different org, different domain (transfer learning)</option>
+      <option value="public">Public benchmark data only</option>
+    </select>
+  </div>
+</div>
+<div class="doc"><b>Pattern:</b> Model trained on Tier-1 customers tested on Tier-3 = wrong segments = will not generalize. <span class="red-flag">Public-benchmark-only models almost always under-perform on enterprise data.</span></div>
+
+<h3>Q6. What does the failure mode look like?</h3>
+<div class="question"><b>Why ask:</b> "Where it fails" tells you more than "where it succeeds." Look for: bias on protected groups, drift on rare cases, edge-case behavior.</div>
+<div class="grid2">
+  <div>
+    <label>Did they show error analysis?</label>
+    <select id="q6_errors">
+      <option value="no">No</option>
+      <option value="generic">Generic ("model isn't perfect")</option>
+      <option value="specific">Specific examples + categorization of errors</option>
+    </select>
+  </div>
+  <div>
+    <label>Subgroup fairness checked?</label>
+    <select id="q6_subgroup">
+      <option value="no">No subgroup analysis shown</option>
+      <option value="some">Demographic parity only</option>
+      <option value="full">Full slice analysis (gender, age, region, segment)</option>
+    </select>
+  </div>
+</div>
+<div class="doc"><b>Pattern:</b> A 92% overall accuracy with 75% accuracy on women / minorities / SMB segment is unshippable in regulated domains and dangerous in any domain. <span class="red-flag">No error analysis = vendor doesn't know where it breaks.</span></div>
+
+<h3>Q7. How will the model degrade, and what's the kill switch?</h3>
+<div class="question"><b>Why ask:</b> Models drift silently. Without monitoring + a kill switch, you only learn it broke when customers complain.</div>
+<div class="grid2">
+  <div>
+    <label>Drift monitoring plan</label>
+    <select id="q7_monitor">
+      <option value="none">None</option>
+      <option value="manual">Manual periodic review</option>
+      <option value="automated">Automated alerts on input + output drift</option>
+    </select>
+  </div>
+  <div>
+    <label>Kill switch / fallback</label>
+    <select id="q7_kill">
+      <option value="none">None defined</option>
+      <option value="manual">Engineer can disable</option>
+      <option value="config">Single config flip routes back to rules / human</option>
+    </select>
+  </div>
+</div>
+<div class="doc"><b>Pattern:</b> No drift monitoring + no kill switch = you bought a black box you can't safely operate. <span class="red-flag">Both must exist before production.</span></div>
+
+<h2>3. The 12 red flags checklist</h2>
+<div class="panel">
+  <p style="font-size: 13px; color: var(--muted);">Tick what you observed. 0–2 = green; 3–5 = yellow; 6+ = stop.</p>
+  <div class="check"><input type="checkbox" class="rf"> No baseline shown</div>
+  <div class="check"><input type="checkbox" class="rf"> Accuracy is the only metric reported</div>
+  <div class="check"><input type="checkbox" class="rf"> No confusion matrix despite imbalanced classes</div>
+  <div class="check"><input type="checkbox" class="rf"> Random split on time-dependent data</div>
+  <div class="check"><input type="checkbox" class="rf"> Same entities in train and test</div>
+  <div class="check"><input type="checkbox" class="rf"> Training data is public benchmark only</div>
+  <div class="check"><input type="checkbox" class="rf"> No subgroup / fairness analysis on regulated decision</div>
+  <div class="check"><input type="checkbox" class="rf"> No error analysis or example failures shown</div>
+  <div class="check"><input type="checkbox" class="rf"> Performance reported in % only — no $ or hours-saved</div>
+  <div class="check"><input type="checkbox" class="rf"> "We can't share the test set / methodology"</div>
+  <div class="check"><input type="checkbox" class="rf"> No drift monitoring plan</div>
+  <div class="check"><input type="checkbox" class="rf"> No kill switch / fallback path</div>
+  <button onclick="computeFlags()">Compute red-flag verdict</button>
+</div>
+
+<div class="verdict" id="flag_verdict" style="display:none;"></div>
+
+<h2>4. The 5 sign-off requirements</h2>
+<div class="panel">
+  <p style="font-size: 13px; color: var(--muted);">All must be ✅ before approving production deployment.</p>
+  <table>
+    <tr><th>Requirement</th><th>What "ready" looks like</th></tr>
+    <tr><td><b>1. Defined decision</b></td><td>Specific action triggered by prediction; threshold set; not "informational only"</td></tr>
+    <tr><td><b>2. Baseline beaten</b></td><td>Documented baseline; lift &gt; 5% on the metric that matters</td></tr>
+    <tr><td><b>3. Right metric</b></td><td>Precision/recall/F1 chosen with explicit business reasoning, not "accuracy because it's familiar"</td></tr>
+    <tr><td><b>4. Held-out test untouched</b></td><td>Test set was scored ONCE at the end; not used to tune anything</td></tr>
+    <tr><td><b>5. Drift monitor + kill switch</b></td><td>Both exist; on-call owner named; weekly eval set in place</td></tr>
+  </table>
+</div>
+
+<h2>5. Sample questions vendors love and how to redirect</h2>
+<table>
+  <tr><th>Vendor leans on…</th><th>Better question</th></tr>
+  <tr><td>"State-of-the-art benchmarks"</td><td>"What did you score on a 100-example sample of *our* data?"</td></tr>
+  <tr><td>"Trained on billions of tokens"</td><td>"What's the recency, source, and bias profile of the training data?"</td></tr>
+  <tr><td>"Same architecture as a frontier model"</td><td>"What's the lift over a logistic regression baseline on our task?"</td></tr>
+  <tr><td>"Customers love it" / case studies</td><td>"Show me the confusion matrix from one of those customers"</td></tr>
+  <tr><td>"It learns from your data"</td><td>"What's the retention policy and can we opt out of training?"</td></tr>
+</table>
+
+<h2>6. Document for record</h2>
+<div class="panel">
+  <label>Model name / version</label>
+  <input type="text">
+  <label>Reviewer + date</label>
+  <input type="text">
+  <label>Verdict (Approve / Approve with conditions / Reject)</label>
+  <select><option>Approve</option><option>Approve with conditions</option><option>Reject — re-pilot required</option><option>Reject — wrong tool</option></select>
+  <label>Conditions / required actions</label>
+  <textarea placeholder="e.g., Re-evaluate on production-distribution sample; install drift monitor; add kill switch config"></textarea>
+  <label>Re-review date</label>
+  <input type="text" placeholder="e.g., 90 days post-launch">
+</div>
+
+<div class="actions" style="text-align: center; margin: 24px 0;">
+  <button onclick="window.print()">Print / PDF this canvas</button>
+</div>
+
+<h2>Companion skills + artifacts</h2>
+<table>
+  <tr><th>Pair with</th><th>Why</th></tr>
+  <tr><td><code>/eval-design</code> skill</td><td>Build the eval set + metric design that this canvas reviews</td></tr>
+  <tr><td><code>/review</code> skill</td><td>Structured architectural review wrapping the model decision</td></tr>
+  <tr><td><code>genai-risk-checklist.html</code> (templates/governance/)</td><td>Risk lens; complements the technical-quality lens here</td></tr>
+  <tr><td><code>llm-vendor-comparison.html</code> (reference/)</td><td>Vendor selection lens for LLM-specific buys</td></tr>
+  <tr><td><code>/model-card</code> skill</td><td>Document the chosen model for downstream consumers</td></tr>
+</table>
+
+<script>
+function computeFlags() {
+  const checked = document.querySelectorAll(".rf:checked").length;
+  const v = document.getElementById("flag_verdict");
+  v.style.display = "block";
+  let cls, h, body;
+  if (checked <= 2) {
+    cls = "go";
+    h = "GREEN — proceed to sign-off";
+    body = `${checked} red flags. Vendor / team is presenting a defensible evaluation. Proceed to the 5 sign-off requirements.`;
+  } else if (checked <= 5) {
+    cls = "maybe";
+    h = "YELLOW — request follow-up";
+    body = `${checked} red flags. Don't approve yet. Send a written follow-up requesting the missing items (baseline, confusion matrix, error analysis, drift plan). Re-meet in 1–2 weeks.`;
+  } else {
+    cls = "no";
+    h = "RED — STOP";
+    body = `${checked} red flags. The evaluation methodology is too weak to support a production decision. Either the model isn't ready, or the team isn't telling you what they know. Send back for re-pilot with explicit methodology requirements.`;
+  }
+  v.className = "verdict " + cls;
+  v.innerHTML = `<h3>${h}</h3>${body}`;
+}
+</script>
+</body>
+</html>

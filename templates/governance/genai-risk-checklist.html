@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GenAI Pre-Deployment Risk Checklist</title>
+<style>
+  :root { --m5:#9C27B0; --m5-dk:#6A1B9A; --bg:#fafafa; --fg:#222; --muted:#666; --ok:#4CAF50; --warn:#FF9800; --bad:#f44336; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.5; }
+  header { padding: 24px 32px; background: white; border-bottom: 4px solid var(--m5); }
+  header h1 { margin: 0 0 6px; font-size: 24px; color: var(--m5-dk); }
+  header p { margin: 0; color: var(--muted); }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 32px; display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .classifier { background: white; padding: 18px; border-radius: 8px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .classifier h2 { margin: 0 0 12px; font-size: 18px; color: var(--m5-dk); }
+  .classifier .q { margin: 10px 0; }
+  .classifier label { display: flex; align-items: center; gap: 10px; padding: 8px; cursor: pointer; }
+  .tier { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; color: white; margin-left: 8px; }
+  .tier.low { background: var(--ok); }
+  .tier.med { background: var(--warn); }
+  .tier.high { background: var(--bad); }
+  .section { background: white; padding: 18px 20px; margin-bottom: 14px; border-radius: 8px; border-left: 4px solid var(--m5); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .section h3 { margin: 0 0 10px; font-size: 16px; color: var(--m5-dk); }
+  .item { padding: 10px 0; border-bottom: 1px dashed #eee; display: flex; gap: 12px; align-items: flex-start; }
+  .item:last-child { border-bottom: 0; }
+  .item input { margin-top: 4px; }
+  .item-text { flex: 1; font-size: 14px; }
+  .item-text .why { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .item.tier-low { display: none; }
+  .item.tier-med { display: none; }
+  .item.tier-high { display: none; }
+  body[data-tier="low"] .item.tier-low { display: flex; }
+  body[data-tier="med"] .item.tier-low, body[data-tier="med"] .item.tier-med { display: flex; }
+  body[data-tier="high"] .item.tier-low, body[data-tier="high"] .item.tier-med, body[data-tier="high"] .item.tier-high { display: flex; }
+  .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); position: sticky; top: 20px; align-self: start; }
+  .panel h2 { margin: 0 0 12px; font-size: 18px; color: var(--m5-dk); }
+  .progress-circle { width: 140px; height: 140px; margin: 0 auto 12px; position: relative; }
+  .progress-circle svg { transform: rotate(-90deg); }
+  .progress-circle .pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; color: var(--m5-dk); }
+  .stats { font-size: 13px; color: var(--muted); text-align: center; margin: 8px 0; }
+  .recommendation { padding: 10px 12px; border-radius: 6px; font-size: 13px; margin-top: 12px; }
+  .recommendation.go { background: #e8f5e9; color: #2e7d32; }
+  .recommendation.wait { background: #fff3e0; color: #e65100; }
+  .recommendation.no { background: #ffebee; color: #c62828; }
+  .actions { display: flex; gap: 8px; margin-top: 16px; }
+  .btn { padding: 8px 14px; border: 0; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  .btn-primary { background: var(--m5); color: white; }
+  .companion { max-width: 1100px; margin: 24px auto; padding: 0 32px 24px; }
+  .companion table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .companion th { background: var(--m5); color: white; padding: 10px 14px; text-align: left; font-size: 14px; }
+  .companion td { padding: 10px 14px; border-bottom: 1px solid #eee; font-size: 14px; }
+  .companion h2 { color: var(--m5-dk); font-size: 18px; }
+  @media print { .actions, .companion { display: none; } body { background: white; } .panel { position: static; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>GenAI Pre-Deployment Risk Checklist</h1>
+  <p>3-question risk classifier auto-selects applicable tier. Tick what's done. Don't ship until your critical items are green.</p>
+</header>
+<main>
+
+<div class="form">
+
+<div class="classifier">
+  <h2>Risk Tier Classifier</h2>
+  <div class="q"><label><input type="radio" name="audience" value="0">Internal use only (employees)</label></div>
+  <div class="q"><label><input type="radio" name="audience" value="1" checked>External — customers / public</label></div>
+  <div class="q"><label><input type="radio" name="audience" value="2">Regulated decision (credit, hiring, healthcare, legal)</label></div>
+  <hr style="margin:14px 0;border:0;border-top:1px solid #eee;">
+  <div class="q"><label><input type="radio" name="data" value="0">No PII / no sensitive data</label></div>
+  <div class="q"><label><input type="radio" name="data" value="1" checked>Some PII or business-confidential</label></div>
+  <div class="q"><label><input type="radio" name="data" value="2">PHI, financial, biometric, or regulated data</label></div>
+  <hr style="margin:14px 0;border:0;border-top:1px solid #eee;">
+  <div class="q"><label><input type="radio" name="impact" value="0">Reversible, low-impact (suggestions, drafts)</label></div>
+  <div class="q"><label><input type="radio" name="impact" value="1" checked>Material business impact</label></div>
+  <div class="q"><label><input type="radio" name="impact" value="2">Irreversible / safety / financial harm possible</label></div>
+  <div style="margin-top:12px; padding-top:12px; border-top: 1px solid #eee;">Tier: <span id="tier-badge" class="tier med">MEDIUM</span></div>
+</div>
+
+<div class="section">
+  <h3>1. Hallucination Controls</h3>
+  <div class="item tier-low"><input type="checkbox" class="check"><div class="item-text">Users are warned that outputs may be wrong<div class="why">Set expectations. Always required.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">RAG or grounding is implemented for factual queries<div class="why">Reduces hallucination by tying answers to retrieved sources.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">Outputs cite sources where possible<div class="why">Lets users verify claims.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Human review required before any external-facing output is published<div class="why">Last line of defense for high-stakes contexts.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Confidence scores or "I don't know" responses are surfaced to users<div class="why">Prevents over-trust on uncertain answers.</div></div></div>
+</div>
+
+<div class="section">
+  <h3>2. Bias &amp; Fairness</h3>
+  <div class="item tier-low"><input type="checkbox" class="check"><div class="item-text">Team has reviewed known bias risks of the chosen foundation model<div class="why">Vendors publish model cards / evaluation reports.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">Outputs tested across protected demographic groups<div class="why">Look for disparate quality, refusals, or tone.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">Redteaming run with adversarial / edge-case prompts<div class="why">Surface failure modes before users do.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Formal bias audit completed by independent reviewer<div class="why">Required for regulated decisions (ECOA, hiring law, etc.).</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Adverse-action / explainability mechanism in place<div class="why">Required by law in regulated decisions.</div></div></div>
+</div>
+
+<div class="section">
+  <h3>3. Privacy &amp; Data Protection</h3>
+  <div class="item tier-low"><input type="checkbox" class="check"><div class="item-text">Vendor's data retention + training-on-input policy reviewed<div class="why">Default: opt out of training-on-input for any business use.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">PII scrubbing/masking on prompts before vendor API call<div class="why">Don't ship raw PII to third-party APIs.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">Logged prompts + outputs stored with encryption + access controls<div class="why">Same standard as any sensitive data.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Data residency requirements satisfied (EU, regulated regions)<div class="why">May force EU-hosted endpoints or self-hosted models.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">DPIA / privacy impact assessment completed<div class="why">Required under GDPR for high-risk processing.</div></div></div>
+</div>
+
+<div class="section">
+  <h3>4. IP &amp; Plagiarism</h3>
+  <div class="item tier-low"><input type="checkbox" class="check"><div class="item-text">Vendor indemnifies for IP claims on generated output<div class="why">All major providers offer this — verify it covers your use case.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">Output plagiarism / similarity check process defined<div class="why">Especially for content you publish or sell.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Attribution policy for AI-assisted content published externally<div class="why">Increasingly required by law and platforms.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Code outputs scanned for license-incompatible snippets<div class="why">Avoid GPL contamination in proprietary codebases.</div></div></div>
+</div>
+
+<div class="section">
+  <h3>5. Operational Reliability</h3>
+  <div class="item tier-low"><input type="checkbox" class="check"><div class="item-text">Cost per call + per month tracked<div class="why">LLM costs runaway easily.</div></div></div>
+  <div class="item tier-low"><input type="checkbox" class="check"><div class="item-text">Latency monitored; user-facing timeout defined<div class="why">LLM responses can stall — degrade gracefully.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">Fallback model or graceful failure path<div class="why">Vendor outages happen. Have a Plan B.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">Quality monitoring + drift alerts in production<div class="why">Models change behavior across versions.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Multi-vendor abstraction (LangChain / LiteLLM / custom)<div class="why">Avoid vendor lock-in for critical paths.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Incident response plan for AI-specific failures<div class="why">Hallucinations + bias incidents need documented playbooks.</div></div></div>
+</div>
+
+<div class="section">
+  <h3>6. Governance &amp; Sign-off</h3>
+  <div class="item tier-low"><input type="checkbox" class="check"><div class="item-text">Use case logged in AI inventory<div class="why">You can't govern what you don't track.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">Legal review completed<div class="why">Vendor terms, liability, jurisdiction.</div></div></div>
+  <div class="item tier-med"><input type="checkbox" class="check"><div class="item-text">Security review completed (data flow, access controls)<div class="why">Same bar as any third-party integration.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Executive sponsor signed off on residual risk<div class="why">Document that leadership accepts what remains.</div></div></div>
+  <div class="item tier-high"><input type="checkbox" class="check"><div class="item-text">Compliance / regulatory review (per applicable framework: EU AI Act, NIST AI RMF, sector-specific)<div class="why">Regulator-facing audit trail.</div></div></div>
+</div>
+
+</div>
+
+<div class="panel">
+  <h2>Deployment Readiness</h2>
+  <div class="progress-circle">
+    <svg width="140" height="140">
+      <circle cx="70" cy="70" r="60" fill="none" stroke="#eee" stroke-width="12"/>
+      <circle id="progress-arc" cx="70" cy="70" r="60" fill="none" stroke="#9C27B0" stroke-width="12" stroke-dasharray="377" stroke-dashoffset="377" stroke-linecap="round"/>
+    </svg>
+    <div class="pct" id="pct">0%</div>
+  </div>
+  <div class="stats" id="stats">0 of 0 items</div>
+  <div id="recommendation" class="recommendation no">Complete classifier first.</div>
+  <div class="actions">
+    <button class="btn btn-primary" onclick="window.print()">Print / PDF</button>
+    <button class="btn" onclick="resetAll()">Reset</button>
+  </div>
+</div>
+
+</main>
+
+<div class="companion">
+  <h2>Companion skills + artifacts</h2>
+  <table>
+    <tr><th>Pair with</th><th>Why</th></tr>
+    <tr><td><code>/threat-model</code> skill</td><td>Structured threat model upstream of this checklist</td></tr>
+    <tr><td><code>/red-team</code> skill</td><td>Adversarial testing for the bias-and-fairness section</td></tr>
+    <tr><td><code>/pii-scan</code> skill</td><td>Implement the PII scrubbing item under Privacy</td></tr>
+    <tr><td><code>governance-playbook-general.html</code> (templates/governance/)</td><td>Broader governance frame around this checklist</td></tr>
+    <tr><td><code>bias-audit-general.html</code> + <code>bias-audit-hr.html</code> (templates/governance/)</td><td>Deeper bias audits for medium/high tier deployments</td></tr>
+  </table>
+</div>
+
+<script>
+const audienceR = () => document.querySelector('input[name="audience"]:checked');
+const dataR = () => document.querySelector('input[name="data"]:checked');
+const impactR = () => document.querySelector('input[name="impact"]:checked');
+
+function classify() {
+  const a = audienceR()?.value, d = dataR()?.value, i = impactR()?.value;
+  if (!a || !d || !i) return 'med';
+  const max = Math.max(+a, +d, +i);
+  return max >= 2 ? 'high' : max >= 1 ? 'med' : 'low';
+}
+
+function update() {
+  const tier = classify();
+  document.body.dataset.tier = tier;
+  const badge = document.getElementById('tier-badge');
+  badge.className = 'tier ' + tier;
+  badge.textContent = {low:'LOW', med:'MEDIUM', high:'HIGH'}[tier];
+
+  const items = Array.from(document.querySelectorAll('.item')).filter(it => {
+    const cls = [...it.classList];
+    if (cls.includes('tier-low')) return true;
+    if (cls.includes('tier-med')) return tier === 'med' || tier === 'high';
+    if (cls.includes('tier-high')) return tier === 'high';
+    return false;
+  });
+  const total = items.length;
+  const done = items.filter(it => it.querySelector('input').checked).length;
+  const pct = total ? Math.round(100 * done / total) : 0;
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('stats').textContent = `${done} of ${total} items`;
+  const arc = document.getElementById('progress-arc');
+  const circ = 2 * Math.PI * 60;
+  arc.setAttribute('stroke-dasharray', circ);
+  arc.setAttribute('stroke-dashoffset', circ * (1 - pct/100));
+
+  const rec = document.getElementById('recommendation');
+  if (pct === 100) {
+    rec.className = 'recommendation go';
+    rec.textContent = '✓ All items addressed. Safe to deploy at this risk tier.';
+  } else if (pct >= 70) {
+    rec.className = 'recommendation wait';
+    rec.textContent = '⚠ Most items addressed. Close gaps before launch — especially any high-tier items.';
+  } else {
+    rec.className = 'recommendation no';
+    rec.textContent = '✗ Significant gaps. Do not deploy externally until ' + (tier === 'high' ? '90%+' : tier === 'med' ? '80%+' : '70%+') + ' of items are addressed.';
+  }
+}
+
+document.querySelectorAll('input[type=radio], .check').forEach(el => el.addEventListener('change', update));
+
+function resetAll() {
+  document.querySelectorAll('.check').forEach(c => c.checked = false);
+  update();
+}
+
+update();
+</script>
+</body>
+</html>

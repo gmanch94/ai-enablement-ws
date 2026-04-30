@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Bias Audit Template</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #eef1f6;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0d2540 100%);
+  color: white;
+  padding: 28px 40px 24px;
+  border-bottom: 3px solid #e17055;
+}
+header h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.5px; }
+header .subtitle { font-size: 0.85rem; opacity: 0.7; margin-top: 5px; }
+header .instructions { font-size: 0.78rem; opacity: 0.5; margin-top: 3px; }
+
+.page { max-width: 940px; margin: 0 auto; padding: 28px 40px; }
+
+/* ── Section ── */
+.section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 22px 14px;
+  border-bottom: 1px solid #f0f3f7;
+}
+.section-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #e17055;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.section-title { font-size: 0.95rem; font-weight: 800; color: #1e3a5f; }
+.section-desc  { font-size: 0.72rem; color: #999; margin-top: 1px; }
+.section-body  { padding: 20px 22px; }
+
+/* ── Fields ── */
+.field-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.field-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.field { display: flex; flex-direction: column; }
+.field.full { grid-column: 1 / -1; }
+
+label.lbl {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.required { color: #e17055; }
+
+input[type=text], input[type=date], select, textarea {
+  border: 1px solid #dde2ea;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 0.83rem;
+  color: #1a1a2e;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  background: white;
+  width: 100%;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #e17055;
+  box-shadow: 0 0 0 2px rgba(225,112,85,0.12);
+}
+textarea { resize: vertical; min-height: 64px; }
+
+/* ── Radio / checkbox groups ── */
+.radio-group, .check-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+.radio-pill, .check-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid #dde2ea;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 0.76rem;
+  color: #444;
+  transition: all 0.15s;
+  background: white;
+  user-select: none;
+}
+.radio-pill:hover, .check-pill:hover { border-color: #e17055; color: #e17055; }
+.radio-pill input, .check-pill input { display: none; }
+.radio-pill.checked, .check-pill.checked {
+  background: #fff3f0;
+  border-color: #e17055;
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* ── YN toggle ── */
+.yn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.yn-label { font-size: 0.8rem; color: #444; flex: 1; min-width: 200px; }
+.yn-btns  { display: flex; gap: 5px; }
+.yn-btn {
+  padding: 4px 14px;
+  border: 1px solid #dde2ea;
+  border-radius: 5px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: white;
+  color: #888;
+  transition: all 0.15s;
+}
+.yn-btn:hover { border-color: #e17055; color: #e17055; }
+.yn-btn.yes-on { background: #f0faf7; border-color: #00b894; color: #00695c; }
+.yn-btn.no-on  { background: #ffeaea; border-color: #e74c3c; color: #c0392b; }
+.yn-btn.na-on  { background: #f7f9fc; border-color: #aaa;    color: #666; }
+
+/* ── Test results table ── */
+.test-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 10px; }
+.test-table th {
+  text-align: left; padding: 6px 9px;
+  background: #f7f9fc; color: #888;
+  font-size: 0.65rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.4px;
+  border-bottom: 2px solid #e8ecf2;
+}
+.test-table td { padding: 4px 6px; border-bottom: 1px solid #f0f3f7; }
+.test-table td input { border: none; padding: 4px 6px; font-size: 0.76rem; background: transparent; width: 100%; outline: none; }
+.test-table td input:focus { background: #fff8f5; border-radius: 4px; }
+.btn-add-row {
+  font-size: 0.72rem; color: #e17055; background: none;
+  border: 1px dashed #e17055; border-radius: 5px;
+  padding: 4px 12px; cursor: pointer; transition: background 0.15s;
+}
+.btn-add-row:hover { background: #fff3f0; }
+.btn-del-row {
+  background: none; border: none; color: #ddd; font-size: 0.8rem;
+  cursor: pointer; padding: 2px 5px; border-radius: 3px; transition: color 0.15s;
+}
+.btn-del-row:hover { color: #e74c3c; }
+
+/* ── Callout ── */
+.note {
+  background: #fff8e1;
+  border-left: 3px solid #f39c12;
+  border-radius: 0 7px 7px 0;
+  padding: 9px 13px;
+  font-size: 0.73rem;
+  color: #856404;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.note strong { display: block; margin-bottom: 2px; }
+
+/* ── Signoff table ── */
+.signoff-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.signoff-table th {
+  text-align: left; padding: 7px 10px;
+  background: #f7f9fc; color: #888;
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+  border-bottom: 2px solid #e8ecf2;
+}
+.signoff-table td { padding: 5px 6px; border-bottom: 1px solid #f0f3f7; }
+.signoff-table td input {
+  border: none; width: 100%; font-size: 0.78rem; padding: 4px 6px;
+  background: transparent; font-family: inherit; outline: none;
+}
+.signoff-table td input:focus { background: #fff8f5; border-radius: 3px; }
+
+/* ── Print ── */
+.btn-print {
+  background: #1e3a5f; color: white; border: none;
+  border-radius: 7px; padding: 10px 22px;
+  font-size: 0.82rem; font-weight: 700;
+  cursor: pointer; transition: background 0.2s;
+  margin-bottom: 24px;
+  display: block;
+}
+.btn-print:hover { background: #163059; }
+
+@media print {
+  body { background: white; }
+  header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .section { box-shadow: none; border: 1px solid #eee; page-break-inside: avoid; }
+  .btn-print { display: none; }
+  .page { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI Bias Audit Template</h1>
+  <p class="subtitle">General-purpose bias audit · Pre-deployment template for ML models affecting people</p>
+  <p class="instructions">Complete before deploying any ML model that affects people. Aligned with NIST AI RMF (MAP/MEASURE/MANAGE), EU AI Act high-risk system requirements, and EEOC 4/5ths rule. For employment-specific use cases, prefer <code>bias-audit-hr.html</code>.</p>
+</header>
+
+<div class="page">
+<button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+
+<!-- ══ 1. Deployment Context ══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div>
+      <div class="section-title">Deployment Context</div>
+      <div class="section-desc">Identify the model, its use case, and who is affected.</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="field-grid-2">
+      <div class="field">
+        <label class="lbl">Model Name / System <span class="required">*</span></label>
+        <input type="text" placeholder="e.g., Customer Credit Scoring v2.1">
+      </div>
+      <div class="field">
+        <label class="lbl">Version / Release</label>
+        <input type="text" placeholder="e.g., v2.1 — 2025-04">
+      </div>
+      <div class="field full">
+        <label class="lbl">Use Case Description <span class="required">*</span></label>
+        <textarea placeholder="What decision does this model make or inform? What action follows from its output?"></textarea>
+      </div>
+      <div class="field full">
+        <label class="lbl">Affected Population</label>
+        <textarea rows="2" placeholder="Who is affected by this model's decisions? Estimated scale (e.g., ~50,000 applicants/year)"></textarea>
+      </div>
+    </div>
+    <div class="field-grid-3">
+      <div class="field">
+        <label class="lbl">EU AI Act Risk Tier</label>
+        <select>
+          <option value="">Select…</option>
+          <option>Minimal Risk</option>
+          <option>Limited Risk (transparency obligations)</option>
+          <option>High Risk (regulated)</option>
+          <option>Unacceptable (prohibited)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="lbl">Team / DRI</label>
+        <input type="text" placeholder="Owning team and directly responsible individual">
+      </div>
+      <div class="field">
+        <label class="lbl">Audit Date</label>
+        <input type="date">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2. Training Data Assessment ══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div>
+      <div class="section-title">Training Data Assessment</div>
+      <div class="section-desc">Data Risks (NIST AI RMF MEASURE) — pre-existing bias in historical data is the most common source of algorithmic bias.</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="field-grid-2" style="margin-bottom:14px;">
+      <div class="field">
+        <label class="lbl">Primary Data Sources</label>
+        <textarea rows="2" placeholder="List all data sources used for training (internal DB, external purchase, web scrape, etc.)"></textarea>
+      </div>
+      <div class="field">
+        <label class="lbl">Data Collection Period</label>
+        <input type="text" placeholder="e.g., 2015–2023">
+      </div>
+    </div>
+    <div class="note">
+      <strong>Pre-existing bias:</strong> Training data that reflects past human decisions (hiring, lending, sentencing) encodes those decisions' biases. The model learns the pattern — including the discriminatory one. Example: Amazon's hiring model trained on 10 years of resumes penalized women because historical hiring was male-dominated.
+    </div>
+    <div class="yn-row">
+      <span class="yn-label">Does the training data represent all affected demographic groups proportionally?</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes</button>
+        <button class="yn-btn" onclick="toggleYN(this,'no')">No</button>
+        <button class="yn-btn" onclick="toggleYN(this,'na')">Partial</button>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:12px;">
+      <label class="lbl">If No / Partial — which groups are underrepresented and what is the estimated share?</label>
+      <textarea rows="2" placeholder="e.g., People with disabilities: ~1% of training set vs ~15% of US population"></textarea>
+    </div>
+    <div class="yn-row">
+      <span class="yn-label">Does the training data reflect historically discriminatory decisions (hiring, lending, criminal justice, etc.)?</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes</button>
+        <button class="yn-btn" onclick="toggleYN(this,'no')">No</button>
+        <button class="yn-btn" onclick="toggleYN(this,'na')">Uncertain</button>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:12px;">
+      <label class="lbl">If Yes — describe the historical bias and how it was addressed</label>
+      <textarea rows="2" placeholder=""></textarea>
+    </div>
+    <div class="yn-row">
+      <span class="yn-label">Were any external datasets or data marketplace purchases used in training?</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes</button>
+        <button class="yn-btn" onclick="toggleYN(this,'no')">No</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">Data Labeling — Who labeled the training data? Known labeler biases?</label>
+      <textarea rows="2" placeholder="e.g., MTurk workers in US; labelers were predominantly English-speaking; bias audits not conducted on labeler pool"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 3. Feature & Proxy Variable Analysis ══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div>
+      <div class="section-title">Feature &amp; Proxy Variable Analysis</div>
+      <div class="section-desc">Excluding protected attributes is not enough — proxy variables can encode discrimination indirectly.</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="note">
+      <strong>Proxy variables:</strong> Features that correlate with protected attributes reproduce bias even when the protected attribute is excluded. Examples: zip code → race (historical redlining), job title gaps → gender, "years since graduation" → age.
+    </div>
+    <div class="field" style="margin-bottom:14px;">
+      <label class="lbl">Protected Attributes in Deployment Jurisdiction</label>
+      <div class="check-group" id="protected-attrs">
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">Race / Ethnicity</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">Gender / Sex</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">Age</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">Religion</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">National Origin</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">Disability</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">Pregnancy / Parental Status</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">Sexual Orientation</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">Marital Status</label>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:14px;">
+      <label class="lbl">Complete list of features / variables used in the model</label>
+      <textarea rows="3" placeholder="List all input features. Flag any that may correlate with protected attributes with an asterisk (*)"></textarea>
+    </div>
+    <div class="yn-row">
+      <span class="yn-label">Were any features removed because they are protected attributes or direct proxies?</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes</button>
+        <button class="yn-btn" onclick="toggleYN(this,'no')">No</button>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:14px;">
+      <label class="lbl">List features removed and the proxy relationship identified</label>
+      <textarea rows="2" placeholder="e.g., Zip code removed — correlated with race via historical redlining patterns (correlation: 0.67)"></textarea>
+    </div>
+    <div class="yn-row">
+      <span class="yn-label">Disparate impact screen: does any remaining feature produce materially different outcomes across demographic groups?</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes</button>
+        <button class="yn-btn" onclick="toggleYN(this,'no')">No</button>
+        <button class="yn-btn" onclick="toggleYN(this,'na')">Not tested</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">Notes on disparate impact findings</label>
+      <textarea rows="2" placeholder=""></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4. Fairness Metric Selection ══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div>
+      <div class="section-title">Fairness Metric Selection</div>
+      <div class="section-desc">Different fairness definitions are mathematically incompatible — you must choose one and document the trade-off.</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="note">
+      <strong>The incompatibility theorem:</strong> Individual fairness (similar people get similar outcomes) and group fairness (equal outcome rates across groups) cannot both be satisfied simultaneously except in degenerate cases. Choosing a metric is a value judgment, not a technical one.
+    </div>
+    <div class="field" style="margin-bottom:14px;">
+      <label class="lbl">Primary Fairness Definition Chosen</label>
+      <div class="radio-group" id="fairness-def">
+        <label class="radio-pill" onclick="toggleRadio(this,'fairness-def')"><input type="radio">Individual — similar inputs → similar outputs</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'fairness-def')"><input type="radio">Group — equal rates across demographic groups</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'fairness-def')"><input type="radio">Counterfactual — outcome same if group membership changed</label>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:14px;">
+      <label class="lbl">If Group Fairness — which group metric?</label>
+      <div class="radio-group" id="group-metric">
+        <label class="radio-pill" onclick="toggleRadio(this,'group-metric')"><input type="radio">Demographic Parity — equal positive rate across groups</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'group-metric')"><input type="radio">Equal Opportunity — equal true positive rate (TPR)</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'group-metric')"><input type="radio">Equalized Odds — equal TPR and FPR across groups</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'group-metric')"><input type="radio">Calibration — predicted probabilities match actual rates</label>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:14px;">
+      <label class="lbl">Justification — why is this the right fairness definition for this use case?</label>
+      <textarea rows="3" placeholder="Explain why the chosen fairness metric aligns with the use case, stakeholder values, and legal context. E.g., 'We chose equal opportunity (TPR parity) for loan approvals because the cost of false negatives (denying creditworthy applicants) is our primary ethical concern...'"></textarea>
+    </div>
+    <div class="yn-row">
+      <span class="yn-label">Acknowledgment: individual and group fairness cannot both be fully satisfied; the above represents a deliberate choice with documented trade-offs.</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Acknowledged</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5. Bias Testing Results ══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div>
+      <div class="section-title">Bias Testing Results</div>
+      <div class="section-desc">Testing &amp; Trust — performance must be measured across demographic groups, not just in aggregate.</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="field-grid-3" style="margin-bottom:16px;">
+      <div class="field">
+        <label class="lbl">Overall Accuracy</label>
+        <input type="text" placeholder="e.g., 87.3%">
+      </div>
+      <div class="field">
+        <label class="lbl">Test Dataset Size (N)</label>
+        <input type="text" placeholder="e.g., 12,440 observations">
+      </div>
+      <div class="field">
+        <label class="lbl">Test Dataset Period</label>
+        <input type="text" placeholder="e.g., Jan–Dec 2024 holdout">
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:10px;">
+      <label class="lbl">Performance by Demographic Group</label>
+    </div>
+    <table class="test-table" id="test-results-table">
+      <thead>
+        <tr>
+          <th style="width:160px">Group</th>
+          <th>Accuracy %</th>
+          <th>False Positive Rate %</th>
+          <th>False Negative Rate %</th>
+          <th>Disparate Impact Ratio</th>
+          <th style="width:30px"></th>
+        </tr>
+      </thead>
+      <tbody id="test-tbody">
+        <tr>
+          <td><input type="text" placeholder="e.g., White / Non-Hispanic"></td>
+          <td><input type="text" placeholder="88.1"></td>
+          <td><input type="text" placeholder="9.2"></td>
+          <td><input type="text" placeholder="12.7"></td>
+          <td><input type="text" placeholder="1.00 (reference)"></td>
+          <td><button class="btn-del-row" onclick="delRow(this)">✕</button></td>
+        </tr>
+        <tr>
+          <td><input type="text" placeholder="e.g., Black / African American"></td>
+          <td><input type="text" placeholder=""></td>
+          <td><input type="text" placeholder=""></td>
+          <td><input type="text" placeholder=""></td>
+          <td><input type="text" placeholder=""></td>
+          <td><button class="btn-del-row" onclick="delRow(this)">✕</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn-add-row" onclick="addTestRow()" style="margin-bottom:16px;">+ Add group</button>
+
+    <div class="note" style="margin-top:4px;">
+      <strong>4/5ths rule (EEOC Uniform Guidelines):</strong> A disparate impact ratio below 0.80 for any protected group may constitute unlawful discrimination in US employment and credit contexts. EU AI Act high-risk systems require documented bias testing.
+    </div>
+
+    <div class="field-grid-2">
+      <div class="field">
+        <label class="lbl">Is the minimum disparate impact ratio ≥ 0.80 across all groups?</label>
+        <div class="yn-btns" style="margin-top:4px;">
+          <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes — pass</button>
+          <button class="yn-btn" onclick="toggleYN(this,'no')">No — potential violation</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl">Maximum false positive rate disparity across groups</label>
+        <input type="text" placeholder="e.g., 18.4 pp gap (White 9.2% vs Black 27.6%)">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 6. Mitigation Actions ══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div>
+      <div class="section-title">Mitigation Actions</div>
+      <div class="section-desc">Document what was done to address identified bias at each stage of the ML pipeline.</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="field-grid-2">
+      <div class="field">
+        <label class="lbl">Pre-Processing (data stage)</label>
+        <textarea placeholder="e.g., Oversampling underrepresented groups; re-labeling historical decisions; removing proxy features; synthetic data augmentation"></textarea>
+      </div>
+      <div class="field">
+        <label class="lbl">In-Processing (training stage)</label>
+        <textarea placeholder="e.g., Fairness-aware regularization; adversarial debiasing; reweighting loss function by demographic group"></textarea>
+      </div>
+      <div class="field">
+        <label class="lbl">Post-Processing (output stage)</label>
+        <textarea placeholder="e.g., Calibrated threshold by group; reject-option classification; human review for borderline cases near threshold"></textarea>
+      </div>
+      <div class="field">
+        <label class="lbl">Residual Risk After Mitigation</label>
+        <textarea placeholder="Describe remaining bias risk that could not be fully mitigated and the rationale for proceeding despite it"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 7. Human Oversight & Transparency ══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <div>
+      <div class="section-title">Human Oversight &amp; Transparency</div>
+      <div class="section-desc">Controls and transparency requirements — calibrated to risk level per governance framework.</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="yn-row">
+      <span class="yn-label">Human review checkpoints defined before consequential decisions are executed?</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes</button>
+        <button class="yn-btn" onclick="toggleYN(this,'no')">No</button>
+        <button class="yn-btn" onclick="toggleYN(this,'na')">N/A (low-risk)</button>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:12px;">
+      <label class="lbl">Decisions requiring mandatory human review</label>
+      <textarea rows="2" placeholder="e.g., Any score in 40–60% band; any denial of credit > $50K; all appeals"></textarea>
+    </div>
+    <div class="yn-row">
+      <span class="yn-label">Individuals informed that AI was used in a decision affecting them?</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes</button>
+        <button class="yn-btn" onclick="toggleYN(this,'no')">No</button>
+      </div>
+    </div>
+    <div class="yn-row">
+      <span class="yn-label">Individuals can request an explanation of the decision on request?</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes</button>
+        <button class="yn-btn" onclick="toggleYN(this,'no')">No</button>
+      </div>
+    </div>
+    <div class="yn-row" style="margin-bottom:12px;">
+      <span class="yn-label">Meaningful appeal or reconsideration mechanism exists?</span>
+      <div class="yn-btns">
+        <button class="yn-btn" onclick="toggleYN(this,'yes')">Yes</button>
+        <button class="yn-btn" onclick="toggleYN(this,'no')">No</button>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:14px;">
+      <label class="lbl">Explainability Method Used</label>
+      <div class="radio-group" id="xai-method">
+        <label class="radio-pill" onclick="toggleRadio(this,'xai-method')"><input type="radio">SHAP (feature attribution)</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'xai-method')"><input type="radio">LIME (local approximation)</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'xai-method')"><input type="radio">Surrogate decision tree</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'xai-method')"><input type="radio">Counterfactual explanations</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'xai-method')"><input type="radio">Model is inherently interpretable</label>
+        <label class="radio-pill" onclick="toggleRadio(this,'xai-method')"><input type="radio">None — explainability not required</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 8. Compliance & Sign-off ══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <div>
+      <div class="section-title">Compliance &amp; Sign-off</div>
+      <div class="section-desc">Compliance / Regulatory — document applicable law and obtain required approvals.</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="field" style="margin-bottom:14px;">
+      <label class="lbl">Applicable Regulations</label>
+      <div class="check-group" id="regs">
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">EU AI Act (2024)</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">GDPR</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">ECOA (US credit)</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">FCRA (US consumer reports)</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">EEOC / Title VII (US employment)</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">CCPA / state privacy law</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">HIPAA (health data)</label>
+        <label class="check-pill" onclick="toggleCheck(this)"><input type="checkbox">Other</label>
+      </div>
+    </div>
+    <div class="field-grid-2" style="margin-bottom:16px;">
+      <div class="field">
+        <label class="lbl">Legal Review Status</label>
+        <div class="yn-btns" style="margin-top:4px;">
+          <button class="yn-btn" onclick="toggleYN(this,'yes')">Complete</button>
+          <button class="yn-btn" onclick="toggleYN(this,'no')">Pending</button>
+          <button class="yn-btn" onclick="toggleYN(this,'na')">Waived</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl">AI Ethics Review Status</label>
+        <div class="yn-btns" style="margin-top:4px;">
+          <button class="yn-btn" onclick="toggleYN(this,'yes')">Complete</button>
+          <button class="yn-btn" onclick="toggleYN(this,'no')">Pending</button>
+          <button class="yn-btn" onclick="toggleYN(this,'na')">Waived</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl">Next Bias Audit Date</label>
+        <input type="date">
+      </div>
+      <div class="field">
+        <label class="lbl">Audit Frequency</label>
+        <select>
+          <option value="">Select…</option>
+          <option>Monthly (high-risk, high-volume)</option>
+          <option>Quarterly</option>
+          <option>Semi-annually</option>
+          <option>Annually</option>
+          <option>On material model change</option>
+        </select>
+      </div>
+    </div>
+
+    <table class="signoff-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Name</th>
+          <th>Approval Status</th>
+          <th>Date</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-size:0.76rem; font-weight:600; color:#1e3a5f; padding:7px 10px;">Data Scientist / ML Engineer</td>
+          <td><input type="text" placeholder="Name"></td>
+          <td><input type="text" placeholder="Approved / Conditional / Declined"></td>
+          <td><input type="date"></td>
+          <td><input type="text" placeholder=""></td>
+        </tr>
+        <tr>
+          <td style="font-size:0.76rem; font-weight:600; color:#1e3a5f; padding:7px 10px;">Product Lead</td>
+          <td><input type="text" placeholder="Name"></td>
+          <td><input type="text" placeholder="Approved / Conditional / Declined"></td>
+          <td><input type="date"></td>
+          <td><input type="text" placeholder=""></td>
+        </tr>
+        <tr>
+          <td style="font-size:0.76rem; font-weight:600; color:#1e3a5f; padding:7px 10px;">Legal Counsel</td>
+          <td><input type="text" placeholder="Name"></td>
+          <td><input type="text" placeholder="Approved / Conditional / Declined"></td>
+          <td><input type="date"></td>
+          <td><input type="text" placeholder=""></td>
+        </tr>
+        <tr>
+          <td style="font-size:0.76rem; font-weight:600; color:#1e3a5f; padding:7px 10px;">AI Ethics Reviewer</td>
+          <td><input type="text" placeholder="Name"></td>
+          <td><input type="text" placeholder="Approved / Conditional / Declined"></td>
+          <td><input type="date"></td>
+          <td><input type="text" placeholder=""></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+</div><!-- /page -->
+
+<script>
+// ── YN toggles ──
+function toggleYN(btn, state) {
+  const group = btn.closest('.yn-btns');
+  group.querySelectorAll('.yn-btn').forEach(b => {
+    b.classList.remove('yes-on','no-on','na-on');
+  });
+  btn.classList.add(state === 'yes' ? 'yes-on' : state === 'no' ? 'no-on' : 'na-on');
+}
+
+// ── Radio pills ──
+function toggleRadio(pill, groupId) {
+  document.querySelectorAll(`#${groupId} .radio-pill`).forEach(p => p.classList.remove('checked'));
+  pill.classList.add('checked');
+}
+
+// ── Checkbox pills ──
+function toggleCheck(pill) {
+  pill.classList.toggle('checked');
+}
+
+// ── Test results table ──
+function addTestRow() {
+  const tbody = document.getElementById('test-tbody');
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td><input type="text" placeholder="Group name"></td>
+    <td><input type="text" placeholder=""></td>
+    <td><input type="text" placeholder=""></td>
+    <td><input type="text" placeholder=""></td>
+    <td><input type="text" placeholder=""></td>
+    <td><button class="btn-del-row" onclick="delRow(this)">✕</button></td>`;
+  tbody.appendChild(row);
+}
+function delRow(btn) {
+  const row = btn.closest('tr');
+  if (row.parentElement.children.length > 1) row.remove();
+}
+
+// ── Print key ──
+document.addEventListener('keydown', e => {
+  if ((e.key === 'p' || e.key === 'P') && (e.ctrlKey || e.metaKey)) return;
+  if (e.key === 'p' || e.key === 'P') window.print();
+});
+</script>
+</body>
+</html>
