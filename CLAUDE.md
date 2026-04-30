@@ -40,34 +40,32 @@ When reviewing any architecture, always assess:
 - Every ADR must have: Context, Decision, Consequences, Alternatives Considered
 - Tag with domain: `[llm]` `[mlops]` `[rag]` `[governance]` `[infra]`
 
-## Custom Commands
-Run these with `/command-name` in any session:
+## Skills
+Run these with `/skill-name` in any session. Skills live in `.claude/skills/<name>/SKILL.md` (canonical). Legacy `.claude/commands/` files remain but are not extended.
 
-| Command | What it does |
+| Skill | What it does |
 |---|---|
 | `/review` | Run full architecture review checklist on provided design |
 | `/adr` | Generate a new ADR from a description |
-| `/rfc` | Scaffold an RFC doc for a proposed system change |
 | `/tradeoff` | Structured trade-off analysis (build/buy/borrow) |
-| `/diagram` | Suggest Mermaid diagram for a described system |
 | `/threat-model` | Run AI-specific threat model on a described component |
-| `/cost-model` | Estimate token + infra cost for a described AI workload |
-| `/update-cheatsheet-azure` | Web-search for Azure AI/MLOps updates, diff against cheatsheet, propose changes for approval |
-| `/update-cheatsheet-aws` | Web-search for AWS AI/MLOps updates, diff against AWS cheatsheet, propose changes for approval |
-| `/update-cheatsheet-gcp` | Web-search for GCP AI/MLOps updates, diff against GCP cheatsheet, propose changes for approval |
-| `/update-cheatsheet-opensource` | Web-search for OSS AI/MLOps releases, diff against opensource cheatsheet, propose changes for approval |
-| `/cross-cloud` | Compare services or architectural approaches across Azure, AWS, and GCP using cross-cloud-ai-comparison.md |
-| `/eval-design` | Scaffold an evaluation framework — metrics, test sets, pass/fail gates, and drift triggers for an LLM feature |
-| `/prompt-review` | Audit a prompt for clarity, injection risk, token efficiency, hallucination surface, and fallback behavior |
-| `/rag-design` | Design a RAG architecture — chunking, embedding, retrieval pattern, re-ranking, and observability |
-| `/agent-design` | Design an agentic loop — tools, memory, termination conditions, guardrails, and fallback paths |
-| `/model-card` | Generate a model card template covering overview, intended use, evals, limitations, and governance |
-| `/rollout` | Design a phased AI feature rollout (shadow → canary → limited GA → full GA) with eval gates and rollback triggers |
-| `/pii-scan` | Map PII exposure points across the AI data lifecycle (ingest, embed, prompt, log, cache, export) |
-| `/runbook` | Generate an AI-specific incident runbook covering model degradation, hallucination spikes, cost blowouts, and more |
-| `/red-team` | Execute a structured adversarial test battery (OWASP LLM Top 10 2025 + ATLAS v5.1) against an AI system |
-| `/supply-chain-review` | Audit AI supply chain — model provenance, AI-BOM, dependency integrity, third-party API trust |
-| `/dataset-readiness` | Audit retail ML dataset readiness — data contracts, PII training consent, temporal split strategy, cold-start coverage |
+| `/eval-design` | Scaffold an evaluation framework — metrics, test sets, pass/fail gates, drift triggers |
+| `/prompt-review` | Audit a prompt for clarity, injection risk, token efficiency, hallucination surface |
+| `/rag-design` | Design a RAG architecture — chunking, embedding, retrieval pattern, re-ranking, observability |
+| `/agent-design` | Design an agentic loop — tools, memory, termination conditions, guardrails, fallback paths |
+| `/model-card` | Generate a model card — overview, intended use, evals, limitations, governance |
+| `/rollout` | Design a phased AI feature rollout (shadow → canary → limited GA → full GA) |
+| `/pii-scan` | Map PII exposure points across the AI data lifecycle |
+| `/runbook` | Generate an AI incident runbook — degradation, hallucination spikes, cost blowouts |
+| `/red-team` | Structured adversarial test battery (OWASP LLM Top 10 2025 + ATLAS v5.1) |
+| `/supply-chain-review` | Audit AI supply chain — model provenance, AI-BOM, dependency integrity |
+| `/dataset-readiness` | Audit retail ML dataset readiness — contracts, PII consent, temporal split, cold-start |
+| `/update-cheatsheet-azure` | Web-search Azure AI/MLOps updates, diff against cheatsheet, propose for approval |
+| `/update-cheatsheet-aws` | Web-search AWS AI/MLOps updates, diff against AWS cheatsheet, propose for approval |
+| `/update-cheatsheet-gcp` | Web-search GCP AI/MLOps updates, diff against GCP cheatsheet, propose for approval |
+| `/update-cheatsheet-opensource` | Web-search OSS AI/MLOps releases, diff against OSS cheatsheet, propose for approval |
+| `/compound` | Capture session learnings as a solution doc in `docs/solutions/` — the knowledge flywheel |
+| `/track` | Append raw session findings to `docs/daily/YYYY-MM-DD.md` — lightweight scratch capture that feeds `/compound` |
 
 ## Response Style
 - Lead with the most important finding or risk
@@ -78,7 +76,13 @@ Run these with `/command-name` in any session:
 - If you need more info to give a real answer, ask one focused question
 
 ## Session Continuity
-- Check `/context/` for active project briefs before starting work — these are short-lived, task-specific notes
-- Check `/decisions/` for existing ADRs before proposing new ones
-- Save all ADRs to `/decisions/`, all diagrams to `/diagrams/`
-- `/reference/` contains stable reference material (cloud cheatsheets, comparisons) — read only when relevant to the question, not on every session start
+- Check `context/` for active project briefs before starting work — short-lived, task-specific notes
+- Check `decisions/` for existing ADRs before proposing new ones
+- Check `docs/solutions/` before starting work in a known domain — captures gotchas and dead ends from prior sessions
+- Check `docs/brainstorms/` and `docs/plans/` for in-progress project work
+- `reference/` contains stable reference material — read only when relevant, not on every session start
+- Save ADRs to `decisions/`, brainstorms to `docs/brainstorms/`, plans to `docs/plans/`, solution learnings to `docs/solutions/`
+- Rules of engagement: `specs/agent-rules.md`
+
+## Codeburn recommendations
+- Before editing any file, read it first. Before modifying a function, grep for all callers. Research before you edit.

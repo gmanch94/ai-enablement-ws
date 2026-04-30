@@ -25,7 +25,7 @@ Every cloud resource created for AI workloads must have all of the following tag
 | `[RETAILER_TAG]-owner` | email address | `aimlead@[RETAILER].com` | AI/ML lead responsible for the resource |
 | `[RETAILER_TAG]-cost-centre` | cost centre code | `CC-12345` | Finance attribution — [CALLOUT: confirm cost centre codes with Finance] |
 
-> **[CALLOUT: Set `[RETAILER_TAG]` to the company-specific prefix used in your tag taxonomy, e.g. `kroger`, `albertsons`, `target`. Must be consistent across all resources.]**
+> **[CALLOUT: Set `[RETAILER_TAG]` to the company-specific prefix used in your tag taxonomy, e.g. `acme`, `bestmart`, `valuegrocer`. Must be consistent across all resources.]**
 
 ---
 

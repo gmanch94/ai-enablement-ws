@@ -26,7 +26,7 @@ We will use:
 ## Rationale
 
 1. **Entra Agent ID is the governance anchor** — every production agent must have a first-class identity. Entra Agent ID enables audit trails of agent actions, integration with Conditional Access policies, and enforcement of least-privilege tool access. Without it, agent governance is impossible.
-2. **Purview for data governance** — manual PII tracking does not scale across 60M+ loyalty profiles (Kroger) or large enterprise datasets. Purview automates classification, enforces sensitivity labels, and provides lineage from raw data through model training.
+2. **Purview for data governance** — manual PII tracking does not scale across tens of millions of loyalty profiles at a large retailer or comparable enterprise datasets. Purview automates classification, enforces sensitivity labels, and provides lineage from raw data through model training.
 3. **Content Safety for LLM guardrails** — Azure AI Content Safety is the platform-native harm detection layer. It applies across all models in Foundry without per-model integration work. Do not build custom keyword filters as a replacement.
 4. **Task Adherence as the agentic scope guardrail** — as agents gain more tool access and autonomy, scope creep becomes a production risk. Task Adherence detects off-task behaviour before it causes downstream harm. Note: Preview — use in conjunction with explicit system prompt constraints until GA.
 5. **Azure Policy for infra compliance** — developer discipline alone cannot enforce encryption, private endpoints, or cost tagging at scale. Azure Policy codifies and enforces these requirements at the resource level.
