@@ -1,6 +1,6 @@
 # Coding Agent Guide — Argus
 
-5-agent ADK pipeline for Kroger catalog integrity. Stack: **Google ADK · FastAPI · BigQuery Vector Search · Slack Block Kit · A2A protocol**.
+5-agent ADK pipeline for retail catalog integrity. Stack: **Google ADK · FastAPI · BigQuery Vector Search · Slack Block Kit · A2A protocol**.
 
 Pipeline: `item_validator → correction_resolver → approval_orchestrator → catalog_writer → feedback_agent`. Root agent: `app/agents/argus_orchestrator.py` (AgentTool composition). Server entry: `app/fast_api_app.py`.
 
