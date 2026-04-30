@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "rubric_based_final_response_quality_v1": {
+      "threshold": 0.8,
+      "judgeModelOptions": {
+        "judgeModel": "gemini-flash-latest",
+        "numSamples": 3
+      },
+      "rubrics": [
+        {
+          "rubricId": "violation_accuracy",
+          "rubricContent": {
+            "textProperty": "If no violations were found, the response clearly states the item is clean. If violations were found, the response accurately names the violation type (e.g., MISSING_FIELD) and the affected field (e.g., allergen_statement)."
+          }
+        },
+        {
+          "rubricId": "outcome_clarity",
+          "rubricContent": {
+            "textProperty": "The response clearly states the final outcome: whether the item was clean, approved, rejected, auto-applied, or escalated for manual review."
+          }
+        },
+        {
+          "rubricId": "structured_summary",
+          "rubricContent": {
+            "textProperty": "The response includes a structured summary with the item name or SKU ID, any violations found, and the resolution status."
+          }
+        }
+      ]
+    }
+  }
+}
