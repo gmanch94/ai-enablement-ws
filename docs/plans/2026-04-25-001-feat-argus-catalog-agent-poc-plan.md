@@ -3,7 +3,34 @@
 **Date:** 2026-04-25  
 **Type:** feat  
 **Brainstorm:** [2026-04-25-argus-catalog-agent-requirements.md](../brainstorms/2026-04-25-argus-catalog-agent-requirements.md)  
-**Status:** READY — all pre-conditions resolved (2026-04-26)
+**Status:** SUPERSEDED (2026-04-30) — POC built. Current truth lives in PRDs + ADRs + solution doc below. Retained for historical context only.
+
+---
+
+## Superseded by
+
+**PRDs (current spec):**
+- [A0 — Argus Master](../../projects/argus/prds/A0-argus-master.md)
+- [A1 — ItemValidator](../../projects/argus/prds/A1-item-validator.md)
+- [A2 — CorrectionResolver](../../projects/argus/prds/A2-correction-resolver.md)
+- [A3 — ApprovalOrchestrator](../../projects/argus/prds/A3-approval-orchestrator.md)
+- [A4 — CatalogWriter](../../projects/argus/prds/A4-catalog-writer.md)
+- [A5 — FeedbackAgent](../../projects/argus/prds/A5-feedback-agent.md)
+
+**ADRs (current decisions):**
+- ADR-0046 Orchestration pattern
+- ADR-0047 BigQuery Vector Search
+- ADR-0048 Three-tier confidence routing (AUTO / PROPOSE / FLAG)
+- ADR-0049 Slack HITL via Block Kit
+- ADR-0050 ADK tool DI pattern (`_client`, `_pending`, `_embedding_fn`)
+
+**Solution doc (build learnings):**
+- [2026-04-29-argus-poc-solution.md](../solutions/2026-04-29-argus-poc-solution.md)
+
+**Build state (2026-04-30):**
+- All 7 units below: complete. 138/138 tests pass. Flow A end-to-end via uvicorn + `trigger_flow_a.py`.
+- Directory drift vs plan: `app/agent.py` + `app/agents/argus_orchestrator.py` (not `argus/orchestrator.py`); added `slack_router.py`, `fast_api_app.py`, `feedback_upsert.py`, `embeddings.py`, `slack_approval.py`, `catalog_writer.py` (tool), A2A executor.
+- GCP prereqs: all satisfied (BQ dataset `argus.correction_history` live, Vertex auth set, Gemini API enabled).
 
 ---
 
