@@ -81,6 +81,24 @@ Run these with `/skill-name` in any session. Skills live in `.claude/skills/<nam
 - Be concise — no padding, no unnecessary hedging
 - If you need more info to give a real answer, ask one focused question
 
+## Skill ↔ Reference Pairings
+
+When a skill is invoked, prefer pulling the matching reference/template into context (load on demand, not at session start):
+
+| Skill | Reference / template |
+|---|---|
+| `/prompt-review` | `reference/prompt-engineering-cookbook.md` (6 principles, 8 patterns, anti-patterns) |
+| `/dataset-readiness` | `reference/feature-engineering-cookbook.md` (12 highest-ROI patterns, anti-patterns) |
+| `/eval-design` | `templates/eval/model-evaluation-canvas.html` (7 questions, 12 red flags, 5 sign-off requirements) |
+| `/review` | `templates/eval/model-evaluation-canvas.html` + `templates/governance/governance-playbook-general.html` |
+| `/tradeoff` | `reference/llm-vendor-comparison.html` (vendor matrix + 12 contract terms + risk-weighted scoring) |
+| `/threat-model` | `reference/ai-governance-framework.md` §2 + `templates/governance/genai-risk-checklist.html` |
+| `/red-team` | `templates/governance/bias-audit-general.html` or `bias-audit-hr.html` (HR/employment context) + `reference/ai-governance-framework.md` §4 |
+| `/pii-scan` | `templates/governance/genai-risk-checklist.html` §3 (Privacy & Data Protection) + `reference/ai-governance-framework.md` §6 |
+| `/model-card` | `reference/ai-governance-framework.md` §9.4 |
+
+For any HR / employment-related work, use `reference/ai-hr-governance-framework.md` and `templates/governance/bias-audit-hr.html` as primary — the HR overlay carries EEOC 4/5ths, GDPR Art. 22, NYC LL 144, IL AIVIA, BIPA obligations not present in the general framework.
+
 ## Session Continuity
 - Check `context/` for active project briefs before starting work — short-lived, task-specific notes
 - Check `decisions/` for existing ADRs before proposing new ones

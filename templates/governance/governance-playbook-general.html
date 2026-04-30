@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Deployment Governance Playbook</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #eef1f6;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0d2540 100%);
+  color: white;
+  padding: 28px 40px 24px;
+  border-bottom: 3px solid #00b894;
+}
+header h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.5px; }
+header .subtitle { font-size: 0.85rem; opacity: 0.75; margin-top: 5px; }
+
+.page-wrap { max-width: 960px; margin: 0 auto; padding: 28px 40px; }
+
+/* ── Project info ── */
+.project-info {
+  background: white;
+  border-radius: 12px;
+  padding: 18px 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 160px;
+  gap: 12px;
+}
+.project-info label { font-size: 0.72rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+.project-info input {
+  width: 100%;
+  border: 1px solid #dde2ea;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 0.85rem;
+  color: #1a1a2e;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.project-info input:focus { border-color: #2e86de; }
+
+/* ── Risk classifier ── */
+.classifier {
+  background: white;
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  margin-bottom: 20px;
+}
+.classifier h2 { font-size: 1rem; font-weight: 800; color: #1e3a5f; margin-bottom: 4px; }
+.classifier .intro { font-size: 0.78rem; color: #888; margin-bottom: 16px; }
+
+.cq { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #f3f5f8; }
+.cq:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.cq-text { font-size: 0.85rem; color: #2d3436; font-weight: 500; margin-bottom: 8px; line-height: 1.45; }
+.cq-note { font-size: 0.72rem; color: #aaa; margin-bottom: 6px; margin-top: -4px; }
+.radio-row { display: flex; gap: 16px; }
+.radio-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #444;
+  cursor: pointer;
+  padding: 5px 12px;
+  border: 1.5px solid #dde2ea;
+  border-radius: 20px;
+  transition: all 0.15s;
+}
+.radio-row label:hover { border-color: #2e86de; color: #2e86de; }
+.radio-row input[type="radio"] { accent-color: #2e86de; }
+.radio-row label:has(input:checked) { border-color: #2e86de; background: #eff6ff; color: #2e86de; font-weight: 600; }
+
+/* ── Risk level banner ── */
+.risk-banner {
+  margin-top: 20px;
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s;
+}
+.risk-banner.hidden { display: none; }
+.risk-banner.low    { background: #d1fae5; border-left: 5px solid #10b981; }
+.risk-banner.medium { background: #fef3c7; border-left: 5px solid #f59e0b; }
+.risk-banner.high   { background: #fee2e2; border-left: 5px solid #ef4444; }
+
+.risk-label { font-size: 1.1rem; font-weight: 900; letter-spacing: 0.5px; }
+.risk-banner.low    .risk-label { color: #065f46; }
+.risk-banner.medium .risk-label { color: #92400e; }
+.risk-banner.high   .risk-label { color: #991b1b; }
+.risk-desc { font-size: 0.8rem; margin-top: 2px; }
+.risk-banner.low    .risk-desc { color: #047857; }
+.risk-banner.medium .risk-desc { color: #b45309; }
+.risk-banner.high   .risk-desc { color: #b91c1c; }
+.risk-count { font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 14px; }
+.risk-banner.low    .risk-count { background: #a7f3d0; color: #065f46; }
+.risk-banner.medium .risk-count { background: #fde68a; color: #92400e; }
+.risk-banner.high   .risk-count { background: #fecaca; color: #991b1b; }
+
+/* ── Progress bar ── */
+.progress-wrap {
+  background: white;
+  border-radius: 12px;
+  padding: 16px 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.progress-wrap.hidden { display: none; }
+.progress-label { font-size: 0.82rem; font-weight: 700; color: #1e3a5f; white-space: nowrap; }
+.progress-track { flex: 1; height: 10px; background: #e8ecf2; border-radius: 5px; }
+.progress-fill { height: 10px; border-radius: 5px; background: #2e86de; transition: width 0.4s; width: 0%; }
+.progress-pct { font-size: 0.82rem; font-weight: 700; color: #2e86de; min-width: 40px; text-align: right; }
+.btn-print {
+  padding: 8px 16px;
+  background: #1e3a5f;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.btn-print:hover { background: #2e86de; }
+
+/* ── Checklist ── */
+.checklist { display: flex; flex-direction: column; gap: 18px; }
+
+.tier {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  overflow: hidden;
+  transition: opacity 0.3s;
+}
+.tier.dimmed { opacity: 0.38; pointer-events: none; }
+
+.tier-header {
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tier-1 .tier-header { background: #eff6ff; border-left: 5px solid #2e86de; }
+.tier-2 .tier-header { background: #fffbeb; border-left: 5px solid #f59e0b; }
+.tier-3 .tier-header { background: #fff1f2; border-left: 5px solid #ef4444; }
+
+.tier-title { font-size: 0.92rem; font-weight: 800; }
+.tier-1 .tier-title { color: #1e40af; }
+.tier-2 .tier-title { color: #92400e; }
+.tier-3 .tier-title { color: #991b1b; }
+.tier-subtitle { font-size: 0.72rem; margin-top: 1px; }
+.tier-1 .tier-subtitle { color: #3b82f6; }
+.tier-2 .tier-subtitle { color: #d97706; }
+.tier-3 .tier-subtitle { color: #ef4444; }
+
+.tier-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.3px;
+}
+.tier-1 .tier-tag { background: #dbeafe; color: #1e40af; }
+.tier-2 .tier-tag { background: #fde68a; color: #92400e; }
+.tier-3 .tier-tag { background: #fecaca; color: #991b1b; }
+
+.tier-items { padding: 6px 0 10px; }
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 22px;
+  border-bottom: 1px solid #f7f9fb;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.item:last-child { border-bottom: none; }
+.item:hover { background: #f8fafc; }
+.item.checked { background: #f0fdf4; }
+
+.item-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #c8d0dc;
+  border-radius: 5px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  background: white;
+}
+.item.checked .item-checkbox {
+  background: #10b981;
+  border-color: #10b981;
+}
+.checkmark { display: none; color: white; font-size: 12px; font-weight: 900; }
+.item.checked .checkmark { display: block; }
+
+.item-body { flex: 1; }
+.item-title { font-size: 0.85rem; font-weight: 700; color: #1a1a2e; line-height: 1.35; }
+.item.checked .item-title { color: #888; text-decoration: line-through; }
+.item-detail { font-size: 0.75rem; color: #888; margin-top: 3px; line-height: 1.45; }
+.item.checked .item-detail { color: #bbb; }
+.item-ref {
+  font-size: 0.68rem;
+  color: #aaa;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.na-message {
+  text-align: center;
+  padding: 14px;
+  font-size: 0.78rem;
+  color: #aaa;
+  font-style: italic;
+}
+
+/* ── Model card reminder ── */
+.model-card-reminder {
+  background: white;
+  border-radius: 12px;
+  padding: 18px 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  margin-top: 18px;
+  border-left: 5px solid #9b59b6;
+  transition: opacity 0.3s;
+}
+.model-card-reminder.dimmed { opacity: 0.3; pointer-events: none; }
+.model-card-reminder h3 { font-size: 0.88rem; font-weight: 800; color: #6c3483; margin-bottom: 8px; }
+.model-card-reminder p { font-size: 0.78rem; color: #555; line-height: 1.5; }
+.mcr-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; margin-top: 10px; }
+.mcr-field { font-size: 0.74rem; color: #777; padding: 3px 0; border-bottom: 1px solid #f3f5f8; }
+.mcr-field::before { content: '□ '; color: #9b59b6; font-weight: 700; }
+
+/* ── Print ── */
+@media print {
+  body { background: white; }
+  header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .btn-print { display: none; }
+  .classifier { display: none; }
+  .project-info input { border: none; padding: 0; }
+  .tier.dimmed { display: none; }
+  .model-card-reminder.dimmed { display: none; }
+  .item-checkbox { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+@media (max-width: 680px) {
+  .page-wrap { padding: 16px 16px; }
+  header { padding: 20px 16px; }
+  .project-info { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI Deployment Governance Playbook</h1>
+  <div class="subtitle">Before-You-Deploy Checklist · 3-question risk classifier auto-selects required tier (4 / 9 / 13 items)</div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- Project info -->
+  <div class="project-info">
+    <div>
+      <label>Project / Model Name</label>
+      <input type="text" placeholder="e.g. Customer Churn Predictor v2">
+    </div>
+    <div>
+      <label>Business Owner</label>
+      <input type="text" placeholder="Name, team">
+    </div>
+    <div>
+      <label>Review Date</label>
+      <input type="date">
+    </div>
+  </div>
+
+  <!-- Risk classifier -->
+  <div class="classifier">
+    <h2>Step 1 — Classify Model Risk Level</h2>
+    <div class="intro">Answer three questions. The appropriate checklist will be automatically selected.</div>
+
+    <div class="cq" id="cq1">
+      <div class="cq-text">Does this model make or significantly influence decisions affecting people's <strong>employment, finances, health, housing, or legal status</strong>?</div>
+      <div class="cq-note">Examples: hiring/promotion/termination, loan approval, medical diagnosis, bail/sentencing, insurance underwriting</div>
+      <div class="radio-row">
+        <label><input type="radio" name="cq1" value="1" onchange="classify()"> Yes</label>
+        <label><input type="radio" name="cq1" value="0" onchange="classify()"> No</label>
+      </div>
+    </div>
+
+    <div class="cq" id="cq2">
+      <div class="cq-text">Does this model use <strong>sensitive personal data or proxy variables</strong> that may encode protected characteristics?</div>
+      <div class="cq-note">Proxy examples: zip code → race/income, name patterns → ethnicity/gender, browsing history → health status</div>
+      <div class="radio-row">
+        <label><input type="radio" name="cq2" value="1" onchange="classify()"> Yes</label>
+        <label><input type="radio" name="cq2" value="0" onchange="classify()"> No</label>
+      </div>
+    </div>
+
+    <div class="cq" id="cq3">
+      <div class="cq-text">Will decisions be <strong>largely automated with limited human review</strong>, or deployed at high volume (&gt;10,000 decisions/month)?</div>
+      <div class="cq-note">High volume + low oversight = higher risk of systematic harm before detection</div>
+      <div class="radio-row">
+        <label><input type="radio" name="cq3" value="1" onchange="classify()"> Yes</label>
+        <label><input type="radio" name="cq3" value="0" onchange="classify()"> No</label>
+      </div>
+    </div>
+
+    <div class="risk-banner hidden" id="riskBanner">
+      <div>
+        <div class="risk-label" id="riskLabel">—</div>
+        <div class="risk-desc" id="riskDesc">—</div>
+      </div>
+      <div class="risk-count" id="riskCount">—</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-wrap hidden" id="progressWrap">
+    <span class="progress-label" id="progressLabel">0 / 0 items complete</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-pct" id="progressPct">0%</span>
+    <button class="btn-print" onclick="window.print()">Print / Save PDF</button>
+  </div>
+
+  <!-- Checklist -->
+  <div class="checklist" id="checklist">
+
+    <!-- Tier 1 -->
+    <div class="tier tier-1" id="tier1">
+      <div class="tier-header">
+        <div>
+          <div class="tier-title">Tier 1 — Foundation</div>
+          <div class="tier-subtitle">Required for ALL models, regardless of risk level</div>
+        </div>
+        <div class="tier-tag">ALL MODELS</div>
+      </div>
+      <div class="tier-items" id="items-tier1"></div>
+    </div>
+
+    <!-- Tier 2 -->
+    <div class="tier tier-2" id="tier2">
+      <div class="tier-header">
+        <div>
+          <div class="tier-title">Tier 2 — Bias &amp; Interpretability</div>
+          <div class="tier-subtitle">Required for medium and high risk models</div>
+        </div>
+        <div class="tier-tag">MEDIUM + HIGH</div>
+      </div>
+      <div class="tier-items" id="items-tier2"></div>
+    </div>
+
+    <!-- Tier 3 -->
+    <div class="tier tier-3" id="tier3">
+      <div class="tier-header">
+        <div>
+          <div class="tier-title">Tier 3 — Full Governance</div>
+          <div class="tier-subtitle">Required for high risk models only</div>
+        </div>
+        <div class="tier-tag">HIGH RISK ONLY</div>
+      </div>
+      <div class="tier-items" id="items-tier3"></div>
+    </div>
+
+  </div>
+
+  <!-- Model card reminder -->
+  <div class="model-card-reminder dimmed" id="modelCardReminder">
+    <h3>Model Card (Google Standard — required for high risk)</h3>
+    <p>For each high-risk deployed model, maintain a Model Card documenting the following. Model cards enable auditability and accountability across the full deployment lifecycle.</p>
+    <div class="mcr-fields">
+      <div class="mcr-field">Architecture, training approach, version</div>
+      <div class="mcr-field">Intended use and explicit non-uses</div>
+      <div class="mcr-field">Relevant demographic and environmental factors</div>
+      <div class="mcr-field">Evaluation metrics and thresholds</div>
+      <div class="mcr-field">Evaluation data: collection method, diversity</div>
+      <div class="mcr-field">Training data: what was used and why</div>
+      <div class="mcr-field">Disaggregated results by demographic subgroup</div>
+      <div class="mcr-field">Ethical considerations and sensitive use cases</div>
+      <div class="mcr-field">Caveats, limitations, and monitoring requirements</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ITEMS = {
+  tier1: [
+    {
+      title: 'Use case documented',
+      detail: 'Write down what decision this model makes or supports, who uses it, what it is explicitly NOT designed for, and what the expected impact is.',
+      ref: 'Governance Operating Model — Model Inventory (Section 9)'
+    },
+    {
+      title: 'Data sources listed and verified',
+      detail: 'Document all training and inference data sources: provenance, collection period, known limitations, and gaps. Confirm data quality meets the required standard.',
+      ref: 'Data-related risks (see ai-governance-framework.md §2.3)'
+    },
+    {
+      title: 'Business owner designated',
+      detail: 'One named person is accountable for this model\'s outcomes in production — not the data science team as a group. This person approves deployment and owns post-deployment issues.',
+      ref: 'Model Risk Management Process (Section 9.2)'
+    },
+    {
+      title: 'Performance tested on held-out data',
+      detail: 'The model has been evaluated on a held-out test set not used during training. Key metrics (accuracy, precision, recall, AUC, or domain-appropriate metrics) are recorded and meet the required threshold.',
+      ref: 'Statistical Risk — Overfitting mitigation (Section 2.1)'
+    }
+  ],
+  tier2: [
+    {
+      title: 'Demographic bias test completed',
+      detail: 'Compare model outputs across demographic groups (race, gender, age, geography). Confirm there is no statistically significant difference in false positive or false negative rates across groups.',
+      ref: 'Algorithmic Bias — Organizational Response Checklist (Section 4.3)'
+    },
+    {
+      title: 'Proxy variable audit completed',
+      detail: 'Test whether "neutral" input variables encode protected class attributes. Common proxies: zip code → race/income, name patterns → ethnicity/gender, purchase history → health status, browsing data → sexual orientation.',
+      ref: 'Sources of Bias — Proxy variables (Section 4.1)'
+    },
+    {
+      title: 'Fairness definition explicitly chosen and documented',
+      detail: 'Individual and group fairness are mathematically incompatible. Document which definition is used (individual fairness, demographic parity, equalized odds, or calibration) and provide business justification for the choice.',
+      ref: 'Fairness Definitions (Section 4.4) — Critical: no algorithm can satisfy all definitions simultaneously'
+    },
+    {
+      title: 'Interpretability documented',
+      detail: 'Document global interpretability (which features drive the model overall) and local interpretability (why a specific decision was made). Use SHAP, LIME, surrogate trees, or equivalent tools. Record which tool was used and results.',
+      ref: 'Transparency Pillar — Global vs. Local Interpretability (Section 3 / Pillar 2)'
+    },
+    {
+      title: 'Post-deployment monitoring plan defined',
+      detail: 'Define: what metrics will be monitored after deployment, what drift thresholds trigger re-evaluation, and what the re-audit cadence is. Assign ownership for monitoring alerts.',
+      ref: 'Risk-Based Audits — Ongoing monitoring (Section 3 / Pillar 3)'
+    }
+  ],
+  tier3: [
+    {
+      title: 'Three-part independent audit completed',
+      detail: 'An independent reviewer (not the model developer) has audited: (1) inputs — training data quality and bias, (2) model — performance, fit quality, stress tests, and (3) outputs — sample decisions, outlier analysis, fairness metrics across groups.',
+      ref: 'Pillar 3 — Audits: Three-part audit scope (Section 3 / Pillar 3)'
+    },
+    {
+      title: 'Legal review completed',
+      detail: 'Legal counsel has reviewed applicability of: ECOA/FCRA (credit), EEOC (employment), GDPR Article 22 (automated decisions affecting EU citizens), HIPAA (health), and any domain-specific regulations. Adverse action notice requirements confirmed if applicable.',
+      ref: 'Explainability and the Law (Section 7)'
+    },
+    {
+      title: 'Explainability mechanism built',
+      detail: 'Affected individuals can request and receive a meaningful, actionable explanation of automated decisions affecting them. This means more than a generic statement — it must identify the principal factors in their specific decision.',
+      ref: 'Legal requirement under ECOA (1974), GDPR Art. 22 (2018), and constitutional due process (Section 7)'
+    },
+    {
+      title: 'Governance committee sign-off obtained',
+      detail: 'The AI Ethics/Governance Committee (or equivalent AI, Legal, Risk, and Business leadership) has reviewed the model card, audit results, and legal review, and approved deployment. Sign-off is documented and stored.',
+      ref: 'Governance Structure — AI Governance Committee (Section 9.1)'
+    }
+  ]
+};
+
+const RISK_LEVELS = {
+  low:    { label: 'LOW RISK', desc: 'Standard QA applies. Complete Tier 1 checklist before deployment.', count: '4 items required', tiers: [1] },
+  medium: { label: 'MEDIUM RISK', desc: 'Bias testing and interpretability required. Complete Tiers 1 and 2.', count: '9 items required', tiers: [1, 2] },
+  high:   { label: 'HIGH RISK', desc: 'Full governance required. Complete all three tiers before deployment.', count: '13 items required', tiers: [1, 2, 3] }
+};
+
+let currentRisk = null;
+
+// Build checklist items
+['tier1', 'tier2', 'tier3'].forEach((tier, ti) => {
+  const container = document.getElementById(`items-${tier}`);
+  ITEMS[tier].forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'item';
+    el.dataset.tier = ti + 1;
+    el.dataset.idx = i;
+    el.innerHTML = `
+      <div class="item-checkbox"><span class="checkmark">✓</span></div>
+      <div class="item-body">
+        <div class="item-title">${item.title}</div>
+        <div class="item-detail">${item.detail}</div>
+        <div class="item-ref">${item.ref}</div>
+      </div>
+    `;
+    el.addEventListener('click', () => toggleItem(el));
+    container.appendChild(el);
+  });
+});
+
+function toggleItem(el) {
+  el.classList.toggle('checked');
+  updateProgress();
+}
+
+function classify() {
+  const vals = ['cq1', 'cq2', 'cq3'].map(name => {
+    const checked = document.querySelector(`input[name="${name}"]:checked`);
+    return checked ? parseInt(checked.value) : null;
+  });
+
+  if (vals.some(v => v === null)) return;
+
+  const yesCount = vals.reduce((a, b) => a + b, 0);
+  const risk = yesCount >= 2 ? 'high' : yesCount === 1 ? 'medium' : 'low';
+  currentRisk = risk;
+
+  const lvl = RISK_LEVELS[risk];
+  const banner = document.getElementById('riskBanner');
+  banner.className = `risk-banner ${risk}`;
+  document.getElementById('riskLabel').textContent = lvl.label;
+  document.getElementById('riskDesc').textContent = lvl.desc;
+  document.getElementById('riskCount').textContent = lvl.count;
+
+  // Apply dimming
+  [1, 2, 3].forEach(t => {
+    document.getElementById(`tier${t}`).classList.toggle('dimmed', !lvl.tiers.includes(t));
+  });
+  document.getElementById('modelCardReminder').classList.toggle('dimmed', risk !== 'high');
+
+  document.getElementById('progressWrap').classList.remove('hidden');
+  updateProgress();
+}
+
+function updateProgress() {
+  if (!currentRisk) return;
+  const lvl = RISK_LEVELS[currentRisk];
+  const applicable = document.querySelectorAll(
+    lvl.tiers.map(t => `#tier${t} .item`).join(', ')
+  );
+  const checked = [...applicable].filter(el => el.classList.contains('checked'));
+  const total = applicable.length;
+  const pct = total > 0 ? Math.round((checked.length / total) * 100) : 0;
+
+  document.getElementById('progressLabel').textContent = `${checked.length} / ${total} items complete`;
+  document.getElementById('progressFill').style.width = `${pct}%`;
+  document.getElementById('progressFill').style.background = pct === 100 ? '#10b981' : '#2e86de';
+  document.getElementById('progressPct').textContent = `${pct}%`;
+  document.getElementById('progressPct').style.color = pct === 100 ? '#10b981' : '#2e86de';
+}
+
+// NA messages for dimmed tiers (shown inside the tier itself)
+function showNaMessages() {
+  // handled via CSS dimming — no message needed
+}
+</script>
+
+</body>
+</html>

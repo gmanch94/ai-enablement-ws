@@ -27,7 +27,12 @@ ai-enablement-ws/
 │   ├── gcp-ai-mlops-cheatsheet.md     ← GCP / Vertex AI stack
 │   ├── cross-cloud-ai-comparison.md   ← Side-by-side service mapping across all three clouds
 │   ├── cloud-ai-course-business-cheatsheet.md  ← Business/non-technical AI reference
-│   └── opensource-ai-mlops-cheatsheet.md  ← Open-source LLM, serving, RAG, eval, MLOps tools (cloud-agnostic)
+│   ├── opensource-ai-mlops-cheatsheet.md  ← Open-source LLM, serving, RAG, eval, MLOps tools (cloud-agnostic)
+│   ├── prompt-engineering-cookbook.md      ← 6 principles, 8 patterns, anti-patterns, eval bar
+│   ├── feature-engineering-cookbook.md     ← Feature taxonomy, 12 highest-ROI patterns, anti-patterns
+│   ├── llm-vendor-comparison.html          ← Interactive vendor matrix + risk-weighted scoring
+│   ├── ai-governance-framework.md          ← General AI governance (NIST AI RMF, EU AI Act, GDPR)
+│   └── ai-hr-governance-framework.md       ← HR-specific overlay (EEOC 4/5ths, GDPR Art. 22, NYC LL 144, IL AIVIA)
 │
 ├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0041)
 │   ├── ADR-0001-langgraph-multi-agent-orchestration.md
@@ -40,8 +45,15 @@ ai-enablement-ws/
 │   └── ADR-0032 – ADR-0041  (OSS:   LLM Selection, Inference, Agents, RAG, Vector DBs, Eval, Observability, MLOps, Fine-Tuning, SDKs)
 │
 ├── templates/
-│   └── adr/
-│       └── ADR-TEMPLATE.md            ← Blank ADR template
+│   ├── adr/
+│   │   └── ADR-TEMPLATE.md            ← Blank ADR template
+│   ├── eval/
+│   │   └── model-evaluation-canvas.html    ← 7-question pre-deployment model review canvas
+│   └── governance/
+│       ├── genai-risk-checklist.html       ← 3-question risk classifier + tier-scoped checklist
+│       ├── governance-playbook-general.html ← Before-you-deploy 13-item governance playbook
+│       ├── bias-audit-general.html         ← General-purpose bias audit (NIST AI RMF + EEOC)
+│       └── bias-audit-hr.html              ← HR-specific bias audit with EEOC 4/5ths calc
 │
 ├── .claude/commands/                  ← Slash commands (type /command-name in Claude Code)
 │   ├── review.md                      ← /review
@@ -120,6 +132,25 @@ Each cheatsheet covers 1st-party services and key SDKs, organised by concern:
 | [Open-Source AI/MLOps](reference/opensource-ai-mlops-cheatsheet.md) | OSS LLMs, inference engines, RAG, eval, observability, MLOps (cloud-agnostic) |
 
 Cheatsheets are verified against official release notes and event announcements (re:Invent, Google Cloud Next, Microsoft Ignite/Build). Last verified: **April 2026**.
+
+---
+
+## Operational Cookbooks, Frameworks, and Templates
+
+Architect-grade reference and templates for prompt/feature engineering, vendor selection, model evaluation, governance, and bias audit. Pair with the matching skills in the table above (e.g., `feature-engineering-cookbook.md` ↔ `/dataset-readiness` + `/eval-design`; `bias-audit-*.html` ↔ `/red-team`; `genai-risk-checklist.html` ↔ `/threat-model`).
+
+| Artifact | Type | Companion skill(s) |
+|---|---|---|
+| [`reference/prompt-engineering-cookbook.md`](reference/prompt-engineering-cookbook.md) | Cookbook | `/prompt-review`, `/eval-design` |
+| [`reference/feature-engineering-cookbook.md`](reference/feature-engineering-cookbook.md) | Cookbook | `/dataset-readiness`, `/eval-design` |
+| [`reference/llm-vendor-comparison.html`](reference/llm-vendor-comparison.html) | Interactive matrix | `/tradeoff`, ADR-0031 |
+| [`reference/ai-governance-framework.md`](reference/ai-governance-framework.md) | Framework | `/threat-model`, `/red-team`, `/model-card` |
+| [`reference/ai-hr-governance-framework.md`](reference/ai-hr-governance-framework.md) | Framework (sector overlay) | `/threat-model`, `/red-team` (HR/employment context) |
+| [`templates/eval/model-evaluation-canvas.html`](templates/eval/model-evaluation-canvas.html) | Canvas | `/eval-design`, `/review` |
+| [`templates/governance/genai-risk-checklist.html`](templates/governance/genai-risk-checklist.html) | Tier-scoped checklist | `/threat-model`, `/red-team`, `/pii-scan` |
+| [`templates/governance/governance-playbook-general.html`](templates/governance/governance-playbook-general.html) | Playbook | `/review`, `/model-card` |
+| [`templates/governance/bias-audit-general.html`](templates/governance/bias-audit-general.html) | Audit template | `/red-team`, `/eval-design` |
+| [`templates/governance/bias-audit-hr.html`](templates/governance/bias-audit-hr.html) | Audit template (HR) | `/red-team`, `/eval-design` (HR context) |
 
 ### Automated Monitoring
 

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LLM Vendor Comparison Framework</title>
+<style>
+  :root {
+    --m5: #9C27B0;
+    --m5-dark: #6A1B9A;
+    --bg: #fafafa;
+    --card: #fff;
+    --border: #e0e0e0;
+    --text: #1a1a1a;
+    --muted: #666;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; max-width: 1280px; margin: 0 auto; }
+  h1 { color: var(--m5-dark); border-bottom: 3px solid var(--m5); padding-bottom: 8px; }
+  h2 { color: var(--m5-dark); margin-top: 32px; }
+  .lede { background: var(--card); border-left: 4px solid var(--m5); padding: 16px 20px; border-radius: 4px; margin: 16px 0 24px; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); margin: 16px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--m5); color: #fff; font-weight: 600; position: sticky; top: 0; }
+  td.score { text-align: center; font-weight: 600; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; color: #fff; }
+  .closed { background: #c62828; }
+  .open { background: #2E7D32; }
+  .hybrid { background: #E65100; }
+  .controls { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 8px; margin: 16px 0; }
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 8px 0; }
+  label { font-size: 13px; color: var(--muted); min-width: 180px; }
+  select, input[type=range] { padding: 4px 8px; font-size: 13px; }
+  .verdict { background: #FFF3E0; border: 2px solid var(--m5); padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 15px; }
+  .verdict h3 { margin-top: 0; color: var(--m5-dark); }
+  button { background: var(--m5); color: #fff; border: 0; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+  button:hover { background: var(--m5-dark); }
+  @media print {
+    button, .controls { display: none; }
+    body { padding: 0; }
+    table { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<h1>LLM Vendor Comparison Framework</h1>
+<div class="lede">
+  Procurement support for enterprise leaders. Compare frontier closed-source (OpenAI, Anthropic, Google) vs. open-weight (Meta Llama, Mistral, DeepSeek) on the dimensions that matter for enterprise buying. Vendor capability data sourced from public vendor documentation; verify against current product pages before contract.
+</div>
+
+<h2>1. The 4 buying questions</h2>
+<table>
+  <tr><th>Question</th><th>Why it matters</th><th>Where to look</th></tr>
+  <tr><td><b>Will this vendor exist in 3 years?</b></td><td>Switching cost is real. Lock-in via fine-tunes, prompts, and tools.</td><td>Funding, revenue, enterprise customer count</td></tr>
+  <tr><td><b>Can I get my data back out?</b></td><td>Fine-tunes and embeddings can be vendor-trapped.</td><td>Export terms, model weight portability, BYOK</td></tr>
+  <tr><td><b>What happens to my prompts?</b></td><td>Default-on training is the silent risk.</td><td>Data retention, training opt-out, zero-retention SKU</td></tr>
+  <tr><td><b>Can I host it myself if I have to?</b></td><td>Some industries (banking, defense, healthcare) require it.</td><td>Open weights, VPC deployment, on-prem option</td></tr>
+</table>
+
+<h2>2. Vendor matrix</h2>
+<table>
+  <tr><th>Vendor / Model</th><th>Type</th><th>Strengths</th><th>Weaknesses</th><th>Pricing model</th><th>Enterprise extras</th></tr>
+  <tr><td><b>OpenAI</b><br>GPT-4o, o1, GPT-4o-mini</td><td><span class="pill closed">Closed</span></td><td>Largest ecosystem, best tool-use, multimodal mature</td><td>Vendor concentration risk; pricing has ratcheted</td><td>Per-token + tier discounts</td><td>Azure OpenAI for VPC; zero-retention SKU; SOC 2</td></tr>
+  <tr><td><b>Anthropic</b><br>Claude Sonnet 4.5, Opus, Haiku</td><td><span class="pill closed">Closed</span></td><td>Best on long-context reasoning, safer defaults, strongest constitutional posture</td><td>Smaller tool/plugin ecosystem; fewer modalities</td><td>Per-token + prompt caching discounts</td><td>AWS Bedrock + GCP Vertex; zero-retention by default; SOC 2 + HIPAA</td></tr>
+  <tr><td><b>Google</b><br>Gemini 2.5 Pro / Flash</td><td><span class="pill closed">Closed</span></td><td>Native multimodal (video, audio); very long context; integrated with GCP data</td><td>Quality has been uneven release-to-release</td><td>Per-token; aggressive Flash pricing</td><td>Vertex AI; BYOK; SOC 2; data-residency by region</td></tr>
+  <tr><td><b>Meta</b><br>Llama 3.x, 4</td><td><span class="pill open">Open weights</span></td><td>Self-host, fine-tune freely, no vendor lock-in</td><td>Trails frontier on hard reasoning; you own the ops</td><td>Free weights; pay your own GPU bill</td><td>License has revenue-cap clause (>700M MAU)</td></tr>
+  <tr><td><b>Mistral</b><br>Mistral Large, Codestral</td><td><span class="pill hybrid">Hybrid</span></td><td>Strong open-weight smalls; EU-based for data sovereignty</td><td>Frontier model is API-only</td><td>Free tier on smalls; per-token on large</td><td>Azure + self-host; EU-hosted SKU</td></tr>
+  <tr><td><b>DeepSeek</b><br>V3, R1</td><td><span class="pill open">Open weights</span></td><td>Frontier-comparable reasoning at fraction of cost; open weights</td><td>China-origin — geopolitical / data-handling concerns for some buyers</td><td>Very low per-token; free weights</td><td>Self-host the only enterprise-safe path for many buyers</td></tr>
+  <tr><td><b>AWS Bedrock / Azure / Vertex</b></td><td><span class="pill hybrid">Aggregator</span></td><td>One contract, multiple models, your existing cloud creds</td><td>Pricing premium; lag on newest models</td><td>Per-token + cloud commit credits</td><td>Existing DPA / BAA / FedRAMP coverage applies</td></tr>
+</table>
+
+<h2>3. Decision shortcut by use case</h2>
+<table>
+  <tr><th>Use case</th><th>Default pick</th><th>Why</th></tr>
+  <tr><td>Internal RAG over wiki, drafts, summaries</td><td>Claude Sonnet or GPT-4o-mini via existing cloud</td><td>Long context, cheap, zero-retention available</td></tr>
+  <tr><td>Customer-facing chatbot on regulated data</td><td>Claude or GPT-4o on VPC (Bedrock / Azure OpenAI)</td><td>BAA / SOC 2 inheritance; explicit retention controls</td></tr>
+  <tr><td>High-volume classification / extraction</td><td>GPT-4o-mini, Claude Haiku, or self-hosted Llama 3</td><td>Cost dominates at volume; smalls hit the threshold</td></tr>
+  <tr><td>Long-document analysis (contracts, filings)</td><td>Claude Sonnet or Gemini 2.5 Pro</td><td>1M+ token windows; strongest at multi-doc reasoning</td></tr>
+  <tr><td>Multimodal (images + video + audio)</td><td>Gemini 2.5 Pro or GPT-4o</td><td>Native multimodal training</td></tr>
+  <tr><td>On-prem / air-gapped deployment</td><td>Llama 3, Mistral, or DeepSeek (self-host)</td><td>Closed APIs not an option</td></tr>
+  <tr><td>Coding co-pilot</td><td>Claude Sonnet, GPT-4o, or Codestral</td><td>All three lead on code benchmarks; pick by ecosystem fit</td></tr>
+</table>
+
+<h2>4. The 12 contract terms to negotiate</h2>
+<table>
+  <tr><th>#</th><th>Term</th><th>Default vs. what to ask for</th></tr>
+  <tr><td>1</td><td>Data retention</td><td>Default 30 days → ask for zero-retention</td></tr>
+  <tr><td>2</td><td>Training on your data</td><td>Should be off by default; get it in writing</td></tr>
+  <tr><td>3</td><td>Sub-processors</td><td>Right to be notified + object to new ones</td></tr>
+  <tr><td>4</td><td>Model deprecation notice</td><td>Ask for 12-month minimum on production model versions</td></tr>
+  <tr><td>5</td><td>Pricing protection</td><td>Cap annual increase; lock per-token rate for term</td></tr>
+  <tr><td>6</td><td>Output IP</td><td>Customer owns outputs; vendor warrants no infringement</td></tr>
+  <tr><td>7</td><td>Indemnification</td><td>For copyright on outputs (now standard with frontier vendors)</td></tr>
+  <tr><td>8</td><td>SLA + uptime credits</td><td>99.9% with meaningful credits, not a press release</td></tr>
+  <tr><td>9</td><td>Region / residency</td><td>EU-only or US-only routing for regulated data</td></tr>
+  <tr><td>10</td><td>Audit rights</td><td>SOC 2 + the right to security questionnaire annually</td></tr>
+  <tr><td>11</td><td>Fine-tune portability</td><td>Right to export weights or representations on exit</td></tr>
+  <tr><td>12</td><td>Termination assistance</td><td>Read-only API access for 90 days post-termination</td></tr>
+</table>
+
+<h2>5. Risk-weighted scoring (interactive)</h2>
+<div class="controls">
+  <p>Weight each criterion 0–5 to reflect your buying priorities. Recommendation updates live.</p>
+  <div class="row"><label>Quality at frontier tasks</label><input type="range" id="w_quality" min="0" max="5" value="4"><span id="v_quality">4</span></div>
+  <div class="row"><label>Cost at scale</label><input type="range" id="w_cost" min="0" max="5" value="3"><span id="v_cost">3</span></div>
+  <div class="row"><label>Data privacy / control</label><input type="range" id="w_privacy" min="0" max="5" value="4"><span id="v_privacy">4</span></div>
+  <div class="row"><label>Self-host / portability</label><input type="range" id="w_portable" min="0" max="5" value="2"><span id="v_portable">2</span></div>
+  <div class="row"><label>Ecosystem / tool maturity</label><input type="range" id="w_ecosystem" min="0" max="5" value="3"><span id="v_ecosystem">3</span></div>
+  <div class="row"><label>Multimodal native</label><input type="range" id="w_multimodal" min="0" max="5" value="2"><span id="v_multimodal">2</span></div>
+  <button onclick="window.print()">Print / PDF</button>
+</div>
+
+<table id="score_table">
+  <tr><th>Vendor</th><th>Quality</th><th>Cost</th><th>Privacy</th><th>Portable</th><th>Ecosystem</th><th>Multimodal</th><th>Weighted</th></tr>
+</table>
+
+<div class="verdict" id="verdict">Set weights to see recommendation.</div>
+
+<h2>6. Anti-patterns</h2>
+<table>
+  <tr><th>Pattern</th><th>Why it fails</th></tr>
+  <tr><td>Sole-source on the cheapest model</td><td>Pricing changes; quality regresses release-to-release. Always have a fallback prompt-tested on a second vendor.</td></tr>
+  <tr><td>"We'll fine-tune so we can switch later"</td><td>Fine-tunes are not portable across vendors. Prompts + RAG are.</td></tr>
+  <tr><td>"It's just an API call"</td><td>Tool-use, function-calling, and structured output formats differ. Real switching cost is in the surrounding code.</td></tr>
+  <tr><td>Ignoring the cloud-aggregator path</td><td>Bedrock / Vertex / Azure OpenAI inherit your existing DPA, BAA, and procurement. Often faster to ship than a direct contract.</td></tr>
+  <tr><td>Buying frontier when small would do</td><td>Mid-tier models (GPT-4o-mini, Claude Haiku) hit the threshold for ~80% of enterprise tasks at a fraction of the cost. Always benchmark mid-tier first; escalate to frontier only when evals demand it.</td></tr>
+</table>
+
+<h2>Companion skills + artifacts</h2>
+<table>
+  <tr><th>Pair with</th><th>Why</th></tr>
+  <tr><td><code>/tradeoff</code> skill</td><td>Structured tradeoff analysis (cost vs quality vs portability vs privacy) for the final pick</td></tr>
+  <tr><td><code>genai-risk-checklist.html</code> (templates/governance/)</td><td>Pre-deployment risk check after vendor selection</td></tr>
+  <tr><td><code>prompt-engineering-cookbook.md</code> (reference/)</td><td>Patterns that work across vendors; build vendor-neutral prompts</td></tr>
+  <tr><td><code>/threat-model</code> skill</td><td>Threat-model the vendor + the surrounding system before signing</td></tr>
+  <tr><td>ADR per material vendor decision</td><td>Use <code>/adr</code> skill — capture the why, not just the what</td></tr>
+</table>
+
+<script>
+// Per-vendor capability scores (0-5)
+const vendors = [
+  { name: "OpenAI (GPT-4o family)",   quality: 5, cost: 3, privacy: 4, portable: 1, ecosystem: 5, multimodal: 5 },
+  { name: "Anthropic (Claude)",       quality: 5, cost: 3, privacy: 5, portable: 1, ecosystem: 4, multimodal: 3 },
+  { name: "Google (Gemini)",          quality: 4, cost: 4, privacy: 4, portable: 1, ecosystem: 4, multimodal: 5 },
+  { name: "Meta Llama (self-host)",   quality: 4, cost: 5, privacy: 5, portable: 5, ecosystem: 3, multimodal: 3 },
+  { name: "Mistral",                  quality: 3, cost: 4, privacy: 5, portable: 4, ecosystem: 3, multimodal: 2 },
+  { name: "DeepSeek (self-host)",     quality: 4, cost: 5, privacy: 5, portable: 5, ecosystem: 2, multimodal: 2 },
+];
+
+const sliders = ["quality","cost","privacy","portable","ecosystem","multimodal"];
+
+function recompute() {
+  const w = {};
+  sliders.forEach(s => {
+    w[s] = +document.getElementById("w_" + s).value;
+    document.getElementById("v_" + s).textContent = w[s];
+  });
+  const totalW = sliders.reduce((a,s) => a + w[s], 0) || 1;
+  const rows = vendors.map(v => {
+    const score = sliders.reduce((a,s) => a + v[s] * w[s], 0) / totalW;
+    return { v, score };
+  }).sort((a,b) => b.score - a.score);
+
+  const t = document.getElementById("score_table");
+  t.innerHTML = "<tr><th>Vendor</th><th>Quality</th><th>Cost</th><th>Privacy</th><th>Portable</th><th>Ecosystem</th><th>Multimodal</th><th>Weighted</th></tr>";
+  rows.forEach((r,i) => {
+    const tr = t.insertRow();
+    tr.innerHTML = `<td><b>${i+1}. ${r.v.name}</b></td>` +
+      sliders.map(s => `<td class="score">${r.v[s]}</td>`).join("") +
+      `<td class="score">${r.score.toFixed(2)}</td>`;
+    if (i === 0) tr.style.background = "#F3E5F5";
+  });
+
+  const top = rows[0].v.name;
+  document.getElementById("verdict").innerHTML =
+    `<h3>Recommendation: ${top}</h3>` +
+    `Highest weighted score given your priorities. Validate by running your top 3 prompts against the top 2 vendors before committing — published benchmarks rarely match your task distribution.`;
+}
+
+sliders.forEach(s => document.getElementById("w_" + s).addEventListener("input", recompute));
+recompute();
+</script>
+</body>
+</html>
