@@ -1,0 +1,47 @@
+{
+  "eval_set_id": "argus_flow_a",
+  "name": "Argus — Flow A: Catalog Integrity",
+  "description": "Core eval cases for Argus orchestrator. Case 2 (hazelnut) requires Slack + ngrok running for full end-to-end — tool trajectory validates first two agents only.",
+  "eval_cases": [
+    {
+      "eval_id": "argus_clean_item",
+      "conversation": [
+        {
+          "invocation_id": "inv_clean_1",
+          "user_content": {
+            "parts": [
+              {
+                "text": "{\"item_name\": \"Organic Brand Peanut Butter\", \"sku_id\": \"SKU-PB-EVAL-001\", \"brand\": \"Organic Brand\", \"department\": \"Pantry\", \"sub_department\": \"Nut Butters\", \"unit_price\": 4.99, \"allergen_statement\": \"Contains: Peanuts\", \"country_of_origin\": \"USA\"}"
+              }
+            ]
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "app",
+        "user_id": "eval_user",
+        "state": {}
+      }
+    },
+    {
+      "eval_id": "argus_flow_a_hazelnut_missing_allergen",
+      "conversation": [
+        {
+          "invocation_id": "inv_hazelnut_1",
+          "user_content": {
+            "parts": [
+              {
+                "text": "{\"item_name\": \"Organic Brand Hazelnut Spread\", \"sku_id\": \"SKU-HAZ-EVAL-001\", \"brand\": \"Organic Brand\", \"department\": \"Pantry\", \"sub_department\": \"Spreads\", \"unit_price\": 6.49, \"country_of_origin\": \"Germany\"}"
+              }
+            ]
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "app",
+        "user_id": "eval_user",
+        "state": {}
+      }
+    }
+  ]
+}

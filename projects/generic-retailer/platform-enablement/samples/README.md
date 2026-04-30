@@ -7,7 +7,7 @@ Use them to understand how to complete each artifact for a real client engagemen
 
 ## Fictional Client: MidWest Grocery
 
-All samples use a fictional retailer so examples are concrete without being Kroger.
+All samples use a fictional retailer so examples are concrete without referencing any real company.
 
 | Placeholder | Sample Value |
 |---|---|

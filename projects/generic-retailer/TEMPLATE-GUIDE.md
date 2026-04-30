@@ -28,11 +28,11 @@ The OKR ranges are directional; calibrate once baselines are established.
 
 ## Placeholder Index
 
-| Placeholder | What to fill | Example (Kroger) |
+| Placeholder | What to fill | Example |
 |---|---|---|
-| `[RETAILER]` | Company name | Kroger |
-| `[RETAILER_DIGITAL]` | Digital storefront (website / app) | kroger.com / Kroger app |
-| `[LOYALTY_PROGRAM]` | Name of the loyalty programme | Kroger Plus |
+| `[RETAILER]` | Company name | Acme Grocery |
+| `[RETAILER_DIGITAL]` | Digital storefront (website / app) | acme.com / Acme app |
+| `[LOYALTY_PROGRAM]` | Name of the loyalty programme | Acme Rewards |
 | `[LOYALTY_SCALE]` | Loyalty programme scale (households) | 60M+ households |
 | `[ML_PARTNER]` | Analytics subsidiary or ML vendor | 84.51° |
 | `[ML_PARTNER_TYPE]` | Subsidiary / third-party vendor / internal platform | Subsidiary |
@@ -56,7 +56,7 @@ The OKR ranges are directional; calibrate once baselines are established.
 | `[AGENT_IDENTITY]` | Managed identity system for agents | Entra Agent ID |
 | `[ERP_SYSTEM]` | ERP system for order submission | SAP / Oracle |
 | `[WMS_SYSTEM]` | Warehouse management system | [Client WMS] |
-| `[MEDIA_NETWORK]` | Retail media network name | KPM (Kroger Precision Marketing) |
+| `[MEDIA_NETWORK]` | Retail media network name | AMP (Acme Marketing Platform) |
 | `[COMPETITOR_MEDIA]` | Competing retail media networks | Walmart Connect, Amazon Ads |
 | `[PHARMACY_PRESENT]` | Does retailer have a pharmacy? (Yes/No) | Yes |
 | `[DATE]` | Document date | 2026-04-18 |
@@ -91,12 +91,12 @@ Use this table to substitute cloud-specific service names when the client's prim
 
 Choose the pattern that matches the client's situation. Update architecture sections in all PRDs accordingly.
 
-### Pattern A — Analytics Subsidiary (e.g. 84.51° / Kroger)
+### Pattern A — Analytics Subsidiary
 
 - [ML_PARTNER] is a wholly-owned or majority-owned subsidiary
 - Signals available via internal APIs and pub/sub topics
 - Data governance boundary still exists — treat as a managed third party
-- Fallback required: [ML_PARTNER] has its own roadmap; Kroger's capability must stand independently
+- Fallback required: [ML_PARTNER] has its own roadmap; the retailer's capability must stand independently
 
 **Implication for PRDs:** Include [ML_PARTNER] API adapters as tool calls; build fallback to internal signals if [ML_PARTNER] API unavailable.
 
