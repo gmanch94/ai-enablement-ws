@@ -19,14 +19,15 @@ requires-python = ">=3.11,<3.14"
 
 [dependency-groups]
 dev = [
-    "pytest>=8.3.4,<9.0.0",
-    "pytest-asyncio>=0.23.8,<1.0.0",
+    "pytest>=9.0.3,<10.0.0",
+    "pytest-asyncio>=1.0,<2.0.0",
     "nest-asyncio>=1.6.0,<2.0.0",
 ]
 
 [project.optional-dependencies]
 eval = [
     "google-adk[eval]>=1.15.0,<2.0.0",
+    "litellm>=1.83.7",
 ]
 lint = [
     "ruff>=0.4.6,<1.0.0",
