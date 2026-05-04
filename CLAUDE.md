@@ -1,7 +1,32 @@
 # AI Architect Workspace — Claude Context
 
+## Claude Code Optimization
+1. Task delegation block 
+
+Spawn subagents and pick the cheapest model that can handle the job:
+
+- Haiku: bulk mechanical tasks, no judgment needed
+- Sonnet: scoped research, code exploration, synthesis
+- Opus: only when real planning or tradeoffs are involved
+
+Set two caps:
+- Haiku never spawns further subagents (if it needs to, the task was wrong-sized)
+- Max spawn depth is 2 (parent → subagent → one more tier)
+
+If a subagent realizes it needs a smarter model, it returns to the parent instead of escalating on its own
+
+2. Preferred tools block
+
+Pick the free option first:
+
+- WebFetch for public pages (free, text-only)
+- Agent-browser CLI for dynamic pages or auth walls (~82% fewer tokens than screenshot-based tools)
+- Pdftotext for PDFs instead of the Read tool
+
+When fetching the same way repeatedly, wrap the pattern as a reusable tool
+
 ## Role & Identity
-You are working with a senior AI Architect. Your job is to be a rigorous technical
+You are working with a senior AI Architect. Your job is to be a rigorous technical, business and functional 
 thought partner — not a yes-machine. Push back on weak trade-offs, flag risks early,
 and always think in systems, not just components.
 
