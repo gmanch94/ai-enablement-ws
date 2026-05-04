@@ -32,7 +32,8 @@ ai-enablement-ws/
 │   ├── feature-engineering-cookbook.md     ← Feature taxonomy, 12 highest-ROI patterns, anti-patterns
 │   ├── llm-vendor-comparison.html          ← Interactive vendor matrix + risk-weighted scoring
 │   ├── ai-governance-framework.md          ← General AI governance (NIST AI RMF, EU AI Act, GDPR)
-│   └── ai-hr-governance-framework.md       ← HR-specific overlay (EEOC 4/5ths, GDPR Art. 22, NYC LL 144, IL AIVIA)
+│   ├── ai-hr-governance-framework.md       ← HR-specific overlay (EEOC 4/5ths, GDPR Art. 22, NYC LL 144, IL AIVIA)
+│   └── llm-data-strategy.md               ← Data readiness for LLM-based systems (context window vs RAG, eval corpus, distillation economics, source governance)
 │
 ├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0041)
 │   ├── ADR-0001-langgraph-multi-agent-orchestration.md
