@@ -2,7 +2,7 @@
 
 > **Audience:** AI Architects, MLOps Engineers, AI Enablement Leads
 > **Scope:** Azure / Microsoft 1st-party services + key Microsoft SDKs used in AIEnablement and MLOps code
-> **Last updated:** 2026-04-17 — verified against Microsoft Foundry April 2026 docs, Ignite 2025, and Dec 2025–Jan 2026 release notes
+> **Last updated:** 2026-05-05 — verified against Microsoft Foundry April 2026 docs, Build 2026 announcements, Ignite 2025, and Dec 2025–Jan 2026 release notes
 > ⚠️ **AzureML SDK v1 EOL: June 30, 2026** — migrate to `azure-ai-projects` v2
 > ⚠️ **Prompt Flow SDK sunset** — migration to Microsoft Framework Workflows, window opens January 2027
 
@@ -110,6 +110,8 @@ graph TB
 | **Foundry Tools** *(formerly Azure AI Services)* | Multi-modal AI capabilities — Vision, Speech, Language, Document Intelligence, Azure Content Understanding (GA), Live Interpreter (GA), LLM Speech (Preview) | Pre-built AI processing for documents, audio, video, images — no custom training required | [docs](https://learn.microsoft.com/en-us/azure/ai-services/) |
 | **Azure AI Search** | Managed search with vector, semantic, and hybrid retrieval | RAG pipelines — chunking, indexing, and low-latency retrieval for LLM grounding | [docs](https://learn.microsoft.com/en-us/azure/search/) |
 | **Model Router** *(GA)* | Automatic model selection based on prompt complexity and cost targets | Optimise token cost vs quality without manual routing logic — routes across OpenAI, Claude, Mistral, Phi | [docs](https://learn.microsoft.com/en-us/azure/ai-foundry/) |
+| **MAI Models** *(Preview)* | Microsoft 1st-party model family: MAI-Transcribe-1 (speech-to-text), MAI-Voice-1 (text-to-speech), MAI-Image-2 (text-to-image) | Native Azure speech/image capabilities without OpenAI dependency — hosted in Foundry, billed via Azure | [docs](https://learn.microsoft.com/en-us/azure/ai-services/) |
+| **Fireworks Models on Foundry** *(Preview)* | Deploy Fireworks AI models (including custom model imports) via Microsoft Foundry model catalog | Access high-throughput OSS models and private fine-tunes via Foundry managed inference — same governance layer as 1st-party models | [docs](https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/enable-fireworks-models) |
 
 ---
 
@@ -124,6 +126,8 @@ graph TB
 | **Agent-to-Agent (A2A) Tool** *(Preview)* | Lets Foundry agents call any A2A-protocol endpoint with explicit auth and clean call/response semantics | Multi-agent orchestration — delegate sub-tasks to specialist agents across frameworks or clouds | [docs](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/agent-to-agent) |
 | **Foundry MCP Server** *(Preview)* | Cloud-hosted Model Context Protocol server at `mcp.ai.azure.com` with Entra authentication | Give agents structured access to 1,400+ enterprise business system integrations via MCP | [docs](https://learn.microsoft.com/en-us/azure/foundry/mcp/available-tools) |
 | **Foundry IQ** | Knowledge engine grounding agents in enterprise data — SharePoint, OneLake, ADLS Gen2, and web, governed by Purview | Single managed knowledge base for agent grounding — replaces ad-hoc RAG wiring | [docs](https://learn.microsoft.com/en-us/azure/foundry/) |
+| **Voice Live API** *(Preview)* | Real-time, voice-first agentic experiences via Foundry Agent Service — multimodal, streaming audio in/out | Build voice-driven agents without external STT/TTS pipelines; integrates directly with Foundry Agent Service | [docs](https://learn.microsoft.com/en-us/azure/foundry/agents/) |
+| **Structured Inputs for Agents** *(Preview)* | Customise agent behaviour at runtime via typed structured inputs — no prompt string manipulation required | Pass structured context (user role, tenant config, feature flags) into agents safely at invocation time | [docs](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/structured-inputs) |
 
 ---
 
@@ -159,7 +163,7 @@ graph TB
 | **Azure Container Apps** | Serverless container platform with autoscaling to zero | Low-ops inference APIs, event-driven scaling, sidecar-based model serving | [docs](https://learn.microsoft.com/en-us/azure/container-apps/) |
 | **Azure Batch** | Managed large-scale parallel and distributed compute | Distributed training jobs, large-scale batch inference, hyperparameter sweeps | [docs](https://learn.microsoft.com/en-us/azure/batch/) |
 | **GPU VMs (NC/ND-series)** | Bare-metal GPU compute — A100, H100, V100 SKUs | Custom training workloads requiring full GPU control (PyTorch, DeepSpeed) | [docs](https://learn.microsoft.com/en-us/azure/virtual-machines/sizes-gpu) |
-| **Foundry Local** *(Preview)* | On-device AI execution — run Foundry models locally or at edge | Edge inference, offline scenarios, developer testing without cloud round-trips | [docs](https://learn.microsoft.com/en-us/azure/foundry-local/) |
+| **Foundry Local** *(Preview)* | On-device AI execution — run Foundry models locally or at edge. ⚠️ **Breaking SDK change:** legacy SDK deprecated — migrate to new Foundry Local SDK ([migration guide](https://learn.microsoft.com/en-us/azure/foundry-local/reference/reference-sdk-migration)) | Edge inference, offline scenarios, developer testing without cloud round-trips | [docs](https://learn.microsoft.com/en-us/azure/foundry-local/) |
 
 ---
 
@@ -200,6 +204,7 @@ graph TB
 | **Azure Policy** | Compliance guardrails enforced at resource level | Restrict GPU SKUs, enforce private endpoints, mandate tagging for cost allocation | [docs](https://learn.microsoft.com/en-us/azure/governance/policy/) |
 | **Microsoft Entra ID** | Identity and access management — RBAC, service principals, managed identities, **Entra Agent ID** | Workload identity for ML compute, RBAC for model registry, SSO for Foundry; Agent ID governs agent actions | [docs](https://learn.microsoft.com/en-us/entra/identity/) |
 | **Azure Key Vault** *(+ BYO Key Vault GA)* | Secrets, keys, and certificates management; BYO Key Vault for compliance-regulated deployments | Store API keys, connection strings, model signing keys; bring your own vault for regulated workloads | [docs](https://learn.microsoft.com/en-us/azure/key-vault/) |
+| **Foundry Agent Service Private Networking** *(Preview)* | BYO VNet support for Foundry Agent Service — no public egress, container/subnet injection, private endpoints | Deploy agents in fully private network topologies for regulated enterprise environments; eliminates public data plane exposure | [docs](https://learn.microsoft.com/en-us/azure/foundry/how-to/configure-private-link) |
 
 ---
 
@@ -211,6 +216,7 @@ graph TB
 | **Azure DevOps** | CI/CD pipelines, repos, boards, artifact feeds | MLOps pipelines — automated training, evaluation gates, model promotion workflows | [docs](https://learn.microsoft.com/en-us/azure/devops/) |
 | **GitHub Actions** *(Azure-integrated)* | Git-native CI/CD with Azure ML and Foundry actions | Trigger retraining on data push, deploy agents on PR merge, run eval suites on schedule | [docs](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-github-actions-machine-learning) |
 | **Azure Cost Management** *(Tag-based AI attribution — GA)* | Cloud spend visibility with tag-based cost attribution and budget alerts | Track LLM token costs, training compute spend, and agent session costs per team/project | [docs](https://learn.microsoft.com/en-us/azure/cost-management-billing/) |
+| **Azure Developer CLI Fine-Tuning Extension** *(Preview)* | AZD extension for fine-tuning AI models in Microsoft Foundry — CLI-native, no portal required | Integrate fine-tuning into existing AZD-based IaC and CI/CD pipelines; scriptable and repeatable | [docs](https://learn.microsoft.com/en-us/azure/foundry/fine-tuning/fine-tune-cli) |
 
 ---
 
@@ -333,3 +339,10 @@ graph TB
 | **Microsoft Agent Framework 1.0 GA** (Apr 2026) | Replaces separate Semantic Kernel + AutoGen usage for new projects |
 | **Prompt Flow SDK sunset** | Migrate to Microsoft Framework Workflows before January 2027 |
 | **`azure-ai-projects` v2 beta** | New unified SDK — consolidates agents, inference, evals, memory into one package |
+| **MAI Models (Preview)** | Microsoft 1st-party speech (MAI-Transcribe-1), voice (MAI-Voice-1), and image (MAI-Image-2) models now in Foundry catalog |
+| **Voice Live API (Preview)** | Real-time voice-first agents via Foundry Agent Service — no external STT/TTS pipeline needed |
+| **Structured Inputs for Agents (Preview)** | Safe runtime parameterisation of agent behaviour without prompt string manipulation |
+| **Fireworks Models on Foundry (Preview)** | Fireworks AI models (incl. custom imports) now deployable via Foundry model catalog |
+| **Foundry Local SDK breaking change** | Legacy SDK deprecated — migrate to new Foundry Local SDK using official migration guide |
+| **Foundry Agent Service: BYO VNet (Preview)** | Private networking now supported — no public egress for regulated enterprise agent deployments |
+| **Azure Developer CLI Fine-Tuning Extension (Preview)** | AZD-native fine-tuning workflow for Foundry models — no portal required |
