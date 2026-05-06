@@ -2,7 +2,7 @@
 
 > **Audience:** AI Architects, MLOps Engineers, Platform Engineers
 > **Scope:** Open-source tools and frameworks for LLM serving, orchestration, RAG, evaluation, observability, and MLOps — cloud-agnostic and self-hostable
-> **Last updated:** 2026-04-19 — verified against project releases, GitHub activity, and community benchmarks
+> **Last updated:** 2026-05-05 — verified against project releases, GitHub activity, HuggingFace blog, and community benchmarks
 > **Complements:** [AWS](aws-ai-mlops-cheatsheet.md) · [Azure](azure-ai-mlops-cheatsheet.md) · [GCP](gcp-ai-mlops-cheatsheet.md) · [Cross-Cloud](cross-cloud-ai-comparison.md)
 
 ---
@@ -15,7 +15,7 @@ graph TB
         LLM3[Llama 3.x]
         MISTR[Mistral / Mixtral]
         QWEN[Qwen 2.5]
-        DS[DeepSeek-V3]
+        DS[DeepSeek-V4]
         PHI[Phi-3 / Phi-4]
     end
 
@@ -50,7 +50,7 @@ graph TB
         LMEH[LM Eval Harness]
         PHX[Phoenix]
         OPIK[Opik]
-        MLF[MLflow 3.0]
+        MLF[MLflow 3.x]
     end
 
     subgraph OBS["📊 Observability"]
@@ -92,11 +92,15 @@ graph TB
 
 | Model | Parameters | Strengths | License | Docs / Hub |
 |---|---|---|---|---|
-| **Llama 3.3** | 8B, 70B, 405B | Strong reasoning, instruction following, long context (128K) | Llama Community License | [hub](https://huggingface.co/meta-llama) |
-| **Mistral Small 3** | 24B | Conversational agents, function calling, fast inference | Apache 2.0 | [hub](https://huggingface.co/mistralai) |
+| **Llama 4 Scout** *(Apr 2026)* | 109B total MoE (16 experts) | 10M token context window, strong multimodal reasoning, native MoE efficiency | Llama Community License | [hub](https://huggingface.co/meta-llama) |
+| **Llama 4 Maverick** *(Apr 2026)* | MoE (size TBC) | Higher-capability tier in Llama 4 family; enterprise-grade reasoning and instruction following | Llama Community License | [hub](https://huggingface.co/meta-llama) |
+| **Llama 3.3** | 8B, 70B, 405B | Strong reasoning, instruction following, long context (128K) — predecessor to Llama 4 | Llama Community License | [hub](https://huggingface.co/meta-llama) |
+| **Mistral Large 3** *(Apr 2026)* | 675B total MoE (41B active) | High-capability sparse MoE; multilingual; enterprise-grade reasoning at MoE efficiency | Apache 2.0 | [hub](https://huggingface.co/mistralai) |
+| **Mistral Small 3** | 24B | Conversational agents, function calling, fast inference — best single-server Mistral | Apache 2.0 | [hub](https://huggingface.co/mistralai) |
 | **Mixtral 8x22B** | 141B (MoE, 39B active) | High-throughput MoE, multilingual, code generation | Apache 2.0 | [hub](https://huggingface.co/mistralai) |
-| **Qwen 2.5 / Qwen3** | 7B–72B (dense) + 235B MoE | Multilingual, coding (Qwen2.5-Coder), long context (1M) | Apache 2.0 | [hub](https://huggingface.co/Qwen) |
-| **DeepSeek-V3** | 671B MoE (37B active) | Frontier reasoning, agentic workloads, cost-efficient MoE | MIT | [hub](https://huggingface.co/deepseek-ai) |
+| **Qwen 3.5** *(Mar 2026)* | 7B–72B dense + 235B MoE; Qwen 2.5-Max ~300B+ | Multilingual, coding, 1M context; Qwen 2.5-Max benchmarks with GPT-4o; full param-size range now available | Apache 2.0 | [hub](https://huggingface.co/Qwen) |
+| **DeepSeek-V4-Pro** *(Apr 2026)* | 1.6T total MoE (49B active) | Frontier reasoning, agentic workloads, 1M token context — successor to V3 | MIT | [hub](https://huggingface.co/deepseek-ai) |
+| **DeepSeek R2** *(new)* | TBC | Reasoning specialist — 79.7% AIME 2025 (vs V3's 39.4%), 72.0% GPQA Diamond; top OSS reasoning model | MIT | [hub](https://huggingface.co/deepseek-ai) |
 | **Phi-4** | 14B | Strong reasoning at small scale, distillation research | MIT | [hub](https://huggingface.co/microsoft) |
 | **Gemma 3** | 1B–27B | Efficient on-device + server inference, multimodal | Gemma Terms of Use | [hub](https://huggingface.co/google) |
 | **Command R+** (Cohere) | 104B | Enterprise RAG, long context (128K), grounded generation | CC-BY-NC | [hub](https://huggingface.co/CohereForAI) |
@@ -124,7 +128,7 @@ graph TB
 |---|---|---|---|---|
 | **LangChain** | Modular LLM application framework — chains, agents, tools, memory, callbacks | Standard integration layer for LLM pipelines; extensive tool/loader ecosystem | Stable | [docs](https://python.langchain.com/) |
 | **LangGraph** | Graph-based stateful agent orchestration — nodes, edges, checkpointing, human-in-the-loop | Production multi-step agents with explicit state machines; controllable loops and branching | Stable | [docs](https://langchain-ai.github.io/langgraph/) |
-| **LlamaIndex** | Data framework for LLM applications — indexing, retrieval, agents, query pipelines | RAG-native agents; multi-modal data ingestion; strong structured data support | Stable | [docs](https://docs.llamaindex.ai/) |
+| **LlamaIndex** | Data framework for LLM applications — indexing, retrieval, agents, query pipelines. ⚠️ **0.13.0 breaking:** `FunctionCallingAgent`, `ReActAgent`, `AgentRunner` deprecated — refactor before upgrading | RAG-native agents; multi-modal data ingestion; strong structured data support | Stable | [docs](https://docs.llamaindex.ai/) |
 | **Haystack** | Production-grade NLP / AI pipeline framework — modular components, REST API first | Enterprise RAG pipelines; semantic search; strong component isolation for testability | Stable | [docs](https://docs.haystack.deepset.ai/) |
 | **CrewAI** | Role-based multi-agent framework — crews, tasks, agents with personas and memory | Collaborative agentic workflows; business process automation with multiple specialist agents | Active | [docs](https://docs.crewai.com/) |
 | **AutoGen** (Microsoft) | Conversational multi-agent framework — code execution, tool use, group chat | Research and complex reasoning workflows; code-writing agent teams | Active | [docs](https://microsoft.github.io/autogen/) |
@@ -168,7 +172,7 @@ graph TB
 | **LM Evaluation Harness** (EleutherAI) | Standardised benchmarking — 60+ tasks (MMLU, HellaSwag, Big-Bench, TruthfulQA) | Reproducible model comparison; custom task addition; used by most model release papers | Stable | [github](https://github.com/EleutherAI/lm-evaluation-harness) |
 | **Phoenix** (Arize) | Self-hosted LLM observability + evaluation — tracing, built-in evaluators, prompt versioning | Integrated eval + observability; open-source core (MIT); no vendor lock-in | Active | [docs](https://docs.arize.com/phoenix) |
 | **Opik** (Comet) | Agent reliability evaluation — complex agentic workflow monitoring and testing | Designed for multi-step agent evaluation; tracks tool call sequences and outcomes | Active | [docs](https://www.comet.com/docs/opik/) |
-| **MLflow 3.0** | Evolved to GenAI evals — hallucination detection, LLM-as-a-judge, trace-based evaluation | Unified eval + experiment tracking + model registry; strong MLOps integration | Stable | [docs](https://mlflow.org/docs/latest/llms/index.html) |
+| **MLflow 3.x** *(current: 3.10.1)* | GenAI evals — hallucination detection, LLM-as-a-judge, trace-based eval; multi-workspace support, cost tracking for traces, GenAI Overview dashboard, MemAlign eval algorithm, Claude Code SDK tracing | Unified eval + experiment tracking + model registry; treats prompts and agents as first-class citizens | Stable | [docs](https://mlflow.org/docs/latest/llms/index.html) |
 | **RAGAS** | RAG-specific evaluation — faithfulness, answer relevancy, context precision/recall | Purpose-built metrics for RAG pipelines; integrates with LangChain and LlamaIndex | Active | [docs](https://docs.ragas.io/) |
 
 ---
@@ -192,7 +196,7 @@ graph TB
 |---|---|---|---|---|
 | **MLflow** | End-to-end ML lifecycle — experiment tracking, model registry, GenAI eval, serving | 20K+ GitHub stars; lingua franca of experiment tracking; MLflow 3.0 adds LLM tracing and evals | Stable | [docs](https://mlflow.org/docs/latest/) |
 | **ZenML** | Cloud-agnostic ML pipeline framework — stack components, team scaling, audit trails (Apache 2.0 core) | Portable pipelines across any cloud or local; strong governance and reproducibility story | Active | [docs](https://docs.zenml.io/) |
-| **Kubeflow** | Kubernetes-native ML platform — Pipelines, Training Operator, Katib, KFServing/KServe | Multi-framework, multi-cloud ML at scale; strong when team already operates Kubernetes | Stable | [docs](https://www.kubeflow.org/docs/) |
+| **Kubeflow** *(1.10)* | Kubernetes-native ML platform — Pipelines, Training Operator, Katib, KServe; **1.10 adds LLM fine-tuning support** | Multi-framework, multi-cloud ML at scale; LLM fine-tuning jobs now first-class in 1.10 | Stable | [docs](https://www.kubeflow.org/docs/) |
 | **Flyte** | Type-safe Kubernetes-native workflow engine — versioned tasks, data lineage, reproducibility | Complex ML workflows requiring strict reproducibility; strong Python-native API | Active | [docs](https://docs.flyte.org/) |
 | **Metaflow** (Netflix) | Python/R-native ML project management — local dev → cloud scale with minimal code changes | Data science teams wanting cloud scale without Kubernetes complexity | Active | [docs](https://docs.metaflow.org/) |
 | **Apache Airflow** | Mature DAG-based workflow orchestrator — rich operator ecosystem, 10K+ plugins | Orchestrating ML pipelines with external dependencies (DBs, APIs, data warehouses) | Stable | [docs](https://airflow.apache.org/docs/) |
@@ -229,7 +233,8 @@ graph TB
 
 | Architectural Concern | Primary Tools |
 |---|---|
-| LLM selection (self-hosted) | Llama 3.3 · Mistral Small 3 · DeepSeek-V3 · Qwen 2.5 |
+| LLM selection (self-hosted) | Llama 4 Scout/Maverick · Mistral Small 3 · DeepSeek-V4-Pro · Qwen 3.5 |
+| LLM selection (reasoning) | DeepSeek R2 · Llama 4 Maverick |
 | Production LLM serving | vLLM · SGLang |
 | Local / edge inference | Ollama · llama.cpp · KTransformers |
 | NVIDIA GPU-optimised serving | TensorRT-LLM |
