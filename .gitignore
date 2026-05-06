@@ -6,6 +6,11 @@
 context/*
 !context/claude-rollout-plan.md
 !context/.gitkeep
+!context/MEMORY.md
+!context/feedback_*.md
+
+# Local workspace — never push
+scratch/
 
 # Per-project folders — gitignore all content except project READMEs
 projects/retailer-x/*

@@ -1,5 +1,17 @@
 # AI Architect Workspace — Claude Context
 
+## Session-start protocol
+
+Before any tool calls beyond basic orientation:
+
+1. Read [`scratch/NEXT_SESSION.md`](scratch/NEXT_SESSION.md) — resume bookmark: HEAD, branch, what landed last session, open items, things NOT to do without explicit instruction
+2. Read [`LESSONS_LEARNED.md`](LESSONS_LEARNED.md) — process lessons from prior sessions; re-reading prevents repeat mistakes
+3. Read `context/MEMORY.md` — active project briefs and feedback
+4. `git status` + `git log --oneline -5` — confirm state matches the bookmark
+5. Only then ask the user what they want to work on — do not start anything proactively
+
+---
+
 ## Claude Code Optimization
 1. Task delegation block 
 
@@ -97,6 +109,38 @@ Run these with `/skill-name` in any session. Skills live in `.claude/skills/<nam
 | `/demo-prep` | Generate + verify a pre-demo checklist (env, gcloud, embedding swap, ngrok, dry-run) tailored to project shape |
 | `/checkpoint` | Mid-task durability — dump current state and next-step file before context fills, so next session resumes cleanly |
 | `/project-status` | Refresh a project's status memory from primary sources (code, tests, git) — never trust the existing memory |
+
+## Sprint workflow
+
+For any non-trivial task:
+
+1. **Assumptions** — surface unstated assumptions before writing code or artifacts; use `/office-hours` if needed
+2. **Plan** — agree on approach; use `/tradeoff` if options need evaluating, `/adr` if a decision needs recording
+3. **Implement** — build against the agreed plan; invoke Confusion Protocol if new ambiguity surfaces
+4. **Review** — run `/review` before opening a PR
+5. **Ship** — feature branch + PR; no direct commits to `main`
+6. **Retro** — run `/retro` at end of session; write new lessons to LESSONS_LEARNED.md
+
+Skip steps only with explicit agreement.
+
+**Confusion Protocol** — when facing an architectural decision or ambiguous requirement, stop and surface the assumption explicitly before proceeding. Never guess on design decisions. Ask one targeted question instead of producing output that may be wrong.
+
+---
+
+## Things to avoid
+
+- Don't commit directly to `main` — all changes via feature branch + PR
+- Don't push to remote without explicit user instruction
+- Don't use long PowerShell here-strings for commit messages — hits 948-byte parse limit; use inline `-m "..."` instead
+- Don't update context/ files with sensitive client data and then push — context/* is gitignored for a reason
+
+**Four failure modes to guard against (Karpathy):**
+- **Wrong assumptions** — don't guess at intent; surface the assumption and ask
+- **Overcomplexity** — don't add abstraction, generalization, or flexibility the task doesn't require
+- **Orthogonal edits** — don't touch code outside the stated task scope; no drive-by cleanup
+- **Imperative over declarative** — prefer describing the desired outcome over prescribing steps
+
+---
 
 ## Response Style
 - Lead with the most important finding or risk
