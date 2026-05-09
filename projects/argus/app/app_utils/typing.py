@@ -19,15 +19,21 @@ from typing import (
 from pydantic import (
     BaseModel,
     Field,
+    confloat,
 )
+
+# M8 + C3: bounded score (no NaN/Inf) and capped text length.
+# Pre-fix: `score: int | float` accepted `float("inf")` and unbounded text
+# was logged verbatim to Cloud Logging — unbounded spend + log-injection.
+_MAX_FEEDBACK_TEXT = 2000
 
 
 class Feedback(BaseModel):
     """Represents feedback for a conversation."""
 
-    score: int | float
-    text: str | None = ""
+    score: confloat(ge=-10.0, le=10.0, allow_inf_nan=False)
+    text: str | None = Field(default="", max_length=_MAX_FEEDBACK_TEXT)
     log_type: Literal["feedback"] = "feedback"
     service_name: Literal["argus"] = "argus"
-    user_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str = Field(default_factory=lambda: str(uuid.uuid4()), max_length=128)
+    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()), max_length=128)

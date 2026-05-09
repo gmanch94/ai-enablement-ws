@@ -15,7 +15,15 @@ from datetime import datetime, timezone
 from google.api_core.exceptions import Conflict
 from google.cloud import bigquery
 
-PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "your-gcp-project-id")
+import re as _re
+
+# C4: validate identifier shape since project/dataset/table are interpolated
+# directly into the DDL/DML below (BigQuery cannot parameterize identifiers).
+_SAFE_IDENT = _re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
+_PROJECT_RAW = os.environ.get("GOOGLE_CLOUD_PROJECT", "your-gcp-project-id")
+if not _SAFE_IDENT.match(_PROJECT_RAW):
+    raise RuntimeError(f"refusing to use unsafe GOOGLE_CLOUD_PROJECT: {_PROJECT_RAW!r}")
+PROJECT = _PROJECT_RAW
 DATASET = "argus"
 TABLE = "correction_history"
 EMBEDDING_DIM = 768
@@ -206,11 +214,13 @@ def main():
             raise RuntimeError("Failed to insert records")
         print(f"Inserted {len(records)} records")
 
-    # Smoke test: VECTOR_SEARCH
+    # Smoke test: VECTOR_SEARCH (parameterized — C4 fix)
     print("\nRunning VECTOR_SEARCH smoke test...")
     test_vec = _random_unit_vector(EMBEDDING_DIM)
-    vec_str = "[" + ",".join(str(x) for x in test_vec) + "]"
 
+    # PROJECT/DATASET/TABLE are validated identifiers (regex-checked at module
+    # load) and cannot be parameterized in BigQuery — they are part of the
+    # query identifier, not values. The embedding and top_k ARE parameters.
     query = f"""
         SELECT
             base.record_id,
@@ -223,13 +233,19 @@ def main():
             VECTOR_SEARCH(
                 TABLE `{PROJECT}.{DATASET}.{TABLE}`,
                 'embedding',
-                (SELECT {vec_str} AS embedding),
-                top_k => 3,
+                (SELECT @query_embedding AS embedding),
+                top_k => @top_k,
                 distance_type => 'COSINE'
             )
         ORDER BY distance ASC
     """
-    results = list(client.query(query).result())
+    job_config = bigquery.QueryJobConfig(
+        query_parameters=[
+            bigquery.ArrayQueryParameter("query_embedding", "FLOAT64", list(test_vec)),
+            bigquery.ScalarQueryParameter("top_k", "INT64", 3),
+        ]
+    )
+    results = list(client.query(query, job_config=job_config).result())
     if not results:
         raise RuntimeError("VECTOR_SEARCH returned no results")
 

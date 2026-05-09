@@ -30,7 +30,12 @@ def _find_similar_corrections(
     """
     embed = _embedding_fn if _embedding_fn is not None else generate_embedding
     v = _j(violation_json)
+    # M9: cap query_text to bound Vertex embedding cost. Attacker-controlled
+    # `detail` field could otherwise be megabytes per call.
+    _MAX_EMBED_CHARS = 2000
     query_text = f"{v.get('rule', '')}:{v.get('field', '')} {v.get('detail', '')}"
+    if len(query_text) > _MAX_EMBED_CHARS:
+        query_text = query_text[:_MAX_EMBED_CHARS]
     embedding = embed(query_text)
     matches = search_similar_corrections(embedding, top_k=5, client=_client)
     return json.dumps(

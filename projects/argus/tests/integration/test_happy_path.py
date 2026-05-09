@@ -153,15 +153,17 @@ def test_happy_path_flow_a_end_to_end(capsys):
     callback_id = approval_req["callback_id"]
     assert approval_req["status"] == "pending"
 
-    # --- Step 5: merchandiser approves (inject decision, instant poll) ---
-    pending: dict[str, str] = {callback_id: "approved"}
-    approval_json = poll_approval_decision(
-        callback_id, _pending=pending, _poll_interval=0.0
-    )
+    # --- Step 5: merchandiser approves (record in server-side approval store) ---
+    # post_approval_message in step 4 already registered callback_id as pending.
+    # Slack callback would normally call approval_store.record_decision; emulate.
+    from app.tools.approval_store import approval_store
+    approval_store.record_decision(callback_id, "approved", approver_user_id="U_TEST")
+
+    approval_json = poll_approval_decision(callback_id, timeout_seconds=2, _poll_interval=0.0)
     approval = json.loads(approval_json)
     assert approval["decision"] == "approved"
 
-    # --- Step 6: write audit diff to stdout ---
+    # --- Step 6: write audit (server-side approval verified by catalog_writer) ---
     audit_json = write_correction_audit(violation_json, decision_json, approval_json)
     audit = json.loads(audit_json)
     assert audit["status"] == "released"  # SC1: item released
@@ -170,10 +172,8 @@ def test_happy_path_flow_a_end_to_end(capsys):
     assert audit["original_value"] is None
     assert audit["proposed_value"] == decision["proposed_value"]
     assert "audit_id" in audit
-
-    captured = capsys.readouterr()
-    assert "--- original/allergen_statement" in captured.out
-    assert "+++ proposed/allergen_statement" in captured.out
+    # NB: legacy diff print() was removed (M5: no raw values to stdout).
+    # Audit content lives in the returned JSON + structured logger.
 
     # --- Step 7: upsert feedback into BQ ---
     mock_bq_insert = _MockBQInsert()

@@ -67,6 +67,9 @@ def test_verify_old_timestamp(monkeypatch):
 
 def test_verify_missing_secret(monkeypatch):
     monkeypatch.delenv("SLACK_SIGNING_SECRET", raising=False)
+    # Clear lru_cache so the deletion takes effect (conftest pre-cached "test-signing-secret").
+    from app.secrets import get_secret
+    get_secret.cache_clear()
     body = b"payload=test"
     ts, sig = _sign(body)
     assert verify_slack_signature(body, ts, sig) is False
@@ -97,32 +100,66 @@ def test_invalid_signature_returns_403(tc):
 
 
 def test_approve_records_approved(tc):
-    pending_decisions.clear()
+    """Pre-register the correction (production flow does this in
+    post_approval_message) before the Slack click POSTs the decision."""
+    from app.tools.approval_store import approval_store
+    approval_store.register_pending("cb-approve")
+
     body = _make_payload("approve", "cb-approve")
     ts, sig = _sign(body)
     tc.post("/slack/interactions", content=body,
             headers={"X-Slack-Request-Timestamp": ts, "X-Slack-Signature": sig, **_FORM_CT})
-    assert pending_decisions.get("cb-approve") == "approved"
-    pending_decisions.clear()
+    assert approval_store.check_decision("cb-approve") == "approved"
 
 
 def test_reject_records_rejected(tc):
-    pending_decisions.clear()
+    from app.tools.approval_store import approval_store
+    approval_store.register_pending("cb-reject")
+
     body = _make_payload("reject", "cb-reject")
     ts, sig = _sign(body)
     tc.post("/slack/interactions", content=body,
             headers={"X-Slack-Request-Timestamp": ts, "X-Slack-Signature": sig, **_FORM_CT})
-    assert pending_decisions.get("cb-reject") == "rejected"
-    pending_decisions.clear()
+    assert approval_store.check_decision("cb-reject") == "rejected"
 
 
 def test_unknown_action_value_ignored(tc):
-    pending_decisions.clear()
+    """Action values with unknown decision keys are silently ignored — no
+    state mutation. Conftest's autouse fixture resets approval_store; we just
+    verify nothing was created."""
+    from app.tools.approval_store import approval_store
+
     data = {"actions": [{"value": "unknown:cb-x", "action_id": "something"}]}
     body = urllib.parse.urlencode({"payload": json.dumps(data)}).encode()
     ts, sig = _sign(body)
     resp = tc.post("/slack/interactions", content=body,
                    headers={"X-Slack-Request-Timestamp": ts, "X-Slack-Signature": sig, **_FORM_CT})
     assert resp.status_code == 200
-    assert "cb-x" not in pending_decisions
-    pending_decisions.clear()
+    assert approval_store.get_entry("cb-x") is None
+
+
+def test_unknown_correction_id_dropped(tc):
+    """Slack click for a correction_id that was never registered (forged
+    `value` field) should be silently dropped — no state created, no 500."""
+    from app.tools.approval_store import approval_store
+
+    body = _make_payload("approve", "forged-cb-id")
+    ts, sig = _sign(body)
+    resp = tc.post("/slack/interactions", content=body,
+                   headers={"X-Slack-Request-Timestamp": ts, "X-Slack-Signature": sig, **_FORM_CT})
+    assert resp.status_code == 200
+    assert approval_store.get_entry("forged-cb-id") is None
+
+
+def test_replay_returns_409(tc):
+    """Same (timestamp, signature) twice within window → second call rejected."""
+    from app.tools.approval_store import approval_store
+    approval_store.register_pending("cb-replay")
+
+    body = _make_payload("approve", "cb-replay")
+    ts, sig = _sign(body)
+    headers = {"X-Slack-Request-Timestamp": ts, "X-Slack-Signature": sig, **_FORM_CT}
+    first = tc.post("/slack/interactions", content=body, headers=headers)
+    second = tc.post("/slack/interactions", content=body, headers=headers)
+    assert first.status_code == 200
+    assert second.status_code == 409
