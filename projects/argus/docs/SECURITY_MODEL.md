@@ -99,6 +99,8 @@ Backfilled 2026-05-09 from the security audit findings (full report: [`docs/secu
 
 **Re-audit cadence:** after every multi-PR sprint touching agents/tools/HTTP routes; before any production deploy; quarterly otherwise.
 
+**Pre-deploy gate:** [`docs/runbooks/pre-deploy-security-checklist.md`](runbooks/pre-deploy-security-checklist.md) — every box ticked before any external traffic. Closes the operational items in §6 (rotation, API key provisioning, env allowlists, SA scope tightening).
+
 ---
 
 ## Update log
