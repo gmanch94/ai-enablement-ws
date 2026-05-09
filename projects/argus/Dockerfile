@@ -16,13 +16,19 @@ FROM python:3.12-slim
 
 RUN pip install --no-cache-dir uv==0.8.13
 
+# L3: drop privileges. RCE inside the container should not have UID 0.
+RUN useradd --create-home --shell /bin/bash --uid 10001 argus
+
 WORKDIR /code
 
-COPY ./pyproject.toml ./README.md ./uv.lock* ./
+COPY --chown=argus:argus ./pyproject.toml ./README.md ./uv.lock* ./
 
-COPY ./app ./app
+COPY --chown=argus:argus ./app ./app
 
-RUN uv sync --frozen
+RUN uv sync --frozen \
+    && chown -R argus:argus /code
+
+USER argus
 
 ARG COMMIT_SHA=""
 ENV COMMIT_SHA=${COMMIT_SHA}

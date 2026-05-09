@@ -48,7 +48,11 @@ A2A_RPC_URL = BASE_URL + "a2a/app/"
 AGENT_CARD_URL = A2A_RPC_URL + ".well-known/agent-card.json"
 FEEDBACK_URL = BASE_URL + "feedback"
 
-HEADERS = {"Content-Type": "application/json"}
+_TEST_API_KEY = "integration-test-api-key"
+HEADERS = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {_TEST_API_KEY}",
+}
 
 
 def log_output(pipe: Any, log_func: Any) -> None:
@@ -69,8 +73,27 @@ def start_server() -> subprocess.Popen[str]:
         "--port",
         "8000",
     ]
-    env = os.environ.copy()
-    env["INTEGRATION_TEST"] = "TRUE"
+    # M7: only forward env vars the server actually needs. Drop secrets the
+    # subprocess doesn't need (Slack tokens etc) so they don't leak via stderr
+    # logging on tool errors.
+    env = {
+        "PATH": os.environ.get("PATH", ""),
+        "PYTHONPATH": os.environ.get("PYTHONPATH", ""),
+        "INTEGRATION_TEST": "TRUE",
+        "PYTHONUTF8": "1",
+        # Auth: the server needs ARGUS_API_KEY to validate the test client's
+        # Authorization: Bearer header. Match what HEADERS uses above.
+        "ARGUS_API_KEY": _TEST_API_KEY,
+        # ARGUS_ALLOWED_HOSTS empty → defaults to "*" for test convenience.
+        # The agent card / RPC routes that the server's own bootstrap reaches
+        # don't need Slack creds; integration tests don't exercise the Slack
+        # callback (that's covered by unit tests).
+    }
+    # Forward GCP-related vars if present so a real-cloud-credentials run
+    # also works (these aren't secrets — they're identifiers / paths).
+    for key in ("GOOGLE_APPLICATION_CREDENTIALS", "GOOGLE_CLOUD_PROJECT", "APP_URL", "AGENT_VERSION"):
+        if key in os.environ:
+            env[key] = os.environ[key]
     process = subprocess.Popen(
         command,
         stdout=subprocess.PIPE,

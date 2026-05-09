@@ -25,7 +25,12 @@ from a2a.utils.constants import (
     AGENT_CARD_WELL_KNOWN_PATH,
     EXTENDED_AGENT_CARD_PATH,
 )
-from fastapi import FastAPI
+import logging
+import secrets as stdlib_secrets
+
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from google.adk.a2a.executor.a2a_agent_executor import A2aAgentExecutor
 from google.adk.a2a.utils.agent_card_builder import AgentCardBuilder
 from google.adk.artifacts import GcsArtifactService, InMemoryArtifactService
@@ -36,6 +41,7 @@ from google.cloud import logging as google_cloud_logging
 from app.agent import app as adk_app
 from app.app_utils.telemetry import setup_telemetry
 from app.app_utils.typing import Feedback
+from app.auth import require_api_key
 from app.slack_router import router as slack_router
 
 setup_telemetry()
@@ -76,6 +82,20 @@ async def build_dynamic_agent_card() -> AgentCard:
     return agent_card
 
 
+# C2 fix: A2A library mounts via `add_routes_to_app` directly on the FastAPI
+# app — there's no hook to inject a Depends. We gate via middleware that
+# matches the A2A path prefix and validates the API key inline. Slack and
+# /feedback have their own auth (Slack HMAC; /feedback uses Depends).
+_logger = logging.getLogger(__name__)
+
+
+def _client_ip_from_request(request: Request) -> str:
+    fwd = request.headers.get("x-forwarded-for", "")
+    if fwd:
+        return fwd.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
 @asynccontextmanager
 async def lifespan(app_instance: FastAPI) -> AsyncIterator[None]:
     agent_card = await build_dynamic_agent_card()
@@ -95,18 +115,76 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
+# C2: middleware-level API key check for A2A routes (the A2A library mounts
+# routes after FastAPI is constructed, so a Depends() can't be applied).
+# Slack and /feedback have their own auth pathways and are skipped here.
+@app.middleware("http")
+async def _a2a_auth_middleware(request: Request, call_next):
+    if request.url.path.startswith(A2A_RPC_PATH):
+        from app.secrets import get_secret  # local import keeps test patches simple
+
+        try:
+            expected = get_secret("ARGUS_API_KEY", required=True)
+        except RuntimeError:
+            _logger.error("ARGUS_API_KEY unavailable; rejecting all A2A requests")
+            return Response(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                content="API key not configured.",
+            )
+        auth_header = request.headers.get("authorization", "")
+        scheme, _, presented = auth_header.partition(" ")
+        if scheme.lower() != "bearer" or not presented or not stdlib_secrets.compare_digest(
+            expected, presented
+        ):
+            _logger.warning(
+                "auth_failed path=%s ip=%s",
+                request.url.path,
+                _client_ip_from_request(request),
+            )
+            return Response(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content="Missing or invalid API key.",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    return await call_next(request)
+
+
+# H6: TrustedHostMiddleware — env-driven allowlist of expected Host headers.
+# Defends against Host-header injection / cache poisoning. Empty allowlist is
+# fail-open for local dev convenience; production deploy MUST set
+# ARGUS_ALLOWED_HOSTS.
+_allowed_hosts_raw = os.environ.get("ARGUS_ALLOWED_HOSTS", "")
+_allowed_hosts = [h.strip() for h in _allowed_hosts_raw.split(",") if h.strip()] or ["*"]
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=_allowed_hosts)
+
+# H6: CORS — explicit origin allowlist; credentials disabled by default.
+# Production deploy MUST set ARGUS_ALLOWED_ORIGINS. Empty = no CORS (deny all
+# cross-origin browser requests, which is the safe posture).
+_allowed_origins_raw = os.environ.get("ARGUS_ALLOWED_ORIGINS", "")
+_allowed_origins = [o.strip() for o in _allowed_origins_raw.split(",") if o.strip()]
+if _allowed_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=_allowed_origins,
+        allow_credentials=False,
+        allow_methods=["GET", "POST"],
+        allow_headers=["Authorization", "Content-Type", "X-Slack-Request-Timestamp", "X-Slack-Signature"],
+    )
+
+# Slack router does its own HMAC auth; no API key required.
 app.include_router(slack_router)
 
 
-@app.post("/feedback")
+@app.post("/feedback", dependencies=[Depends(require_api_key)])
 def collect_feedback(feedback: Feedback) -> dict[str, str]:
-    """Collect and log feedback.
+    """Collect and log feedback. Auth-gated (C3 fix); bounded text + score (M8).
 
     Args:
-        feedback: The feedback data to log
+        feedback: The feedback data to log (Pydantic-validated bounds).
 
     Returns:
-        Success message
+        Success message.
     """
     logger.log_struct(feedback.model_dump(), severity="INFO")
     return {"status": "success"}
