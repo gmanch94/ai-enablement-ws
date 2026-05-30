@@ -2,7 +2,7 @@
 
 > **Audience:** AI Architects, MLOps Engineers, Platform Engineers
 > **Scope:** Open-source tools and frameworks for LLM serving, orchestration, RAG, evaluation, observability, and MLOps — cloud-agnostic and self-hostable
-> **Last updated:** 2026-05-05 — verified against project releases, GitHub activity, HuggingFace blog, and community benchmarks
+> **Last updated:** 2026-05-29 — verified against project releases, GitHub activity, HuggingFace blog, vLLM blog, and community benchmarks
 > **Complements:** [AWS](aws-ai-mlops-cheatsheet.md) · [Azure](azure-ai-mlops-cheatsheet.md) · [GCP](gcp-ai-mlops-cheatsheet.md) · [Cross-Cloud](cross-cloud-ai-comparison.md)
 
 ---
@@ -104,6 +104,7 @@ graph TB
 | **Phi-4** | 14B | Strong reasoning at small scale, distillation research | MIT | [hub](https://huggingface.co/microsoft) |
 | **Gemma 3** | 1B–27B | Efficient on-device + server inference, multimodal | Gemma Terms of Use | [hub](https://huggingface.co/google) |
 | **Command R+** (Cohere) | 104B | Enterprise RAG, long context (128K), grounded generation | CC-BY-NC | [hub](https://huggingface.co/CohereForAI) |
+| **GPT-OSS** (OpenAI open-weight) | 120B, 20B | OpenAI's open-weight model family — optimized for NVIDIA Blackwell; available via vLLM and cloud MaaS (GCP Vertex AI) | MIT | [hub](https://huggingface.co/openai) |
 
 > **Rule of thumb:** For self-hosted production, Llama 3.3 70B or Mistral Small 3 24B cover most use cases. Use MoE models (DeepSeek-V3, Mixtral 8x22B) when throughput matters more than memory footprint.
 
@@ -113,7 +114,7 @@ graph TB
 
 | Tool | Purpose | Key MLOps Use | Status | Docs |
 |---|---|---|---|---|
-| **vLLM** | High-throughput LLM inference engine — PagedAttention for 80% GPU memory reduction, continuous batching | De facto standard for production self-hosted serving; OpenAI-compatible API; powers Meta, LinkedIn, Roblox | Stable | [docs](https://docs.vllm.ai/) |
+| **vLLM** | High-throughput LLM inference engine — PagedAttention for 80% GPU memory reduction, continuous batching, FP8 KV-Cache (Apr 2026 — quantized KV cache slashes memory at 128k+ contexts) | De facto standard for production self-hosted serving; OpenAI-compatible API; supports DeepSeek V4 native long-context; powers Meta, LinkedIn, Roblox | Stable | [docs](https://docs.vllm.ai/) |
 | **SGLang** | Structured generation server — RadixAttention for fine-grained KV cache reuse in multi-turn and RAG | High-performance alternative to vLLM for structured outputs and multi-turn workloads | Active | [docs](https://sgl-project.github.io/) |
 | **Ollama** | Developer-friendly local LLM runner — one-line model pull + serve | Local dev and prototyping; pairs with OpenWebUI for browser UI; not production-scale | Stable | [docs](https://ollama.com/) |
 | **llama.cpp** | CPU/GPU inference via GGUF quantisation — runs on consumer hardware | Edge deployment, cost-sensitive inference, developer laptops | Stable | [github](https://github.com/ggerganov/llama.cpp) |
@@ -126,7 +127,7 @@ graph TB
 
 | Framework | Purpose | Key MLOps / AIEnablement Use | Status | Docs |
 |---|---|---|---|---|
-| **LangChain** | Modular LLM application framework — chains, agents, tools, memory, callbacks | Standard integration layer for LLM pipelines; extensive tool/loader ecosystem | Stable | [docs](https://python.langchain.com/) |
+| **LangChain** | Modular LLM application framework — chains, agents, tools, memory, callbacks; v1.3.x adds middleware system (PIIMiddleware for in-flight PII redaction, TodoListMiddleware) | Standard integration layer for LLM pipelines; extensive tool/loader ecosystem | Stable | [docs](https://python.langchain.com/) |
 | **LangGraph** | Graph-based stateful agent orchestration — nodes, edges, checkpointing, human-in-the-loop | Production multi-step agents with explicit state machines; controllable loops and branching | Stable | [docs](https://langchain-ai.github.io/langgraph/) |
 | **LlamaIndex** | Data framework for LLM applications — indexing, retrieval, agents, query pipelines. ⚠️ **0.13.0 breaking:** `FunctionCallingAgent`, `ReActAgent`, `AgentRunner` deprecated — refactor before upgrading | RAG-native agents; multi-modal data ingestion; strong structured data support | Stable | [docs](https://docs.llamaindex.ai/) |
 | **Haystack** | Production-grade NLP / AI pipeline framework — modular components, REST API first | Enterprise RAG pipelines; semantic search; strong component isolation for testability | Stable | [docs](https://docs.haystack.deepset.ai/) |
@@ -209,7 +210,7 @@ graph TB
 | Tool | Purpose | Key MLOps / AIEnablement Use | Status | Docs |
 |---|---|---|---|---|
 | **Hugging Face PEFT** | Parameter-efficient fine-tuning — LoRA, QLoRA, DoRA, IA³ | Industry-standard PEFT library; integrates with Transformers, Accelerate, TRL | Stable | [docs](https://huggingface.co/docs/peft) |
-| **TRL** (Hugging Face) | Reinforcement learning from human feedback — SFT, DPO, PPO, GRPO | Full RLHF and preference optimisation pipeline; works with PEFT and Accelerate | Stable | [docs](https://huggingface.co/docs/trl) |
+| **TRL** (Hugging Face) | Reinforcement learning from human feedback — SFT, DPO, PPO, GRPO; delta weight sync (May 2026) — sync only changed weights to Hub during trillion-parameter RLHF, reducing checkpoint upload cost ~100× | Full RLHF and preference optimisation pipeline; works with PEFT and Accelerate | Stable | [docs](https://huggingface.co/docs/trl) |
 | **Unsloth** | 2× faster fine-tuning, 60% less VRAM — LoRA/QLoRA optimised kernels | Drop-in replacement for HF Transformers fine-tuning; significant GPU cost reduction | Active | [docs](https://unsloth.ai/) |
 | **Axolotl** | Flexible fine-tuning configuration via YAML — SFT, LoRA, QLoRA, RLHF | Config-driven fine-tuning without boilerplate; strong community recipes for common models | Active | [github](https://github.com/OpenAccess-AI-Collective/axolotl) |
 | **LM Studio** | GUI for local model fine-tuning and inference — consumer-hardware friendly | Developer experimentation; non-engineers running fine-tuning without code | Active | [docs](https://lmstudio.ai/) |

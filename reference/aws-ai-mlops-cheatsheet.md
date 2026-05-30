@@ -2,7 +2,7 @@
 
 > **Audience:** AI Architects, MLOps Engineers, AI Enablement Leads
 > **Scope:** AWS 1st-party services + key AWS SDKs used in AIEnablement and MLOps code
-> **Last updated:** 2026-04-17 — verified against AWS re:Invent 2025 and Feb 2026 release notes
+> **Last updated:** 2026-05-29 — verified against AWS re:Invent 2025, Feb 2026 release notes, May 2026 announcements, and What's Next with AWS 2026 (Apr/May 2026)
 
 ---
 
@@ -101,11 +101,13 @@ graph TB
 
 | Service | Purpose | Key MLOps / AIEnablement Use | Docs |
 |---|---|---|---|
-| **Amazon Bedrock** | Managed access to foundation models — Amazon Nova, Claude, Llama, Mistral, Titan, Cohere, Stable Diffusion — with enterprise security | LLM inference, embeddings, fine-tuning, RAG; Reserved/Priority/Flex service tiers for cost/latency control | [docs](https://docs.aws.amazon.com/bedrock/) |
+| **Amazon Bedrock** | Managed access to foundation models — Amazon Nova, Claude, Llama, Mistral, Titan, Cohere, Stable Diffusion, OpenAI GPT — with enterprise security | LLM inference, embeddings, fine-tuning, RAG; Reserved/Priority/Flex service tiers; supports Converse, Invoke, OpenAI-compatible Responses and Chat Completions APIs | [docs](https://docs.aws.amazon.com/bedrock/) |
 | **Amazon Nova 2** | Amazon's own model family — Lite, Pro (1M context, extended thinking), Sonic (speech-to-speech), Omni (multimodal I/O) | Cost-optimised inference with native AWS integration; Nova Forge for custom frontier models ($100K/yr) | [docs](https://docs.aws.amazon.com/nova/) |
 | **Amazon Nova Act** *(GA)* | Browser automation agent — 90%+ task reliability, deploys to AgentCore with zero infra config | Automate web-based workflows in agentic pipelines; integrates natively with AgentCore Runtime | [docs](https://docs.aws.amazon.com/nova/) |
 | **SageMaker JumpStart** | Model hub — pre-trained foundation models, fine-tuning templates, one-click deployment | Discover and deploy open models (Llama, Falcon, etc.); starting point for model evaluation and PoC | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/studio-jumpstart.html) |
 | **Amazon Kendra** | Managed enterprise search with ML-powered relevance ranking | Enterprise RAG — index internal documents, SharePoint, S3 with intelligent retrieval | [docs](https://docs.aws.amazon.com/kendra/) |
+| **OpenAI Models on Amazon Bedrock** *(Limited Preview)* | GPT-5.5, GPT-5.4 via Bedrock — same IAM, PrivateLink, Guardrails, CloudTrail controls as native models | Access frontier OpenAI models without leaving AWS trust boundary; applies toward existing AWS cloud commitments | [docs](https://aws.amazon.com/bedrock/openai/) |
+| **Amazon Bedrock Data Automation (BDA)** *(GA)* | Intelligent document processing — extract structured data from PDFs, images, financial docs; supports EN/PT/FR/IT/ES/DE | Automate data ingestion pipelines for RAG and feature engineering; replaces custom OCR/extraction stacks | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/bda.html) |
 
 ---
 
@@ -113,11 +115,17 @@ graph TB
 
 | Service | Purpose | Key MLOps / AIEnablement Use | Docs |
 |---|---|---|---|
-| **Amazon Bedrock AgentCore** *(GA)* | Production agent infrastructure — Cedar-based policy controls, episodic memory, continuous quality evaluations, bidirectional streaming | Deploy and govern production agents; enforce what agents can/cannot do before any tool call | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html) |
+| **Amazon Bedrock AgentCore** *(GA)* | Production agent infrastructure — Cedar-based policy controls, episodic memory, continuous quality evaluations, bidirectional streaming; Payments capability (Preview) via Coinbase/Stripe wallets with session-level spending limits | Deploy and govern production agents; enforce what agents can/cannot do before any tool call; enable agents to autonomously pay for APIs and MCP services | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html) |
 | **Amazon Bedrock Agents** | Build conversational agents with tool use, multi-step reasoning, and memory | RAG + action execution; connect agents to APIs, Lambda functions, and knowledge bases | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html) |
-| **Amazon Bedrock Knowledge Bases** | Managed RAG — automatic chunking, embedding, vector storage, and retrieval | Ground agents in enterprise data without building custom RAG pipelines; supports S3, Confluence, SharePoint | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html) |
+| **Amazon Bedrock Knowledge Bases** | Managed RAG — automatic chunking, embedding, vector storage, and retrieval | Ground agents in enterprise data without building custom RAG pipelines; supports S3, Confluence, SharePoint; supports 1-hour prompt cache TTL for long-running multi-turn agent workflows | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html) |
 | **Amazon Bedrock Flows** | Visual no-code builder for agent workflows — chain prompts, tools, and conditions as DAGs | Build and iterate on agent logic without code; deploy flows as managed endpoints | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/flows.html) |
+| **Amazon Bedrock Responses API** *(GA)* | Server-side tool use within Bedrock — web search, code execution, database updates run inside AWS security boundary | Use in agentic pipelines where tool calls must stay server-side; integrates with Converse API | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/tool-use.html) |
 | **Amazon Bedrock Guardrails** *(GA)* | Content filtering — PII redaction, topic blocking, grounding checks, hallucination detection, code safety | Apply safety layers to all LLM I/O in a pipeline; Guardrails for Code extends to code comments and variables | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) |
+| **Codex on Amazon Bedrock** *(Limited Preview)* | OpenAI coding agent inside AWS — authenticate with AWS credentials, run via Codex CLI, desktop app, or VS Code extension | AI-assisted coding within enterprise AWS boundary; usage applies toward cloud commitments | [docs](https://aws.amazon.com/about-aws/whats-new/2026/04/bedrock-openai-models-codex-managed-agents/) |
+| **Bedrock Managed Agents powered by OpenAI** *(Limited Preview)* | Deploy production-ready OpenAI-powered agents on Bedrock infrastructure with AWS security controls | Fast path to OpenAI agent capabilities with IAM, PrivateLink, Guardrails governance | [docs](https://aws.amazon.com/bedrock/openai/) |
+| **Amazon WorkSpaces for AI Agents** *(Preview)* | Isolated secure compute environments (desktop/browser) for AI agents to operate in | Sandbox for agents running UI automation, web browsing, and desktop workflows | [docs](https://aws.amazon.com/about-aws/whats-new/2026/05/workspaces-ai-agents/) |
+| **AWS Security Agent** *(GA)* | Autonomous on-demand penetration testing frontier agent — compresses pen testing from weeks to hours; runs persistently without human oversight | Integrate security testing into MLOps pipelines; detect vulnerabilities in AI workload infrastructure | [docs](https://aws.amazon.com/blogs/machine-learning/aws-launches-frontier-agents-for-security-testing-and-cloud-operations/) |
+| **AWS DevOps Agent** *(GA)* | Autonomous DevOps operations frontier agent — 3–5x faster incident resolution, runs continuously hours to days | AI-driven SRE and incident response; reduce ops burden on AI platform teams | [docs](https://aws.amazon.com/blogs/machine-learning/aws-launches-frontier-agents-for-security-testing-and-cloud-operations/) |
 
 ---
 
@@ -127,7 +135,7 @@ graph TB
 
 | Service | Purpose | Key MLOps / AIEnablement Use | Docs |
 |---|---|---|---|
-| **Amazon SageMaker AI** | Core MLOps platform — Unified Studio IDE, experiments, training, model registry, managed endpoints, batch transform | End-to-end ML lifecycle from data prep to production serving; PrivateLink support for VPC isolation | [docs](https://docs.aws.amazon.com/sagemaker/) |
+| **Amazon SageMaker AI** | Core MLOps platform — Unified Studio (integrated workspace: EMR, Glue, Athena, Redshift, Bedrock, SageMaker AI in one UI), experiments, training, model registry, managed endpoints, batch transform | End-to-end ML lifecycle from data prep to production serving; PrivateLink support for VPC isolation | [docs](https://docs.aws.amazon.com/sagemaker/) |
 | **SageMaker HyperPod** *(GA — enhanced)* | Managed distributed training cluster — checkpointless training (80%+ downtime reduction), elastic auto-scaling | Large-scale foundation model training and fine-tuning; self-healing clusters reduce ops burden | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod.html) |
 | **SageMaker Serverless Customization** *(GA)* | UI-driven fine-tuning — SFT, DPO, RLVR, RLAIF — without managing compute | Fine-tune Nova, Llama, DeepSeek in a few clicks; no capacity planning or instance management | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-fine-tune.html) |
 | **SageMaker Pipelines** | Reusable MLOps workflow DAGs — data prep → train → evaluate → register → deploy | Automated retraining pipelines with CI/CD integration; YAML-based pipeline definitions | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines.html) |
@@ -208,6 +216,8 @@ graph TB
 | **AWS CodePipeline / CodeBuild** | Managed CI/CD — automated build, test, and deploy pipelines | MLOps pipelines — trigger SageMaker pipeline runs on code or data changes | [docs](https://docs.aws.amazon.com/codepipeline/) |
 | **AWS CDK** | Infrastructure as code in Python/TypeScript — L2/L3 constructs for AWS services | Define and version ML infrastructure (endpoints, pipelines, IAM roles) as code | [docs](https://docs.aws.amazon.com/cdk/) |
 | **AWS CloudFormation** | Declarative infrastructure as code — YAML/JSON templates | Deploy reproducible ML environments; stack-based infra lifecycle management | [docs](https://docs.aws.amazon.com/cloudformation/) |
+| **Agent Toolkit for AWS** *(GA)* | Production-ready suite of tools + guidance for AI coding agents building on AWS — fewer errors, lower token cost, enterprise security; successor to AWS Labs MCP servers/plugins/skills | Standard integration layer for AI coding agents building on AWS; replaces ad-hoc MCP server setups | [docs](https://docs.aws.amazon.com/agent-toolkit/latest/userguide/quick-start.html) |
+| **AWS MCP Server** *(GA)* | Managed remote MCP server — gives AI agents and coding assistants authenticated access to all AWS services via a small fixed tool set; part of Agent Toolkit for AWS | Expose all AWS service capabilities to any MCP-compatible AI agent or assistant | [docs](https://aws.amazon.com/about-aws/whats-new/2026/05/aws-mcp-server/) |
 
 ---
 
@@ -217,7 +227,7 @@ graph TB
 
 | SDK | Languages | Purpose | Key Use | Status | Docs |
 |---|---|---|---|---|---|
-| **boto3** | Python | Primary AWS SDK — low-level client for all AWS services | Call Bedrock, SageMaker, S3, and all AWS AI services | **GA** | [docs](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) |
+| **boto3** | Python | Primary AWS SDK — low-level client for all AWS services | Call Bedrock, SageMaker, S3, and all AWS AI services | **GA** — Python 3.9 EOL April 2026; requires Python 3.10+ | [docs](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) |
 | **amazon-bedrock-runtime** | Python, Java, .NET, JS/TS | High-level Bedrock client — InvokeModel, Converse API, streaming | LLM inference, streaming responses, multi-turn conversations | **GA** | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/getting-started.html) |
 | **amazon-bedrock-agent-runtime** | Python, Java, .NET, JS/TS | Invoke Bedrock Agents and Knowledge Bases programmatically | Run agents, retrieve from knowledge bases, manage agent sessions | **GA** | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-lambda.html) |
 
@@ -243,8 +253,11 @@ graph TB
 |---|---|
 | LLM access & model selection | Amazon Bedrock, SageMaker JumpStart |
 | Amazon's own models | Amazon Nova 2 (Lite/Pro/Sonic/Omni) |
+| OpenAI model access on AWS | OpenAI Models on Amazon Bedrock (Limited Preview) |
 | Agent building & orchestration | Bedrock AgentCore, Bedrock Agents, Bedrock Flows |
 | Agent memory & state | Bedrock AgentCore (episodic memory) |
+| Agent payments / API purchasing | Bedrock AgentCore Payments (Preview) |
+| Agent compute sandboxing | Amazon WorkSpaces for AI Agents (Preview) |
 | Enterprise data grounding (RAG) | Bedrock Knowledge Bases, Amazon Kendra, OpenSearch |
 | Vector store | Amazon S3 Vectors, Amazon OpenSearch |
 | Training & experimentation | SageMaker AI, SageMaker HyperPod, EC2 P5/G6 |
@@ -265,6 +278,11 @@ graph TB
 | Agent policy enforcement | Bedrock AgentCore Policy Controls (Cedar) |
 | Data governance & PII | AWS Lake Formation, Amazon Macie |
 | Identity & access | AWS IAM |
+| Document intelligence / extraction | Amazon Bedrock Data Automation (BDA) |
+| AI-assisted coding in AWS | Codex on Amazon Bedrock (Limited Preview) |
+| Automated security testing | AWS Security Agent |
+| AI-driven incident response | AWS DevOps Agent |
+| MCP server (AWS services) | AWS MCP Server (Agent Toolkit for AWS) |
 | CI/CD for ML | AWS CodePipeline, CodeBuild, GitHub Actions |
 | Infra as code | AWS CDK, CloudFormation |
 | **SDK: Model inference** | `boto3` + `amazon-bedrock-runtime` |

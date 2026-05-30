@@ -2,7 +2,7 @@
 
 > **Audience:** AI Architects, MLOps Engineers, AI Enablement Leads
 > **Scope:** Azure / Microsoft 1st-party services + key Microsoft SDKs used in AIEnablement and MLOps code
-> **Last updated:** 2026-05-05 — verified against Microsoft Foundry April 2026 docs, Build 2026 announcements, Ignite 2025, and Dec 2025–Jan 2026 release notes
+> **Last updated:** 2026-05-29 — verified against Microsoft Foundry April 2026 docs, Build 2026 announcements, Ignite 2025, Dec 2025–Jan 2026 release notes, and Apr–May 2026 blog announcements
 > ⚠️ **AzureML SDK v1 EOL: June 30, 2026** — migrate to `azure-ai-projects` v2
 > ⚠️ **Prompt Flow SDK sunset** — migration to Microsoft Framework Workflows, window opens January 2027
 
@@ -105,13 +105,14 @@ graph TB
 
 | Service | Purpose | Key MLOps / AIEnablement Use | Docs |
 |---|---|---|---|
-| **Azure OpenAI Service** | Managed access to OpenAI models — GPT-5.2, GPT-5.1 Codex Max, GPT-4o, o1, embeddings, DALL-E, Sora 2 | LLM inference, embeddings for RAG, fine-tuning, Reinforcement Fine-Tuning (GPT-5) | [docs](https://learn.microsoft.com/en-us/azure/ai-services/openai/) |
-| **Microsoft Foundry** *(formerly Azure AI Foundry)* | Unified platform for building, governing, and scaling AI — model catalog, fine-tuning, evaluation, agent development, one-click deployment to M365/Teams | Central hub for the full AI lifecycle: discover models, fine-tune, evaluate, deploy agents and LLM apps | [docs](https://learn.microsoft.com/en-us/azure/foundry/) |
+| **Azure OpenAI Service** | Managed access to OpenAI models — GPT-5.5 (GA Apr 2026 — deeper long-context reasoning, improved agentic execution + computer-use, greater token efficiency; GPT-5.5 Pro for most demanding workloads), GPT-5.2, GPT-5.1 Codex Max, GPT-4o, o1, embeddings, DALL-E, Sora 2 | LLM inference, embeddings for RAG, fine-tuning, Reinforcement Fine-Tuning (GPT-5) | [docs](https://learn.microsoft.com/en-us/azure/ai-services/openai/) |
+| **Microsoft Foundry** *(formerly Azure AI Foundry)* | Unified platform for building, governing, and scaling AI — model catalog (incl. GPT-5.5, Claude Opus 4.8 — May 2026), fine-tuning, evaluation, agent development, one-click deployment to M365/Teams | Central hub for the full AI lifecycle: discover models, fine-tune, evaluate, deploy agents and LLM apps | [docs](https://learn.microsoft.com/en-us/azure/foundry/) |
 | **Foundry Tools** *(formerly Azure AI Services)* | Multi-modal AI capabilities — Vision, Speech, Language, Document Intelligence, Azure Content Understanding (GA), Live Interpreter (GA), LLM Speech (Preview) | Pre-built AI processing for documents, audio, video, images — no custom training required | [docs](https://learn.microsoft.com/en-us/azure/ai-services/) |
 | **Azure AI Search** | Managed search with vector, semantic, and hybrid retrieval | RAG pipelines — chunking, indexing, and low-latency retrieval for LLM grounding | [docs](https://learn.microsoft.com/en-us/azure/search/) |
 | **Model Router** *(GA)* | Automatic model selection based on prompt complexity and cost targets | Optimise token cost vs quality without manual routing logic — routes across OpenAI, Claude, Mistral, Phi | [docs](https://learn.microsoft.com/en-us/azure/ai-foundry/) |
 | **MAI Models** *(Preview)* | Microsoft 1st-party model family: MAI-Transcribe-1 (speech-to-text), MAI-Voice-1 (text-to-speech), MAI-Image-2 (text-to-image) | Native Azure speech/image capabilities without OpenAI dependency — hosted in Foundry, billed via Azure | [docs](https://learn.microsoft.com/en-us/azure/ai-services/) |
 | **Fireworks Models on Foundry** *(Preview)* | Deploy Fireworks AI models (including custom model imports) via Microsoft Foundry model catalog | Access high-throughput OSS models and private fine-tunes via Foundry managed inference — same governance layer as 1st-party models | [docs](https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/enable-fireworks-models) |
+| **Microsoft Discovery** *(Preview — expanded Apr 2026)* | Agentic AI platform for research and development — enterprise-grade multi-agent capabilities for scientific R&D workflows | Accelerate R&D pipelines with agentic AI; enterprise governance for research teams doing hypothesis testing, document synthesis, and scientific analysis | [docs](https://azure.microsoft.com/en-us/blog/microsoft-discovery-advancing-agentic-rd-at-scale/) |
 
 ---
 
@@ -120,7 +121,7 @@ graph TB
 | Service | Purpose | Key MLOps / AIEnablement Use | Docs |
 |---|---|---|---|
 | **Foundry Agent Service** *(GA)* | Managed multi-agent orchestration with persistent memory and enterprise governance | Production-grade agent hosting — run, monitor, and govern agents without managing infra | [docs](https://learn.microsoft.com/en-us/azure/ai-services/agents/) |
-| **Hosted Agents** *(GA)* | Deploy custom-code agents (LangGraph, CrewAI, Microsoft Agent Framework) into a fully managed runtime | No containers, no Kubernetes — agents run in managed compute with built-in scaling | [docs](https://learn.microsoft.com/en-us/azure/foundry/agents/quickstarts/quickstart-hosted-agent) |
+| **Hosted Agents** *(GA)* | Deploy custom-code agents (LangGraph, CrewAI, Microsoft Agent Framework, Claude Agent SDK, OpenAI Agents SDK) into a fully managed runtime — define agents in YAML or code; isolated sandbox with persistent filesystem, distinct Entra identity, scale-to-zero pricing | No containers, no Kubernetes — any agent framework runs identically; single CLI command to deploy | [docs](https://learn.microsoft.com/en-us/azure/foundry/agents/quickstarts/quickstart-hosted-agent) |
 | **Microsoft Agent Framework** *(GA, open source)* | Unified SDK for building durable, interoperable multi-agent systems — merges Semantic Kernel + AutoGen | Build production agents with cross-cloud flexibility; supports rapid prototyping through to enterprise deployment | [docs](https://learn.microsoft.com/en-us/azure/ai-foundry/) |
 | **Memory in Foundry Agent Service** *(Preview)* | Managed long-term memory store with automatic extraction, consolidation, and retrieval across agent sessions | Enable agents to retain user context and facts across conversations without custom vector stores | [docs](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/memory-usage) |
 | **Agent-to-Agent (A2A) Tool** *(Preview)* | Lets Foundry agents call any A2A-protocol endpoint with explicit auth and clean call/response semantics | Multi-agent orchestration — delegate sub-tasks to specialist agents across frameworks or clouds | [docs](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/agent-to-agent) |
@@ -173,7 +174,7 @@ graph TB
 |---|---|---|---|
 | **Azure ML Pipelines** | Reusable ML workflow DAGs executed on Azure ML compute | Automated retraining — data prep → train → evaluate → register → deploy | [docs](https://learn.microsoft.com/en-us/azure/machine-learning/concept-ml-pipelines) |
 | **Azure Functions** | Event-driven serverless compute | Lightweight inference triggers, model warmup, webhook handlers for ML events | [docs](https://learn.microsoft.com/en-us/azure/azure-functions/) |
-| **AI Gateway** *(via Azure APIM — Preview)* | Model access management — rate limiting, routing, token quotas, usage analytics across all models in Foundry | Centralised governance and cost control for LLM API traffic across teams and environments | [docs](https://learn.microsoft.com/en-us/azure/api-management/ai-gateway-overview) |
+| **AI Gateway** *(via Azure APIM — Preview)* | Single Azure-native platform to govern traditional APIs, AI models, tools, and agents — rate limiting, routing, token quotas, usage analytics | Centralised governance and cost control for the full AI API surface across teams and environments | [docs](https://learn.microsoft.com/en-us/azure/api-management/ai-gateway-overview) |
 
 ---
 
@@ -346,3 +347,8 @@ graph TB
 | **Foundry Local SDK breaking change** | Legacy SDK deprecated — migrate to new Foundry Local SDK using official migration guide |
 | **Foundry Agent Service: BYO VNet (Preview)** | Private networking now supported — no public egress for regulated enterprise agent deployments |
 | **Azure Developer CLI Fine-Tuning Extension (Preview)** | AZD-native fine-tuning workflow for Foundry models — no portal required |
+| **GPT-5.5 GA in Microsoft Foundry** (Apr 2026) | Latest OpenAI frontier model — deeper long-context reasoning, improved agentic execution + computer-use, greater token efficiency; GPT-5.5 Pro for most demanding enterprise workloads |
+| **Claude Opus 4.8 in Foundry catalog** (May 2026) | Anthropic's most capable model available in Foundry for coding, agentic tasks, and professional workflows |
+| **Microsoft Discovery expanded Preview** (Apr 2026) | Enterprise-grade agentic AI platform for R&D teams — scientific workflows, hypothesis testing, document synthesis |
+| **Hosted Agents YAML/declarative support** | Define agents in YAML; LangGraph, Claude Agent SDK, OpenAI Agents SDK run identically in Foundry hosted runtime; isolated sandbox + persistent filesystem + scale-to-zero |
+| **AI Gateway now governs agents + tools** | APIM AI Gateway extended from models to the full AI surface: traditional APIs, models, MCP tools, and agents |
