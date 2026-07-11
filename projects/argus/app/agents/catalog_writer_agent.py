@@ -15,7 +15,7 @@ def log_approved_correction(
 
 catalog_writer_agent = Agent(
     name="catalog_writer",
-    model=Gemini(model="gemini-flash-latest"),
+    model=Gemini(model="gemini-3.5-flash"),
     description="Logs approved catalog corrections as audit diffs (released/blocked).",
     instruction=(
         "You are a catalog writer. You record the audit diff for an approved correction.\n"

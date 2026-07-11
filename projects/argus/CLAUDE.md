@@ -14,7 +14,7 @@ Pipeline: `item_validator → correction_resolver → approval_orchestrator → 
 
 | Task | Command |
 |---|---|
-| Tests (143, all mocked) | `PYTHONUTF8=1 uv run pytest tests/unit tests/integration` |
+| Tests (187, all mocked) | `PYTHONUTF8=1 uv run pytest tests/unit tests/integration` |
 | Server | `PYTHONUTF8=1 uv run uvicorn app.fast_api_app:app --host 0.0.0.0 --port 8000` |
 | Demo Flow A trigger | `PYTHONUTF8=1 uv run python scripts/trigger_flow_a.py` |
 | Seed BigQuery (one-time) | `PYTHONUTF8=1 uv run python scripts/setup_bigquery.py` |
@@ -42,8 +42,8 @@ Pipeline: `item_validator → correction_resolver → approval_orchestrator → 
 
 ## Hard Rules
 
-- **NEVER change the model** unless explicitly asked (preserve `model="..."` literals).
-- **Model 404** → fix `GOOGLE_CLOUD_LOCATION` (`global`), not the model name.
+- **Model is pinned to `gemini-3.5-flash` (GA)** across all 6 agents — do NOT change unless explicitly asked; preserve the `model="..."` literals. (Was `gemini-flash-latest`; floating `-latest` aliases are prohibited in prod per ADR-0044. `text-embedding-004` is separately pinned — leave it.)
+- **Model 404** → first fix `GOOGLE_CLOUD_LOCATION` (`global`; `gemini-3.5-flash` GA is Global-served), not the model name.
 - **ADK tool imports** → import the tool instance, not the module: `from google.adk.tools.load_web_page import load_web_page`.
 - **App name must match dir name:** `App(name="app")` and the `app/` directory — mismatch → "Session not found".
 - **Run Python with `uv`:** `uv run python ...`.
@@ -52,7 +52,7 @@ Pipeline: `item_validator → correction_resolver → approval_orchestrator → 
 
 ## Test Strategy
 
-143 unit + integration tests, all mocked — no real GCP, no real Slack, no real LLM. CI-safe.
+187 unit + integration tests, all mocked — no real GCP, no real Slack, no real LLM. CI-safe.
 - Unit: pure-Python rule engine, confidence scorer, embedding helpers, Slack HMAC, BQ upsert.
 - Integration: `test_happy_path.py` (5 tests, full SC1–SC5 pipeline with mocked tools), `test_server_e2e.py` (FastAPI), `test_agent.py` (ADK runner stream).
 

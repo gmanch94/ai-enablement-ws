@@ -85,7 +85,7 @@ def score_violation_correction(matches_json: str, field_name: str) -> str:
 
 correction_resolver_agent = Agent(
     name="correction_resolver",
-    model=Gemini(model="gemini-flash-latest"),
+    model=Gemini(model="gemini-3.5-flash"),
     description="Looks up similar past corrections in BigQuery and determines action tier for a violation.",
     instruction=(
         "You are a catalog correction resolver. Given a violation JSON, do the following in order:\n"

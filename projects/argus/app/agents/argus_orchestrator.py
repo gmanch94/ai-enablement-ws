@@ -27,7 +27,7 @@ from app.tools.auto_release import release_auto_correction
 
 argus_orchestrator = Agent(
     name="argus_orchestrator",
-    model=Gemini(model="gemini-flash-latest"),
+    model=Gemini(model="gemini-3.5-flash"),
     description="End-to-end retail catalog correction pipeline: validate → resolve → approve → write → feedback.",
     instruction=(
         "You are the Argus catalog correction orchestrator for a grocery retailer.\n"

@@ -19,7 +19,7 @@ async def wait_for_approval_decision(callback_id: str) -> str:
 
 approval_orchestrator_agent = Agent(
     name="approval_orchestrator",
-    model=Gemini(model="gemini-flash-latest"),
+    model=Gemini(model="gemini-3.5-flash"),
     description="Sends Slack approval requests to merchandisers and waits for their decisions.",
     instruction=(
         "You are an approval orchestrator for retail catalog corrections.\n"
