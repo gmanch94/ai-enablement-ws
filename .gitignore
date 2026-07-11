@@ -12,6 +12,9 @@ context/*
 # Local workspace — never push
 scratch/
 
+# lean-ctx local context cache — tooling, not source
+.lean-ctx/
+
 # Per-project folders — gitignore all content except project READMEs
 projects/retailer-x/*
 projects/*/context/*

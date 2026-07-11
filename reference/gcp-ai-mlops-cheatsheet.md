@@ -2,7 +2,7 @@
 
 > **Audience:** AI Architects, MLOps Engineers, AI Enablement Leads
 > **Scope:** Google Cloud 1st-party services + key Google SDKs used in AIEnablement and MLOps code
-> **Last updated:** 2026-05-29 — verified against Google Cloud Next '26 (April 2026), Vertex AI release notes through May 2026
+> **Last updated:** 2026-07-11 — verified against Google Cloud Next '26 (April 2026), Vertex AI + Gemini Enterprise Agent Platform release notes through July 9 2026, and the June 2026 AI-month blog
 
 ---
 
@@ -105,7 +105,11 @@ graph TB
 
 | Service | Purpose | Key MLOps / AIEnablement Use | Docs |
 |---|---|---|---|
-| **Gemini API / Google AI Studio** | Access to Gemini model family — 3.1 Pro (Preview, deep reasoning), 3.1 Flash-Lite (Preview, high-volume cost-efficient), 3.1 Flash Image (Preview — recommended for image gen), 2.5 Pro/Flash (retiring Oct 16 2026) | LLM inference, multimodal I/O, streaming; Flash-Lite for high-volume cost-sensitive pipelines; use `gemini-3.1-flash-image` for image gen — all `imagen-3.0-*` and `imagen-4.0-*` GA endpoints deprecated, retire Jun 30 2026; migrate off 2.5 before Oct 2026 | [docs](https://ai.google.dev/docs) |
+| **Gemini API / Google AI Studio** | Access to Gemini model family — 3.5 Flash (**GA** Jun 2026, Global/US/EU; now default for Agent Engine Memory Bank), 3.1 Pro (Preview, deep reasoning), 3.1 Flash-Lite (GA `gemini-3.1-flash-lite`; `-preview` endpoint retired Jul 9 2026), 3.1 Flash Image (Preview), 2.5 Pro/Flash (preview endpoints retired Jul 9 2026; GA 2.5 retiring Oct 16 2026) | LLM inference, multimodal I/O, streaming; prefer 3.5 Flash (GA) for new work; Flash-Lite for high-volume cost-sensitive pipelines; use Nano Banana 2 / Gemini image models for image gen — `imagen-3.0-*`/`imagen-4.0-*` GA endpoints deprecated, retire Jun 30 2026; migrate off 2.5 before Oct 2026 | [docs](https://ai.google.dev/docs) |
+| **Gemini Omni Flash** *(Preview)* | Natively multimodal model — generate any output from any input, starting with video; custom dynamic video workflows for enterprises and developers | Multimodal generation + editing in AI pipelines; unified any-to-any I/O | [docs](https://cloud.google.com/vertex-ai/generative-ai/docs) |
+| **Nano Banana 2 / 2 Lite / Pro** | Gemini image-generation model family — 2 Lite fastest and most cost-efficient; supersedes Imagen for image gen | Text-to-image and image editing in pipelines; cost-tiered image gen | [docs](https://cloud.google.com/vertex-ai/generative-ai/docs) |
+| **Gemini Embedding 2** *(Preview)* [M] | First natively multimodal embedding model — maps text, images, video, audio, documents into a single embedding space | Unified multimodal retrieval / RAG grounding without per-modality embedders | [docs](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings) |
+| **Lyria 3** *(Preview)* | Audio/music generation — `lyria-3-pro-preview` (up to 184s), `lyria-3-clip-preview` (30s); granular control over vocals, instrumentation, arrangement | Generate music/audio in creative + media pipelines | [docs](https://cloud.google.com/vertex-ai/generative-ai/docs/models/lyria/lyria-3) |
 | **Vertex AI Model Garden** | Unified model catalog — Gemini, Llama 4, Mistral, Imagen, Veo, Chirp, and more; 1st-party + partner + open models | Discover, evaluate, and deploy models; single endpoint for all model families | [docs](https://cloud.google.com/vertex-ai/docs/model-garden/explore-models) |
 | **Vertex AI Model Optimizer** *(GA)* | Automatically selects the best model per prompt based on quality/cost targets | Reduce token cost without manual routing logic; dynamically routes across Gemini model tiers | [docs](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/model-optimizer) |
 | **Vertex AI Global Endpoint** *(GA)* | Capacity-aware routing across multiple regions for Gemini models | High-availability LLM serving; automatic failover and load balancing across regions | [docs](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/global-endpoint) |
@@ -128,8 +132,11 @@ graph TB
 | **Agent Studio** *(Preview)* | Visual IDE for building, testing, and deploying agents — drag-drop orchestration, prompt editor, tool wiring | Accelerate agent development cycle; iterate on agent logic without raw code | [docs](https://cloud.google.com/gemini-enterprise-agent-platform) |
 | **Agent Registry** *(Preview)* | Centralised catalog for discovering, versioning, and sharing agents across teams | Govern agent lifecycle; promote agents from dev to prod with version history | [docs](https://cloud.google.com/gemini-enterprise-agent-platform) |
 | **Agent Identity** *(Preview)* | Managed identity for agents — unique credentials, audit trail, least-privilege scoping | Non-repudiation for agent actions; fine-grained access control per agent | [docs](https://cloud.google.com/gemini-enterprise-agent-platform) |
-| **Agent Gateway** *(Preview)* | Policy enforcement gateway for agent tool calls — ISV security ecosystem integrations | Single enforcement point for all agent tool calls; integrates with third-party SIEM/DLP | [docs](https://cloud.google.com/gemini-enterprise-agent-platform) |
-| **Agent Observability** *(Preview)* | Distributed traces, metrics, and logs across multi-agent systems | End-to-end visibility into agentic pipelines; latency profiling across agent hops | [docs](https://cloud.google.com/gemini-enterprise-agent-platform) |
+| **Agent Gateway** *(GA — Jun 18 2026)* | Networking component of the Agent Platform — secures and governs connectivity for all agentic interactions (user↔agent, agent↔tool, agent↔agent); ISV security ecosystem integrations | Single enforcement point for all agent tool calls; integrates with third-party SIEM/DLP | [docs](https://cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview) |
+| **Agent Observability** *(GA — Jun 18 2026)* | Distributed traces, metrics, and logs across multi-agent systems and MCP servers; default-on OpenTelemetry tracing for ADK agents on Agent Engine; GCS default trace storage; DAG span views | End-to-end visibility into agentic pipelines; latency profiling across agent hops | [docs](https://cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview) |
+| **Semantic Governance Policies (SGP)** *(Preview — Jun 29 2026)* | Runtime intent-gating layer — author NL constraints in plain English, verify tool calls against user intent + business rules; blocks rogue tool use / data exfil; agent-skills supply-chain governance; dry-run mode | Declarative agent guardrails without code/redeploy; granular per-tool/parameter scoping (e.g. financial limits) | [docs](https://cloud.google.com/gemini-enterprise-agent-platform) |
+| **Managed Agents API (Agent Platform)** | Build and run custom agents inside secure, Google-hosted environments that integrate with Agent Platform | Fully managed custom-agent hosting with platform-native governance | [docs](https://cloud.google.com/gemini-enterprise-agent-platform) |
+| **CodeMender** [M] | AI security agent via Agent Platform — finds and fixes vulnerabilities in code | Automated code-vulnerability remediation in the agentic dev loop | [docs](https://cloud.google.com/gemini-enterprise-agent-platform) |
 
 ---
 
@@ -149,6 +156,7 @@ graph TB
 | **Vertex AI Model Monitoring** | Production model health — feature skew, prediction drift, data quality alerts | Detect model degradation; trigger retraining on statistical drift thresholds | [docs](https://cloud.google.com/vertex-ai/docs/model-monitoring/overview) |
 | **Vertex AI Dashboards** *(GA)* | Real-time monitoring of model deployments — usage, throughput, latency, error rates | Single-pane visibility across all deployed models and endpoints | [docs](https://cloud.google.com/vertex-ai/docs/general/monitoring) |
 | **BigQuery ML** | In-database ML — train and serve models directly in BigQuery SQL | Rapid prototyping without data movement; production ML for SQL-native teams | [docs](https://cloud.google.com/bigquery/docs/bqml-introduction) |
+| **Gemini fine-tuning (Agent Platform)** *(Preview — Jun 2026)* | RL fine-tuning for `gemini-3.5-flash` (Jun 15); supervised fine-tuning for `gemini-3.1-flash-lite` + `gemini-3.5-flash` (Jun 22); tuning in `us-central1`/`europe-west4`, serving on us/eu multi-region; Provisioned Throughput now supports SFT Gemini 3 inference | Specialise Gemini models on domain tasks; assured throughput for tuned-model serving | [docs](https://cloud.google.com/gemini-enterprise-agent-platform/models/tuning/reinforcement-tuning) |
 | **Data Science Agent** *(GA — May 26, 2026)* | AI agent in Colab Enterprise that automates EDA, ML tasks, and insights from BigQuery notebooks — supports BigFrames, BigQuery ML, Managed Apache Spark | Accelerate data science workflows without manual code authoring; integrates natively with BigQuery | [docs](https://cloud.google.com/colab/docs/use-data-science-agent) |
 | **Data Engineering Agent** *(Preview)* | Autonomously builds Dataform pipelines from plain-English goals — enforces governance rules, tests, blocks bad data from production | AI-driven data pipeline authoring; pairs with Data Science Agent for end-to-end agentic analytics | [docs](https://cloud.google.com/blog/products/data-analytics/unveiling-new-bigquery-capabilities-for-the-agentic-era) |
 
@@ -254,7 +262,7 @@ graph TB
 
 | SDK | Languages | Purpose | Key Use | Status | Docs |
 |---|---|---|---|---|---|
-| **google-cloud-aiplatform** (Vertex AI SDK) | Python | Primary Vertex AI SDK — training, pipelines, model registry, endpoints, evaluation | Author training jobs, run Vertex AI Pipelines, deploy models | **GA** — ⚠️ Gen AI / Gemini module deprecated, EOL June 24 2026; migrate to `google-genai`. Core Vertex AI (training, pipelines, registry) unaffected. | [docs](https://cloud.google.com/python/docs/reference/aiplatform/latest) |
+| **google-cloud-aiplatform** (Vertex AI SDK) | Python | Primary Vertex AI SDK — training, pipelines, model registry, endpoints, evaluation | Author training jobs, run Vertex AI Pipelines, deploy models | **GA** — ⚠️ Gen AI / Gemini modules (`vertexai.generative_models`, `.language_models`, `.vision_models`, `.tuning`, `.caching`) **removed from releases after June 24 2026** — migrate to `google-genai`. Core Vertex AI (training, pipelines, registry) unaffected. | [docs](https://cloud.google.com/python/docs/reference/aiplatform/latest) |
 | **kfp** (Kubeflow Pipelines SDK) | Python | Define Vertex AI Pipelines as Python DSL — components, pipelines, artifacts | Build reusable pipeline components; compile and submit pipelines to Vertex AI | **GA** | [docs](https://www.kubeflow.org/docs/components/pipelines/sdk/sdk-overview/) |
 
 ### Data & Infra
@@ -274,8 +282,13 @@ graph TB
 | LLM access & model selection | Gemini API, Vertex AI Model Garden, Model Optimizer |
 | Agent building & orchestration | ADK, Agent Engine, Vertex AI Agent Builder, Agent Studio |
 | Agent registry & versioning | Agent Registry |
-| Agent identity & governance | Agent Identity, Agent Gateway |
-| Agent observability | Agent Observability, Cloud Trace |
+| Agent identity & governance | Agent Identity, Agent Gateway (GA), Semantic Governance Policies |
+| Agent runtime intent-gating / guardrails | Semantic Governance Policies (SGP) |
+| Custom agent hosting (managed) | Managed Agents API (Agent Platform) |
+| Agent observability | Agent Observability (GA), Cloud Trace |
+| Audio / music generation | Lyria 3 |
+| Multimodal any-to-any generation | Gemini Omni Flash |
+| Image generation | Nano Banana 2 / 2 Lite / Pro |
 | Agent-to-agent communication | A2A Protocol, ADK |
 | Enterprise data grounding (RAG) | Vertex AI RAG Engine, Vertex AI Agent Builder, Vertex AI Search |
 | Vector store | Vertex AI Vector Search 2.0, AlloyDB AI, Cloud Spanner |

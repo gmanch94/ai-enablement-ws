@@ -2,7 +2,7 @@
 
 > **Audience:** AI Architects, MLOps Engineers, AI Enablement Leads
 > **Scope:** AWS 1st-party services + key AWS SDKs used in AIEnablement and MLOps code
-> **Last updated:** 2026-05-29 — verified against AWS re:Invent 2025, Feb 2026 release notes, May 2026 announcements, and What's Next with AWS 2026 (Apr/May 2026)
+> **Last updated:** 2026-07-11 — verified against AWS re:Invent 2025, May 2026 announcements, and AWS Summit New York 2026 (June 16–22, 2026)
 
 ---
 
@@ -101,7 +101,8 @@ graph TB
 
 | Service | Purpose | Key MLOps / AIEnablement Use | Docs |
 |---|---|---|---|
-| **Amazon Bedrock** | Managed access to foundation models — Amazon Nova, Claude, Llama, Mistral, Titan, Cohere, Stable Diffusion, OpenAI GPT — with enterprise security | LLM inference, embeddings, fine-tuning, RAG; Reserved/Priority/Flex service tiers; supports Converse, Invoke, OpenAI-compatible Responses and Chat Completions APIs | [docs](https://docs.aws.amazon.com/bedrock/) |
+| **Amazon Bedrock** | Managed access to foundation models — Amazon Nova, Claude, Llama, Mistral, Titan, Cohere, Stable Diffusion, OpenAI GPT, xAI Grok 4.3, + 18 open-weight models added Jun 2026 (Mistral Large 3, Gemma 3, NVIDIA Nemotron) — with enterprise security | LLM inference, embeddings, fine-tuning, RAG; Reserved/Priority/Flex service tiers; supports Converse, Invoke, OpenAI-compatible Responses and Chat Completions APIs | [docs](https://docs.aws.amazon.com/bedrock/) |
+| **xAI Grok 4.3 on Bedrock** *(GA — Jun 2026)* | Grok 4.3 via a new Bedrock inference engine tuned for price/performance — tool calling, structured output, response streaming | Frontier reasoning + agentic workflows inside AWS trust boundary; more model choice for enterprise pipelines | [docs](https://aws.amazon.com/about-aws/whats-new/2026/06/grok-amazon-bedrock/) |
 | **Amazon Nova 2** | Amazon's own model family — Lite, Pro (1M context, extended thinking), Sonic (speech-to-speech), Omni (multimodal I/O) | Cost-optimised inference with native AWS integration; Nova Forge for custom frontier models ($100K/yr) | [docs](https://docs.aws.amazon.com/nova/) |
 | **Amazon Nova Act** *(GA)* | Browser automation agent — 90%+ task reliability, deploys to AgentCore with zero infra config | Automate web-based workflows in agentic pipelines; integrates natively with AgentCore Runtime | [docs](https://docs.aws.amazon.com/nova/) |
 | **SageMaker JumpStart** | Model hub — pre-trained foundation models, fine-tuning templates, one-click deployment | Discover and deploy open models (Llama, Falcon, etc.); starting point for model evaluation and PoC | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/studio-jumpstart.html) |
@@ -116,6 +117,9 @@ graph TB
 | Service | Purpose | Key MLOps / AIEnablement Use | Docs |
 |---|---|---|---|
 | **Amazon Bedrock AgentCore** *(GA)* | Production agent infrastructure — Cedar-based policy controls, episodic memory, continuous quality evaluations, bidirectional streaming; Payments capability (Preview) via Coinbase/Stripe wallets with session-level spending limits | Deploy and govern production agents; enforce what agents can/cannot do before any tool call; enable agents to autonomously pay for APIs and MCP services | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html) |
+| **Bedrock AgentCore Harness** *(GA — Jun 2026)* | Managed infrastructure + orchestration layer — go from agent idea to production-grade agent in minutes | Standardised runtime for hosting/orchestrating agents without wiring infra by hand | [docs](https://aws.amazon.com/blogs/machine-learning/amazon-bedrock-agentcore-harness-is-now-generally-available-go-from-idea-to-production-grade-agent-in-minutes/) |
+| **Web Search on Bedrock AgentCore** *(GA — Jun 2026)* | Fully managed web-search tool — grounds agents in current, cited web knowledge with zero data egress from the customer's AWS boundary | Add live web grounding to agents without building/operating a search integration | [docs](https://aws.amazon.com/blogs/aws/announcing-web-search-on-amazon-bedrock-agentcore-ground-your-ai-agents-in-current-accurate-web-knowledge/) |
+| **Amazon Bedrock Managed Knowledge Base** *(GA — Jun 2026)* | Fully managed enterprise RAG — native data connectors, Smart Parsing (automatic multi-format prep), Agentic Retriever for multi-step queries, integrated with AgentCore Gateway | Build RAG pipelines focused on outcomes, not infra; evolution of Bedrock Knowledge Bases | [docs](https://aws.amazon.com/blogs/aws/introducing-amazon-bedrock-managed-knowledge-base-for-faster-more-accurate-enterprise-ai-applications/) |
 | **Amazon Bedrock Agents** | Build conversational agents with tool use, multi-step reasoning, and memory | RAG + action execution; connect agents to APIs, Lambda functions, and knowledge bases | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html) |
 | **Amazon Bedrock Knowledge Bases** | Managed RAG — automatic chunking, embedding, vector storage, and retrieval | Ground agents in enterprise data without building custom RAG pipelines; supports S3, Confluence, SharePoint; supports 1-hour prompt cache TTL for long-running multi-turn agent workflows | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html) |
 | **Amazon Bedrock Flows** | Visual no-code builder for agent workflows — chain prompts, tools, and conditions as DAGs | Build and iterate on agent logic without code; deploy flows as managed endpoints | [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/flows.html) |
@@ -125,7 +129,7 @@ graph TB
 | **Bedrock Managed Agents powered by OpenAI** *(Limited Preview)* | Deploy production-ready OpenAI-powered agents on Bedrock infrastructure with AWS security controls | Fast path to OpenAI agent capabilities with IAM, PrivateLink, Guardrails governance | [docs](https://aws.amazon.com/bedrock/openai/) |
 | **Amazon WorkSpaces for AI Agents** *(Preview)* | Isolated secure compute environments (desktop/browser) for AI agents to operate in | Sandbox for agents running UI automation, web browsing, and desktop workflows | [docs](https://aws.amazon.com/about-aws/whats-new/2026/05/workspaces-ai-agents/) |
 | **AWS Security Agent** *(GA)* | Autonomous on-demand penetration testing frontier agent — compresses pen testing from weeks to hours; runs persistently without human oversight | Integrate security testing into MLOps pipelines; detect vulnerabilities in AI workload infrastructure | [docs](https://aws.amazon.com/blogs/machine-learning/aws-launches-frontier-agents-for-security-testing-and-cloud-operations/) |
-| **AWS DevOps Agent** *(GA)* | Autonomous DevOps operations frontier agent — 3–5x faster incident resolution, runs continuously hours to days | AI-driven SRE and incident response; reduce ops burden on AI platform teams | [docs](https://aws.amazon.com/blogs/machine-learning/aws-launches-frontier-agents-for-security-testing-and-cloud-operations/) |
+| **AWS DevOps Agent** *(GA; release mgmt Preview — Jun 2026)* | Autonomous DevOps operations frontier agent — 3–5x faster incident resolution, runs continuously hours to days; release-management capability (Preview) assesses code changes before production | AI-driven SRE and incident response; reduce ops burden on AI platform teams | [docs](https://aws.amazon.com/blogs/machine-learning/aws-launches-frontier-agents-for-security-testing-and-cloud-operations/) |
 
 ---
 
@@ -135,9 +139,9 @@ graph TB
 
 | Service | Purpose | Key MLOps / AIEnablement Use | Docs |
 |---|---|---|---|
-| **Amazon SageMaker AI** | Core MLOps platform — Unified Studio (integrated workspace: EMR, Glue, Athena, Redshift, Bedrock, SageMaker AI in one UI), experiments, training, model registry, managed endpoints, batch transform | End-to-end ML lifecycle from data prep to production serving; PrivateLink support for VPC isolation | [docs](https://docs.aws.amazon.com/sagemaker/) |
+| **Amazon SageMaker AI** | Core MLOps platform — Unified Studio (integrated workspace: EMR, Glue, Athena, Redshift, Bedrock, SageMaker AI in one UI), experiments, training, model registry, managed endpoints, batch transform; real-time endpoints now expose an OpenAI-compatible API (invoke via OpenAI SDK / LangChain / Strands by changing only the endpoint URL — Jun 2026) [M]; MLflow integration streams benchmark + inference-optimization results in real time [M] | End-to-end ML lifecycle from data prep to production serving; PrivateLink support for VPC isolation | [docs](https://docs.aws.amazon.com/sagemaker/) |
 | **SageMaker HyperPod** *(GA — enhanced)* | Managed distributed training cluster — checkpointless training (80%+ downtime reduction), elastic auto-scaling | Large-scale foundation model training and fine-tuning; self-healing clusters reduce ops burden | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod.html) |
-| **SageMaker Serverless Customization** *(GA)* | UI-driven fine-tuning — SFT, DPO, RLVR, RLAIF — without managing compute | Fine-tune Nova, Llama, DeepSeek in a few clicks; no capacity planning or instance management | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-fine-tune.html) |
+| **SageMaker Serverless Customization** *(GA — agent-guided workflow Jun 2026)* | UI-driven fine-tuning — SFT, DPO, RLVR, RLAIF — without managing compute; new agent-guided natural-language workflow generates synthetic data + handles eval, cutting cycles months→days | Fine-tune Nova, Llama, DeepSeek in a few clicks; no capacity planning or instance management | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-fine-tune.html) |
 | **SageMaker Pipelines** | Reusable MLOps workflow DAGs — data prep → train → evaluate → register → deploy | Automated retraining pipelines with CI/CD integration; YAML-based pipeline definitions | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines.html) |
 | **SageMaker Feature Store** | Centralised online + offline feature storage with point-in-time correctness | Feature sharing across teams; consistent feature serving for training and inference | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/feature-store.html) |
 | **SageMaker Model Registry** | Versioned model store with approval workflows and metadata | Govern model promotion from dev → staging → prod; track lineage per model version | [docs](https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry.html) |
@@ -154,6 +158,7 @@ graph TB
 |---|---|---|---|
 | **Amazon S3** | Object storage — unlimited scale, lifecycle policies, event triggers | Training datasets, model artifacts, checkpoint storage, feature snapshots | [docs](https://docs.aws.amazon.com/s3/) |
 | **Amazon S3 Vectors** *(GA)* | Native vector storage in S3 — 2B vectors per index, ~100ms query latency, 14 regions | Cost-efficient vector store for RAG — no separate vector DB needed for many use cases | [docs](https://docs.aws.amazon.com/s3/latest/userguide/vectors.html) |
+| **Amazon S3 annotations** *(GA — Jun 2026)* | Attach up to 1GB of rich, mutable, queryable context directly to S3 objects — purpose-built for AI agents and autonomous workflows | Discover/understand/act on data at scale without a separate metadata system | [docs](https://aws.amazon.com/blogs/aws/amazon-s3-annotations-attach-rich-queryable-context-directly-to-your-objects/) |
 | **Amazon OpenSearch Service** | Managed search + vector search with k-NN and hybrid retrieval | RAG pipelines — chunk, embed, index, and retrieve at low latency; replaces Elasticsearch | [docs](https://docs.aws.amazon.com/opensearch-service/) |
 | **AWS Glue** | Serverless ETL — data cataloguing, transformation, quality checks | Build training data pipelines; data cataloguing for feature discovery and governance | [docs](https://docs.aws.amazon.com/glue/) |
 | **Amazon Redshift** | Cloud data warehouse with ML-native capabilities (Redshift ML via SageMaker) | Large-scale feature engineering; in-warehouse model training via SQL | [docs](https://docs.aws.amazon.com/redshift/) |
@@ -169,6 +174,7 @@ graph TB
 | **AWS Trainium 2** | Amazon's custom ML training chip — optimised for large model training | Distributed training at lower cost than GPU alternatives; Neuron SDK for framework support | [docs](https://aws.amazon.com/machine-learning/trainium/) |
 | **AWS Inferentia 2** | Amazon's custom inference chip — high throughput, low cost per token | Production inference for latency-sensitive LLM serving at scale | [docs](https://aws.amazon.com/machine-learning/inferentia/) |
 | **EC2 P5 / G6 instances** | NVIDIA H100 (P5) and L40S (G6) GPU instances | Custom training and high-performance inference workloads requiring full GPU control | [docs](https://aws.amazon.com/ec2/instance-types/p5/) |
+| **EC2 G7 instances** *(Jun 2026)* | NVIDIA RTX PRO 4500 Blackwell Server Edition GPUs + 6th-gen Intel Xeon — AWS is first major cloud to offer these; up to 4.6x AI inference and 2.1x graphics vs G6 | Cost-effective GPU inference and graphics workloads at the mid-tier | [docs](https://aws.amazon.com/blogs/aws/announcing-amazon-ec2-g7-instances-accelerated-by-nvidia-rtx-pro-4500-blackwell-server-edition-gpus/) |
 | **AWS Batch** | Managed batch compute — job queues, auto-scaling, spot integration | Large-scale batch inference, distributed training jobs, hyperparameter sweeps | [docs](https://docs.aws.amazon.com/batch/) |
 
 ---
@@ -254,6 +260,11 @@ graph TB
 | LLM access & model selection | Amazon Bedrock, SageMaker JumpStart |
 | Amazon's own models | Amazon Nova 2 (Lite/Pro/Sonic/Omni) |
 | OpenAI model access on AWS | OpenAI Models on Amazon Bedrock (Limited Preview) |
+| xAI model access on AWS | xAI Grok 4.3 on Bedrock (GA) |
+| Agent runtime / orchestration harness | Bedrock AgentCore Harness (GA) |
+| Agent web grounding | Web Search on Bedrock AgentCore (GA) |
+| Object-level context for agents | Amazon S3 annotations (GA) |
+| Mid-tier GPU inference | EC2 G7 (Blackwell RTX PRO 4500) |
 | Agent building & orchestration | Bedrock AgentCore, Bedrock Agents, Bedrock Flows |
 | Agent memory & state | Bedrock AgentCore (episodic memory) |
 | Agent payments / API purchasing | Bedrock AgentCore Payments (Preview) |

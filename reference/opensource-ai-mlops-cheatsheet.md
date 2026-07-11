@@ -2,7 +2,7 @@
 
 > **Audience:** AI Architects, MLOps Engineers, Platform Engineers
 > **Scope:** Open-source tools and frameworks for LLM serving, orchestration, RAG, evaluation, observability, and MLOps — cloud-agnostic and self-hostable
-> **Last updated:** 2026-05-29 — verified against project releases, GitHub activity, HuggingFace blog, vLLM blog, and community benchmarks
+> **Last updated:** 2026-07-11 — verified against GitHub releases (vLLM v0.25, MLflow 3.12+, Transformers v5.12), HuggingFace blog, and community benchmarks (June–July 2026)
 > **Complements:** [AWS](aws-ai-mlops-cheatsheet.md) · [Azure](azure-ai-mlops-cheatsheet.md) · [GCP](gcp-ai-mlops-cheatsheet.md) · [Cross-Cloud](cross-cloud-ai-comparison.md)
 
 ---
@@ -101,7 +101,11 @@ graph TB
 | **Qwen 3.5** *(Mar 2026)* | 7B–72B dense + 235B MoE; Qwen 2.5-Max ~300B+ | Multilingual, coding, 1M context; Qwen 2.5-Max benchmarks with GPT-4o; full param-size range now available | Apache 2.0 | [hub](https://huggingface.co/Qwen) |
 | **DeepSeek-V4-Pro** *(Apr 2026)* | 1.6T total MoE (49B active) | Frontier reasoning, agentic workloads, 1M token context — successor to V3 | MIT | [hub](https://huggingface.co/deepseek-ai) |
 | **DeepSeek R2** *(new)* | TBC | Reasoning specialist — 79.7% AIME 2025 (vs V3's 39.4%), 72.0% GPQA Diamond; top OSS reasoning model | MIT | [hub](https://huggingface.co/deepseek-ai) |
+| **GLM-5.2** (Z.ai / Zhipu) *(Jun 2026)* | MoE | Long-horizon agentic tasks, 1M context; among the strongest open-weight models per community leaderboards (GPQA Diamond ~91% [M]) | MIT — verify on hub [?] | [hub](https://huggingface.co/zai-org) |
+| **Kimi K2.7 Code** (Moonshot AI) *(Jun 2026)* | 1.1T MoE (multimodal) | Agentic coding specialist — +21.8% over K2.6 on Kimi Code Bench v2 [M]; HighSpeed variant ~6× faster inference | Modified MIT — verify on hub [?] | [hub](https://huggingface.co/moonshotai/Kimi-K2.7-Code) |
 | **Phi-4** | 14B | Strong reasoning at small scale, distillation research | MIT | [hub](https://huggingface.co/microsoft) |
+| **MiniMax M3** *(Jun 2026)* | MoE (dense/sparse) + M3-VL vision variant | 1M context, native multimodal, frontier coding — tops open-weight SWE-Bench Pro (59.0%); supported in Transformers v5.12 | MIT/Apache — verify on hub [?] | [hub](https://huggingface.co/MiniMaxAI) |
+| **Gemma 4** *(2026)* | 1B–27B+ (dense + MoE) | Successor to Gemma 3 — efficient on-device + server inference, multimodal, MTP speculative decoding (vLLM/Ollama) | Gemma Terms of Use | [hub](https://huggingface.co/google) |
 | **Gemma 3** | 1B–27B | Efficient on-device + server inference, multimodal | Gemma Terms of Use | [hub](https://huggingface.co/google) |
 | **Command R+** (Cohere) | 104B | Enterprise RAG, long context (128K), grounded generation | CC-BY-NC | [hub](https://huggingface.co/CohereForAI) |
 | **GPT-OSS** (OpenAI open-weight) | 120B, 20B | OpenAI's open-weight model family — optimized for NVIDIA Blackwell; available via vLLM and cloud MaaS (GCP Vertex AI) | MIT | [hub](https://huggingface.co/openai) |
@@ -114,12 +118,14 @@ graph TB
 
 | Tool | Purpose | Key MLOps Use | Status | Docs |
 |---|---|---|---|---|
-| **vLLM** | High-throughput LLM inference engine — PagedAttention for 80% GPU memory reduction, continuous batching, FP8 KV-Cache (Apr 2026 — quantized KV cache slashes memory at 128k+ contexts) | De facto standard for production self-hosted serving; OpenAI-compatible API; supports DeepSeek V4 native long-context; powers Meta, LinkedIn, Roblox | Stable | [docs](https://docs.vllm.ai/) |
+| **vLLM** *(v0.25.0 — Jul 2026)* | High-throughput LLM inference engine — PagedAttention, continuous batching, FP8 KV-Cache; now runs on `transformers>=5`; CUDA 13 default; EAGLE spec-decode + Gemma 4 MTP; DeepSeek V4 on Blackwell (MLA) + AMD/ROCm + pipeline parallelism | De facto standard for production self-hosted serving; OpenAI-compatible API; supports DeepSeek V4 native long-context; powers Meta, LinkedIn, Roblox | Stable | [docs](https://docs.vllm.ai/) |
 | **SGLang** | Structured generation server — RadixAttention for fine-grained KV cache reuse in multi-turn and RAG | High-performance alternative to vLLM for structured outputs and multi-turn workloads | Active | [docs](https://sgl-project.github.io/) |
 | **Ollama** | Developer-friendly local LLM runner — one-line model pull + serve | Local dev and prototyping; pairs with OpenWebUI for browser UI; not production-scale | Stable | [docs](https://ollama.com/) |
 | **llama.cpp** | CPU/GPU inference via GGUF quantisation — runs on consumer hardware | Edge deployment, cost-sensitive inference, developer laptops | Stable | [github](https://github.com/ggerganov/llama.cpp) |
 | **TensorRT-LLM** | NVIDIA-optimised inference backend — quantisation, paged KV cache, speculative decoding | Production GPU serving with maximum throughput on NVIDIA hardware | Stable | [docs](https://nvidia.github.io/TensorRT-LLM/) |
 | **KTransformers** | Consumer hardware MoE inference — run 671B DeepSeek on 24 GB GPU + 382 GB RAM | 3–28× speedup vs naive CPU offloading; enables full-size MoE on commodity machines | Maturing | [github](https://github.com/kvcache-ai/ktransformers) |
+
+> ⚠️ **HF Text Generation Inference (TGI) → maintenance mode (Mar 21 2026).** The TGI project now directs new users to vLLM, SGLang, llama.cpp, and MLX. Don't start new deployments on TGI. [M]
 
 ---
 
@@ -173,7 +179,7 @@ graph TB
 | **LM Evaluation Harness** (EleutherAI) | Standardised benchmarking — 60+ tasks (MMLU, HellaSwag, Big-Bench, TruthfulQA) | Reproducible model comparison; custom task addition; used by most model release papers | Stable | [github](https://github.com/EleutherAI/lm-evaluation-harness) |
 | **Phoenix** (Arize) | Self-hosted LLM observability + evaluation — tracing, built-in evaluators, prompt versioning | Integrated eval + observability; open-source core (MIT); no vendor lock-in | Active | [docs](https://docs.arize.com/phoenix) |
 | **Opik** (Comet) | Agent reliability evaluation — complex agentic workflow monitoring and testing | Designed for multi-step agent evaluation; tracks tool call sequences and outcomes | Active | [docs](https://www.comet.com/docs/opik/) |
-| **MLflow 3.x** *(current: 3.10.1)* | GenAI evals — hallucination detection, LLM-as-a-judge, trace-based eval; multi-workspace support, cost tracking for traces, GenAI Overview dashboard, MemAlign eval algorithm, Claude Code SDK tracing | Unified eval + experiment tracking + model registry; treats prompts and agents as first-class citizens | Stable | [docs](https://mlflow.org/docs/latest/llms/index.html) |
+| **MLflow 3.x** *(current: 3.12+)* | GenAI evals — hallucination detection, LLM-as-a-judge, trace-based eval; coding-agent tracing (Claude Code / Codex / Gemini CLI / Qwen Code plugins), RBAC + Admin UI, trace retention/auto-archival to object storage, MLflow Assistant engines, official Kubernetes Helm chart | Unified eval + experiment tracking + model registry; treats prompts and agents as first-class citizens | Stable | [docs](https://mlflow.org/docs/latest/llms/index.html) |
 | **RAGAS** | RAG-specific evaluation — faithfulness, answer relevancy, context precision/recall | Purpose-built metrics for RAG pipelines; integrates with LangChain and LlamaIndex | Active | [docs](https://docs.ragas.io/) |
 
 ---
@@ -195,7 +201,7 @@ graph TB
 
 | Tool | Purpose | Key MLOps / AIEnablement Use | Status | Docs |
 |---|---|---|---|---|
-| **MLflow** | End-to-end ML lifecycle — experiment tracking, model registry, GenAI eval, serving | 20K+ GitHub stars; lingua franca of experiment tracking; MLflow 3.0 adds LLM tracing and evals | Stable | [docs](https://mlflow.org/docs/latest/) |
+| **MLflow** *(3.12+)* | End-to-end ML lifecycle — experiment tracking, model registry, GenAI eval, serving | 20K+ GitHub stars; lingua franca of experiment tracking; 3.12+ adds coding-agent tracing, RBAC + Admin UI, trace auto-archival, Helm chart | Stable | [docs](https://mlflow.org/docs/latest/) |
 | **ZenML** | Cloud-agnostic ML pipeline framework — stack components, team scaling, audit trails (Apache 2.0 core) | Portable pipelines across any cloud or local; strong governance and reproducibility story | Active | [docs](https://docs.zenml.io/) |
 | **Kubeflow** *(1.10)* | Kubernetes-native ML platform — Pipelines, Training Operator, Katib, KServe; **1.10 adds LLM fine-tuning support** | Multi-framework, multi-cloud ML at scale; LLM fine-tuning jobs now first-class in 1.10 | Stable | [docs](https://www.kubeflow.org/docs/) |
 | **Flyte** | Type-safe Kubernetes-native workflow engine — versioned tasks, data lineage, reproducibility | Complex ML workflows requiring strict reproducibility; strong Python-native API | Active | [docs](https://docs.flyte.org/) |
@@ -221,7 +227,7 @@ graph TB
 
 | Library | Languages | Purpose | Key Use | Docs |
 |---|---|---|---|---|
-| **Hugging Face Transformers** | Python | Model loading, inference, fine-tuning — 200K+ models | Standard entry point for any open model; integrates with all MLOps tools | [docs](https://huggingface.co/docs/transformers) |
+| **Hugging Face Transformers** *(v5.x)* | Python | Model loading, inference, fine-tuning — 200K+ models. ⚠️ **v5 is a major bump (breaking from v4)** — v5.12 adds MiniMax-M3-VL, Parakeet-RNNT; vLLM now targets `transformers>=5` | Standard entry point for any open model; integrates with all MLOps tools | [docs](https://huggingface.co/docs/transformers) |
 | **Hugging Face Hub** | Python | Model and dataset registry — push/pull weights, versioned repos | Model versioning and sharing across teams | [docs](https://huggingface.co/docs/huggingface_hub) |
 | **Accelerate** | Python | Distributed training across GPUs/TPUs — minimal code changes | Scale fine-tuning jobs to multi-GPU or multi-node without framework rewrites | [docs](https://huggingface.co/docs/accelerate) |
 | **LiteLLM** | Python | Unified API proxy — normalises 100+ LLM providers to OpenAI-compatible format | Switch between OSS and cloud models without code changes; cost tracking and fallbacks | [docs](https://docs.litellm.ai/) |
@@ -234,8 +240,10 @@ graph TB
 
 | Architectural Concern | Primary Tools |
 |---|---|
-| LLM selection (self-hosted) | Llama 4 Scout/Maverick · Mistral Small 3 · DeepSeek-V4-Pro · Qwen 3.5 |
-| LLM selection (reasoning) | DeepSeek R2 · Llama 4 Maverick |
+| LLM selection (self-hosted) | Llama 4 Scout/Maverick · Mistral Small 3 · DeepSeek-V4-Pro · Qwen 3.5 · MiniMax M3 |
+| LLM selection (multimodal + long context) | MiniMax M3 (1M ctx) · Llama 4 Scout (10M ctx) |
+| LLM selection (reasoning) | DeepSeek R2 · Llama 4 Maverick · GLM-5.2 |
+| LLM selection (agentic coding) | Kimi K2.7 Code · DeepSeek-V4-Pro · MiniMax M3 |
 | Production LLM serving | vLLM · SGLang |
 | Local / edge inference | Ollama · llama.cpp · KTransformers |
 | NVIDIA GPU-optimised serving | TensorRT-LLM |
