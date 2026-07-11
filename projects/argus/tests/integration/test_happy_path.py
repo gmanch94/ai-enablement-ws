@@ -74,7 +74,7 @@ class _MockBQSearch:
     def __init__(self, rows: list[dict]):
         self._rows = rows
 
-    def query(self, _sql: str):
+    def query(self, _sql: str, job_config=None):
         rows = self._rows
 
         class _Job:
@@ -100,6 +100,9 @@ class _MockSlack:
 
     def post(self, _url: str, *, json=None, headers=None):
         class _Resp:
+            status_code = 200
+            headers: dict = {}
+
             def raise_for_status(self_):  # noqa: N805
                 pass
 

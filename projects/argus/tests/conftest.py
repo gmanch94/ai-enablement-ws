@@ -1,7 +1,12 @@
-"""Unit test configuration — env defaults + embedding stub.
+"""Shared test configuration — env defaults + embedding stub.
 
-Sets test values for security-related env vars so tests don't trip the
-fail-loud secret loaders. Production loads from Secret Manager; tests use env.
+Applies to BOTH unit and integration tests. Sets test values for
+security-related env vars so tests don't trip the fail-loud secret loaders.
+Production loads from Secret Manager; tests use env.
+
+Lives at tests/ root (not tests/unit/) so integration tests inherit the same
+Slack/API env — otherwise integration flows hit the real secret loader and
+fail with "Required secret 'SLACK_BOT_TOKEN' is missing".
 """
 import pytest
 
