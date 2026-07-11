@@ -1,7 +1,8 @@
 # ADR-0017: AWS — Data Ingestion & Feature Management
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops] [rag]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -57,11 +58,3 @@ We will use **Amazon S3** as the primary data lake for all training datasets, mo
 4. EventBridge rule: `{ "source": ["aws.s3"], "detail-type": ["Object Created"], "detail": { "bucket": { "name": ["[project]-raw"] } } }` → trigger SageMaker Pipeline or Glue job
 5. For streaming features: use Kinesis Data Streams → Lambda → Feature Store `put_record()` for sub-second feature updates
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

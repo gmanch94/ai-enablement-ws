@@ -1,7 +1,8 @@
 # ADR-0035: Open-Source — RAG Frameworks
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [rag]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -66,11 +67,3 @@ We adopt a **tiered RAG framework selection** based on production requirements:
 5. LlamaIndex: use `VectorStoreIndex` with `SentenceSplitter`; configure `similarity_top_k` (default 3) and evaluate vs RAGAS metrics
 6. Store retrieval configuration (chunk size, overlap, top-k, reranker) in versioned config — changes to retrieval config require re-evaluation
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

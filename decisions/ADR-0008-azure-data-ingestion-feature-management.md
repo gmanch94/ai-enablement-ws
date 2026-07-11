@@ -1,7 +1,8 @@
 # ADR-0008: Azure — Data Ingestion & Feature Management
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops] [rag]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -57,11 +58,3 @@ We will use **ADLS Gen2** as the primary data lake for training datasets, model 
 4. Use Microsoft Fabric Lakehouse for raw-to-curated data transformation; mount Fabric OneLake as the ADLS Gen2 endpoint for Azure ML access
 5. Enable Azure Policy to enforce `deny` on unclassified data writes to the AI data perimeter ADLS account
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

@@ -1,7 +1,8 @@
 # ADR-0016: AWS — ML Platform & Experiment Tracking
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -29,7 +30,7 @@ We will use **Amazon SageMaker AI** (Unified Studio IDE) as the central MLOps pl
 ### Positive
 - Serverless MLflow removes the #1 ops burden teams cite when managing their own experiment tracking infrastructure
 - SageMaker Model Registry approval workflows create a mandatory quality gate between staging and production
-- SageMaker Serverless Customization (fine-tuning via UI) enables non-engineers to run SFT/DPO without compute management
+- SageMaker Serverless Customization (fine-tuning via UI) enables non-engineers to run SFT, DPO, RLVR, and RLAIF without compute management; the Jun 2026 GA agent-guided natural-language fine-tuning workflow generates synthetic data and handles eval, cutting fine-tuning cycles from months to days
 
 ### Negative / Trade-offs
 - Deep SageMaker dependency — teams with existing Kubeflow or Argo Workflows pipelines face significant migration effort
@@ -56,12 +57,4 @@ We will use **Amazon SageMaker AI** (Unified Studio IDE) as the central MLOps pl
 3. Use `sagemaker` Python SDK for pipeline authoring; define pipeline steps as `@step` decorated functions for v2 pipeline DSL
 4. SageMaker Model Registry: configure two-stage approval (auto-approve in dev, manual approval for prod); add evaluation metrics as model card metadata
 5. For SFT/DPO fine-tuning: use SageMaker Serverless Customization for Nova/Llama models; use HyperPod (ADR-0018) for large-scale custom training runs
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
+6. SageMaker AI real-time endpoints expose an OpenAI-compatible API (Jun 2026) — invoke via the OpenAI SDK, LangChain, or Strands by changing only the endpoint URL

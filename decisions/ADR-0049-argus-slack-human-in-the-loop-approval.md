@@ -1,6 +1,7 @@
 # ADR-0049: Slack Block Kit for Human-in-the-Loop Approval Channel
 
 **Date:** 2026-04-29
+**Last reviewed:** 2026-07-11
 **Status:** Accepted
 **Domain:** [llm] [governance]
 **Author:** AI Architect
@@ -22,13 +23,13 @@
 
 Use **Slack Block Kit** as the approval channel. `ApprovalOrchestrator` posts a structured message to a configured channel containing the violation details and proposed correction. Approve and Reject buttons are rendered via Block Kit `actions` blocks. A FastAPI endpoint (`/slack/interactions`) receives the button click payload, resolves the pending approval, and unblocks the pipeline.
 
-The approval state is held in an in-process `_pending` dict (keyed by `action_id`) that bridges the Slack webhook callback to the polling loop in the agent tool.
+The approval state is held in `app/tools/approval_store.py`, a locked in-process state machine (`pending` → `approved`/`rejected`/`timeout` → `consumed`) keyed by `correction_id`, that bridges the Slack webhook callback to the orchestrator via an event-driven wakeup in the agent tool.
 
 ## Rationale
 
 Merchandisers at the retailer already use Slack as their primary communication tool. Routing approvals to Slack means zero new tool adoption — the merchandiser receives a push notification, reviews the correction in context, and clicks a button without leaving Slack. This is materially lower friction than email, a custom web UI, or a CLI prompt.
 
-Slack Block Kit provides first-class interactive components (buttons, structured text, markdown) without requiring a frontend build. The webhook-based callback pattern is well-understood, OAuth-free for internal workspace apps, and implementable in a single FastAPI route.
+Slack Block Kit provides first-class interactive components (buttons, structured text, markdown) without requiring a frontend build. The webhook-based callback pattern is well-understood, OAuth-free for internal workspace apps, and implementable in a single FastAPI route. `/slack/interactions` (`app/slack_router.py`) is now hardened with HMAC-SHA256 signature verification, timestamp staleness/NaN checks, a TTL'd replay-defence seen-set on `(timestamp, signature)`, and team/channel/user allowlists.
 
 ## Consequences
 
@@ -40,12 +41,12 @@ Slack Block Kit provides first-class interactive components (buttons, structured
 
 ### Negative / Trade-offs
 - Slack bot token (`SLACK_BOT_TOKEN`) and channel ID (`SLACK_CHANNEL_ID`) must be configured and secret-managed
-- Approval state held in-process (`_pending` dict) — not durable across server restarts; PROPOSE items in flight at restart are lost
-- Polling loop (5s interval, 2min timeout) is a workaround; production should use Agent Engine's durable workflow suspend/resume
+- Approval state lives in `app/tools/approval_store.py` — an in-process, per-pod dict. Single-pod V0 is correct, but the state is still not shared across pods or durable across restarts; see Risks below
+- Production polling is now event-driven: a per-correction `threading.Event` (`app/tools/slack_approval.py`) is set by the Slack callback and woken by `poll_approval_decision`, eliminating the original CPU-burning poll loop. A dict-based poll path survives only as a test-only override (`_pending` DI param); production should still move to Agent Engine's durable workflow suspend/resume for cross-restart durability
 - Slack's 3-second interactive response window requires immediate HTTP 200 ack — actual processing must be async
 
 ### Risks
-- [RISK: HIGH] In-process state loss on restart — any PROPOSE approval waiting at server restart is silently dropped. Acceptable for POC; must be replaced with durable queue (Pub/Sub or Agent Engine workflow) before production.
+- [RISK: HIGH] In-process state loss on restart — any PROPOSE approval waiting at server restart is silently dropped. This is now a documented known-gap (`docs/SECURITY_MODEL.md` §6 known-gap registry; `app/tools/approval_store.py` module docstring): single-pod V0 is correct, but multi-pod Cloud Run will silently lose state between the Slack callback pod and the orchestrator poll pod. The fix is a Firestore migration (not the Pub/Sub path originally proposed here).
 - [RISK: MED] Slack rate limits — for high PROPOSE volumes, batch or deduplicate notifications
 - [RISK: LOW] Channel misconfiguration — merchandiser never sees the approval request; violation silently times out as rejected
 
@@ -64,7 +65,7 @@ Slack Block Kit provides first-class interactive components (buttons, structured
 | ADR | Relationship |
 |-----|-------------|
 | [ADR-0046](ADR-0046-argus-adk-multi-agent-orchestration.md) | `ApprovalOrchestrator` is an ADK sub-agent in the orchestrator |
-| [ADR-0048](ADR-0048-argus-three-tier-confidence-routing.md) | PROPOSE tier (0.50–0.71) is the trigger condition for this flow |
+| [ADR-0051](ADR-0051-argus-four-tier-confidence-routing-compliance-cap.md) | PROPOSE tier (≥ 0.65, plus the compliance-field cap) is the trigger condition for this flow; supersedes ADR-0048 |
 | [ADR-0050](ADR-0050-argus-adk-tool-dependency-injection.md) | `_pending` and `_poll_interval` DI params make Slack tools testable |
 
 ## Implementation Notes

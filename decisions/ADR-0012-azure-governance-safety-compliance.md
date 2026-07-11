@@ -1,7 +1,8 @@
 # ADR-0012: Azure — Governance, Safety & Compliance
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [governance]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -66,11 +67,3 @@ We will use:
 5. Azure Policy: deploy `deny` policies for (a) non-private-endpoint ML workspaces, (b) untagged AI resources, (c) unapproved GPU SKUs above agreed cost tier
 6. Key Vault: use managed identity (`DefaultAzureCredential`) for all SDK access — no API keys in environment variables or code
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

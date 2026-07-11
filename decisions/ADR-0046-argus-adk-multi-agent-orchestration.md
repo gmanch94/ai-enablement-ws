@@ -1,6 +1,7 @@
 # ADR-0046: Google ADK for Argus Multi-Agent Orchestration
 
 **Date:** 2026-04-29
+**Last reviewed:** 2026-07-11
 **Status:** Accepted
 **Domain:** [llm]
 **Author:** AI Architect
@@ -34,7 +35,7 @@ ADK is the native framework for Agent Engine deployment. Building on it now avoi
 
 ### Positive
 - Zero-friction deployment to Agent Engine (same framework, same config)
-- A2A compatibility built in — Argus agents are discoverable by other retailer agents
+- A2A compatibility built in — Argus agents are discoverable by other retailer agents (the `/a2a/argus/*` surface is now auth-gated: `_a2a_auth_middleware` in `app/fast_api_app.py` requires a Bearer `ARGUS_API_KEY` from Secret Manager on every RPC and agent-card request — see `docs/SECURITY_MODEL.md`)
 - Sub-agent isolation: each agent has its own model, instruction, and tool scope
 - Orchestration logic in instruction prompt — reviewable by non-engineers
 
@@ -61,7 +62,7 @@ ADK is the native framework for Agent Engine deployment. Building on it now avoi
 | ADR | Relationship |
 |-----|-------------|
 | [ADR-0047](ADR-0047-argus-bigquery-vector-search-rag.md) | RAG store used by `CorrectionResolverAgent` sub-agent |
-| [ADR-0048](ADR-0048-argus-three-tier-confidence-routing.md) | Routing logic encoded in orchestrator instruction prompt |
+| [ADR-0051](ADR-0051-argus-four-tier-confidence-routing-compliance-cap.md) | Routing logic (4 tiers + compliance cap) encoded in orchestrator instruction prompt; supersedes ADR-0048 |
 | [ADR-0049](ADR-0049-argus-slack-human-in-the-loop-approval.md) | `ApprovalOrchestrator` sub-agent channel decision |
 | [ADR-0050](ADR-0050-argus-adk-tool-dependency-injection.md) | Testability pattern applied to all tools wired into sub-agents |
 
@@ -72,3 +73,4 @@ ADK is the native framework for Agent Engine deployment. Building on it now avoi
 3. `InMemorySessionService` for local dev; swap to Agent Engine sessions for prod
 4. End-to-end test path: `uvicorn` server + `trigger_flow_a.py` script (not playground)
 5. `agents-cli eval run` required before any deploy — covers AUTO, PROPOSE, FLAG, and timeout paths
+6. A 6th tool, `release_auto_correction` (`app/tools/auto_release.py`), is registered directly in `argus_orchestrator`'s `tools=[...]` list alongside the five `AgentTool`-wrapped sub-agents — it is a plain function tool, not an `AgentTool` over a sub-agent. It re-validates `decision_json.tier == "AUTO"` server-side, generates the `correction_id`, and registers it in `approval_store` before `catalog_writer` is invoked, so the orchestrator LLM can no longer fabricate an AUTO approval.

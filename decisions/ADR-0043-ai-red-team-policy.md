@@ -1,8 +1,9 @@
 # ADR-0043: AI Red Team Policy
 
-**Status:** Accepted  
-**Domain:** [governance]  
+**Status:** Accepted
+**Domain:** [governance]
 **Date:** 2026-04-22
+**Last reviewed:** 2026-07-11
 
 ---
 

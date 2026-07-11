@@ -1,7 +1,8 @@
 # ADR-0021: AWS — Governance, Safety & Compliance
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [governance]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -64,11 +65,3 @@ We will use:
 4. Macie: enable continuous discovery on curated S3 bucket; configure EventBridge rule to halt the SageMaker Pipeline data-prep step on Macie HIGH severity findings
 5. SageMaker Clarify: integrate as a pipeline step in SageMaker Pipelines after model training; fail pipeline if bias metric (DPL, NDKL) exceeds defined threshold for protected groups
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

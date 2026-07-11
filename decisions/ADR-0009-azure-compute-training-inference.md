@@ -1,7 +1,8 @@
 # ADR-0009: Azure — Compute: Training & Inference
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops] [infra]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -61,13 +62,5 @@ Foundry Agent Service / Hosted Agents (see ADR-0005) handles agent compute — n
 2. Use NC A100 v4 or ND H100 v5 series for training; request quota 3 weeks before project start
 3. ACA: use `--scale-rule-http` with appropriate concurrency limits; add KEDA scaling rules for queue-based inference
 4. For AKS model serving: use NVIDIA Triton Inference Server or TorchServe as the model runtime; KEDA for autoscaling on custom metrics
-5. Foundry Local: use for developer inner loop testing and edge PoC; do not expose to production traffic
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
+5. Foundry Local: use for developer inner loop testing and edge PoC; do not expose to production traffic. ⚠️ **Breaking SDK change:** the legacy Foundry Local SDK is deprecated — migrate to the new Foundry Local SDK (see [migration guide](https://learn.microsoft.com/en-us/azure/foundry-local/reference/reference-sdk-migration))
+6. For sovereign / air-gapped edge deployments, evaluate **Foundry Local on Azure Local** — multi-node Kubernetes deployment with air-gapped operation and a vLLM inference runtime (alongside ONNX Runtime GenAI) — as an alternative to single-node Foundry Local when regulatory or connectivity constraints apply

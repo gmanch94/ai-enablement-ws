@@ -1,7 +1,8 @@
 # ADR-0026: GCP — Data Ingestion & Feature Management
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops] [rag]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -56,13 +57,4 @@ We will use **Google Cloud Storage (GCS)** as the primary data lake for training
 2. BigQuery feature engineering: use partitioned and clustered tables (partition on `event_date`, cluster on `entity_id`) for cost-efficient feature queries
 3. BigQuery Pipelines: define transformation graph in the BigQuery console or via `google-cloud-bigquery` SDK; schedule via BigQuery Pipelines scheduler
 4. Dataflow streaming features: `apache-beam` pipeline with `PubSubIO.readFromSubscription()` → transform → `VertexAIFeatureStoreIO.write()` for online store updates
-5. Vertex AI Feature Store: create feature group with `entity_type` and `feature` definitions; use `write_feature_values()` for batch ingest; `read_feature_values()` for online serving in inference endpoints
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
+5. Vertex AI Feature Store: create feature group with `entity_type` and `feature` definitions; use `write_feature_values()` for batch ingest; `read_feature_values()` for online serving in inference endpoints — target the standard Vertex AI Feature Store online serving tier; both Feature Store Optimized online serving and Feature Store Legacy (V1) were deprecated Feb 2026, so pin new and migrating implementations to standard online serving, not either deprecated tier

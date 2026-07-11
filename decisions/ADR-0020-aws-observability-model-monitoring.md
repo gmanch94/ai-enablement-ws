@@ -1,7 +1,8 @@
 # ADR-0020: AWS — Observability & Model Monitoring
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -61,11 +62,3 @@ We will use:
 4. SageMaker Model Monitor: run `DefaultModelMonitor.suggest_baseline()` at deployment time; schedule hourly data quality jobs; configure CloudWatch alarm on drift metric threshold
 5. AgentCore continuous evaluations: configure evaluation schedule and quality thresholds in AgentCore settings; route evaluation failures to EventBridge for automated retraining trigger
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

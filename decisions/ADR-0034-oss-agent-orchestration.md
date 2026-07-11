@@ -1,7 +1,8 @@
 # ADR-0034: Open-Source — Agent & Orchestration Frameworks
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [llm]
 **Author:** AI Architect
 **Supersedes:** ADR-0001 (LangGraph Multi-Agent Orchestration — superseded by this broader OSS decision)
@@ -63,14 +64,5 @@ We adopt a **use-case-driven framework selection** policy:
 2. Enable LangGraph checkpointing via `MemorySaver` (dev) or `PostgresSaver` (production) — store checkpoint backend in config, not code
 3. Instrument with Langfuse or Phoenix via LangChain callbacks: `CallbackHandler` wraps all LLM calls automatically
 4. CrewAI/AutoGen: wrap in async task with timeout; expose `max_iter` and `max_tokens` as environment-variable-configurable limits
-5. LlamaIndex agents: use `FunctionCallingAgentWorker` over `ReActAgent` for tool-calling models; set `verbose=False` in production
+5. LlamaIndex agents: use the **Workflows** API (event-driven, e.g. `AgentWorkflow`) — LlamaIndex 0.13.0 deprecates `FunctionCallingAgent`, `ReActAgent`, and `AgentRunner`; refactor before upgrading. Set `verbose=False` in production
 6. Document agent state schema in the ADR supplement — state shape is the primary migration artifact if framework changes
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

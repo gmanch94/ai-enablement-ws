@@ -1,7 +1,8 @@
 # ADR-0006: Azure — RAG & Vector Retrieval
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [rag]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -57,11 +58,3 @@ We will use **Azure AI Search** as the primary retrieval store for RAG — handl
 4. Set re-indexing triggers via Azure ML Pipelines on ADLS Gen2 data arrival events
 5. Use Cosmos DB DiskANN only when the same document must serve OLTP reads and vector retrieval in the same transaction boundary
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

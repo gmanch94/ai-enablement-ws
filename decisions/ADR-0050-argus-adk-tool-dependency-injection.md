@@ -1,6 +1,7 @@
 # ADR-0050: Dependency Injection Pattern for ADK Tool Testability
 
 **Date:** 2026-04-29
+**Last reviewed:** 2026-07-11
 **Status:** Accepted
 **Domain:** [llm] [mlops]
 **Author:** AI Architect
@@ -46,12 +47,12 @@ ADK infers the tool's JSON schema from the public function signature. Parameters
 
 The private-function / public-wrapper split allows tests to call `_func(args, _client=fake_client)` with full control over external dependencies, without mocking module-level globals or patching import paths.
 
-This pattern was validated across all five Argus tools: `bq_vector_search`, `embeddings`, `slack_approval`, `confidence_scorer`, and `catalog_writer`. The 138 unit and integration tests pass without any real GCP or Slack calls.
+This pattern was validated across the Argus tools that call external I/O: `bq_vector_search`, `embeddings`, `slack_approval`, `confidence_scorer`, `catalog_writer`, and `feedback_upsert` (`app/tools/` now holds 9 tool modules total, including the DI-free pure-Python `rule_engine` and the in-process `approval_store`/`auto_release`). 187 unit and integration tests pass without any real GCP or Slack calls.
 
 ## Consequences
 
 ### Positive
-- 138 tests run with no GCP credentials, no Slack token, no network access
+- 187 tests run with no GCP credentials, no Slack token, no network access
 - CI runs fast and deterministically — no flakiness from external API rate limits or latency
 - LLM schema stays clean — only business parameters visible to the orchestrator
 - Async wrapping eliminates Slack "operation timed out" errors under ADK's event loop

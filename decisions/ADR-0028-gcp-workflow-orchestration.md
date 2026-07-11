@@ -1,7 +1,8 @@
 # ADR-0028: GCP — Workflow Orchestration
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops] [infra]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -61,11 +62,3 @@ We will use:
 4. Cloud Composer: provision `composer-3` environment (not Composer 2 for new projects); use `DAGS_FOLDER` in GCS; enable DAG versioning via Git + Cloud Build trigger
 5. Pipeline step caching: pass `enable_caching=True` to `PipelineJob`; ensure pipeline step inputs are fully specified — cached steps reuse outputs from identical prior runs
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

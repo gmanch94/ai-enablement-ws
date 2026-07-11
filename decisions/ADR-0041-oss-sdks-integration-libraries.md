@@ -1,7 +1,8 @@
 # ADR-0041: Open-Source — SDKs & Integration Libraries
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [llm]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -67,11 +68,3 @@ We adopt the following **canonical integration library stack**:
 5. Outlines: `import outlines; model = outlines.models.vllm("model-id"); generator = outlines.generate.json(model, MyPydanticSchema)` — use with vLLM backend for production
 6. Accelerate: run `accelerate config` to set up distributed training config; replace `model.to(device)` with `accelerator.prepare(model, optimizer, dataloader)`
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

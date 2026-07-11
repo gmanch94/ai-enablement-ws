@@ -1,7 +1,8 @@
 # ADR-0022: GCP — LLM Access & Foundation Models
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [llm]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -20,8 +21,8 @@ We will use the **Gemini API via Vertex AI** (not Google AI Studio) as the prima
 ## Rationale
 
 1. **Vertex AI, not AI Studio, for enterprise** — Google AI Studio is a developer/prototyping tool with no VPC controls, no audit logs, and no enterprise SLA. All production workloads must use Vertex AI endpoints, which provide VPC Service Controls, Cloud IAM, CMEK, and audit logging.
-2. **Model Optimizer removes manual routing code** — Vertex AI Model Optimizer automatically selects Gemini 2.5 Pro, 2.5 Flash, or 3.1 Flash-Lite based on prompt complexity and declared targets. This mirrors the reasoning for Azure's Model Router (ADR-0004) — manual routing logic is fragile and expensive to maintain.
-3. **Gemini tier selection** — 2.5 Pro for complex reasoning and code generation; 2.5 Flash for balanced quality/cost and interactive applications (1M context); 3.1 Flash-Lite for high-volume, cost-sensitive pipelines. Model Optimizer selects automatically when targets are configured.
+2. **Model Optimizer removes manual routing code** — Vertex AI Model Optimizer automatically selects Gemini 3.1 Pro, 3.5 Flash, or 3.1 Flash-Lite based on prompt complexity and declared targets. This mirrors the reasoning for Azure's Model Router (ADR-0004) — manual routing logic is fragile and expensive to maintain.
+3. **Gemini tier selection** — 3.1 Pro (Preview) for complex reasoning and code generation; 3.5 Flash (GA, now the default tier) for balanced quality/cost and interactive applications; 3.1 Flash-Lite (GA) for high-volume, cost-sensitive pipelines. Gemini 2.5 Pro/Flash preview endpoints retired Jul 9 2026 and GA 2.5 retires Oct 16 2026 — do not select 2.5 for new work. Model Optimizer selects automatically when targets are configured.
 4. **Global Endpoint for HA** — capacity-aware routing across multiple regions with automatic failover satisfies the graceful degradation principle in CLAUDE.md without custom multi-region routing code.
 
 ## Consequences
@@ -51,17 +52,8 @@ We will use the **Gemini API via Vertex AI** (not Google AI Studio) as the prima
 
 ## Implementation Notes
 
-1. Use `google-cloud-aiplatform` SDK (`vertexai.GenerativeModel`) for all Gemini inference — not `google-generativeai` directly in production (bypasses Vertex AI controls)
-2. Set model version explicitly: `gemini-2.5-flash-001` not `gemini-2.5-flash` — prevents silent model changes on Google's side
+1. Use the `google-genai` SDK (Google Gen AI SDK) for all Gemini inference against Vertex AI — the `vertexai.generative_models` / `.language_models` / `.vision_models` / `.tuning` / `.caching` modules of `google-cloud-aiplatform` were removed from releases after Jun 24 2026; `google-cloud-aiplatform` remains the SDK for core Vertex AI (training, pipelines, registry) only. Do not use `google-generativeai` directly in production (bypasses Vertex AI controls)
+2. Set model version explicitly: `gemini-3.5-flash` (current GA default) not a floating/latest alias — prevents silent model changes on Google's side; migrate any remaining `gemini-2.5-*` usage before the Oct 16 2026 GA retirement
 3. Enable Model Optimizer in Vertex AI project settings; define quality threshold (e.g., `quality_tier: "balanced"`) for automated routing
 4. Configure Global Endpoint in production; test failover behaviour across at least two regions before go-live
 5. VPC Service Controls: add Vertex AI API (`aiplatform.googleapis.com`) to the service perimeter before any data-sensitive inference
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

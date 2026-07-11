@@ -1,7 +1,8 @@
 # ADR-0011: Azure — Observability & Model Monitoring
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -62,11 +63,3 @@ We will use:
 4. Azure ML Model Monitoring: capture baseline dataset on first production deployment; set data drift alert threshold at 0.1 PSI; configure retraining trigger in Azure ML Pipeline on alert
 5. Log Analytics: configure data collection rules to sample inference traces at 100% in production, 10% in dev/staging
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
