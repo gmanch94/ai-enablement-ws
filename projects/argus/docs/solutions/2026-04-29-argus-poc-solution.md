@@ -53,7 +53,7 @@ Seven units wired into a working Flow A pipeline: `ItemValidatorAgent` → `Corr
 
 - `allergen_statement` missing on hazelnut spread → `MISSING_FIELD` violation → PROPOSE tier (compliance field cap prevents AUTO) → Slack approval required. Confirmed in live run.
 
-- Rubric-based eval score 1.0 on both cases (clean item and missing allergen). `gemini-flash-latest` as judge model is sufficient for these rubrics.
+- Rubric-based eval score 1.0 on both cases (clean item and missing allergen). The judge model is sufficient for these rubrics (originally the `gemini-flash-latest` alias at POC time; since pinned to `gemini-3.5-flash` in `tests/eval/eval_config.json` per ADR-0044).
 
 - `synthetic_embedding` produces stable, deterministic vectors — BQ vector search unit tests pass with it without live GCP.
 
