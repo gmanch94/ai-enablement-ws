@@ -1,7 +1,8 @@
 # ADR-0040: Open-Source — Fine-Tuning
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [llm]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -67,11 +68,3 @@ Fine-tuning is a **last resort** after prompt engineering, RAG, and few-shot app
 5. Axolotl: define config in `config.yaml`; run with `accelerate launch -m axolotl.cli.train config.yaml`; store config in `fine-tuning/configs/` under version control
 6. Log fine-tuning runs to MLflow: `mlflow.log_params(lora_config)`, `mlflow.log_metrics({"train_loss": ..., "eval_loss": ...})`; register final adapter in model registry
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

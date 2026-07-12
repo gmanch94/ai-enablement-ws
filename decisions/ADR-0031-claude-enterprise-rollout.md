@@ -1,8 +1,9 @@
 # ADR-0031: Claude Enterprise Rollout Strategy
 
-**Status:** Proposed  
-**Domain:** `[llm]` `[governance]`  
-**Date:** 2026-04-19  
+**Status:** Accepted
+**Domain:** `[llm]` `[governance]`
+**Date:** 2026-04-19
+**Last reviewed:** 2026-07-11
 **Author:** AI Architect
 
 ---

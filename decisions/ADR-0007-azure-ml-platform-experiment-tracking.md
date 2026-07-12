@@ -1,7 +1,8 @@
 # ADR-0007: Azure — ML Platform & Experiment Tracking
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -15,7 +16,7 @@ Azure ML SDK v1 (`azureml-sdk`, `azureml-core`) reaches EOL on **June 30, 2026**
 
 ## Decision
 
-We will use **Azure Machine Learning** (SDK v2 via `azure-ai-ml`) as the MLOps platform for training jobs, pipelines, model registry, and managed endpoints. **`azure-ai-projects` v2** (`2.0.0b3+`) is the unified Foundry SDK covering agents, inference, evaluations, and memory. **Azure ML's built-in MLflow tracking** (not self-managed MLflow) handles experiment logging and run comparison.
+We will use **Azure Machine Learning** (SDK v2 via `azure-ai-ml`) as the MLOps platform for training jobs, pipelines, model registry, and managed endpoints. **`azure-ai-projects` v2** (Python `2.2.0` live, Java `2.1.0` GA, converging to `2.3.0` stable) is the unified Foundry SDK covering agents, inference, evaluations, and memory. **Azure ML's built-in MLflow tracking** (not self-managed MLflow) handles experiment logging and run comparison.
 
 ## Rationale
 
@@ -32,13 +33,13 @@ We will use **Azure Machine Learning** (SDK v2 via `azure-ai-ml`) as the MLOps p
 - MLflow integration provides familiar experiment tracking API for teams coming from open-source MLflow
 
 ### Negative / Trade-offs
-- `azure-ai-projects` v2 is still in beta (`2.0.0b3+`) — expect breaking changes before GA; pin to minor versions
+- `azure-ai-projects` v2 Python is at `2.2.0` live (Hosted Agents / Toolboxes / sessions still moving off `.beta`); Java is GA at `2.1.0`. Python and JS/TS are converging on `2.3.0` to promote Hosted Agents + Toolboxes to stable — pin versions and review remaining beta surfaces before relying on them in production
 - SDK v2 uses YAML-based pipeline definitions (not v1's Python-only DSL) — retraining effort for teams with large v1 pipeline codebases
 - Microsoft Framework Workflows (Prompt Flow replacement) is not yet GA — teams mid-migration from Prompt Flow face a timing gap
 
 ### Risks
 - [RISK: HIGH] Teams still on AzureML SDK v1 will lose support June 30, 2026 — audit all repos for `azureml-sdk` / `azureml-core` imports immediately; prioritise migration
-- [RISK: MED] `azure-ai-projects` v2 beta API surface may change — do not build production services on beta APIs without a version-pin and upgrade review cadence
+- [RISK: MED] `azure-ai-projects` v2 Hosted Agents / Toolboxes / sessions remain on `.beta` pending the `2.3.0` stable convergence — do not build production services on the remaining beta surfaces without a version-pin and upgrade review cadence
 - [RISK: LOW] Prompt Flow DAGs cannot be directly converted to Framework Workflows — plan manual migration effort per flow
 
 ## Alternatives Considered
@@ -54,16 +55,7 @@ We will use **Azure Machine Learning** (SDK v2 via `azure-ai-ml`) as the MLOps p
 
 1. Run `pip-audit` or `grep -r "azureml-sdk\|azureml-core"` across all repos — flag for migration sprint
 2. Migrate to `azure-ai-ml` (SDK v2): replace `Workspace` → `MLClient`, update pipeline YAML format
-3. Install `azure-ai-projects>=2.0.0b3` for all Foundry-integrated workloads
+3. Install `azure-ai-projects>=2.2.0` (Python) / `>=2.1.0` (Java) for all Foundry-integrated workloads
 4. Configure MLflow tracking URI to point to Azure ML workspace: `mlflow.set_tracking_uri(ws.get_mlflow_tracking_uri())`
 5. Inventory existing Prompt Flow assets; begin migration to Microsoft Framework Workflows before Q4 2026
-6. Pin `azure-ai-projects` to `==2.0.0b3` (or latest beta); review on each release for breaking changes
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
+6. Pin `azure-ai-projects` to `==2.2.0` (Python) / `==2.1.0` (Java); track the `2.3.0` convergence release that promotes Hosted Agents + Toolboxes to stable

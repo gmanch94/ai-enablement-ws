@@ -1,7 +1,8 @@
 # ADR-0005: Azure — Agent Services & Orchestration
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [llm] [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -60,11 +61,3 @@ We will use **Foundry Agent Service** (GA) as the managed agent runtime, **Hoste
 5. Use Agent Monitoring Dashboard (GA) from day one — configure alerts on tool call failure rate > 5%
 6. A2A Tool and MCP Server: prototype now, do not depend on for tier-1 SLAs until GA
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

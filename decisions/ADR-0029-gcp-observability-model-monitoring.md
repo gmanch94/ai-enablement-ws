@@ -1,7 +1,8 @@
 # ADR-0029: GCP — Observability & Model Monitoring
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -18,7 +19,8 @@ AI systems on GCP require observability at multiple layers: infrastructure healt
 We will use:
 - **Cloud Monitoring** as the platform-wide metrics, alerting, and dashboards backbone — all GCP AI services emit metrics natively
 - **Cloud Logging** for centralised log aggregation with Log Analytics (SQL-queryable) for structured query across ML pipeline and agent logs
-- **Cloud Trace** for distributed tracing across Cloud Run, Vertex AI endpoints, and ADK agent tool calls
+- **Cloud Trace** for distributed tracing across Cloud Run and Vertex AI endpoints
+- **Agent Observability** (GA — Jun 18 2026) as the agent-specific tracing layer — default-on OpenTelemetry tracing for ADK agents on Agent Engine, with distributed traces/metrics/logs across multi-agent systems and MCP servers, GCS default trace storage, and DAG span views
 - **Vertex AI Model Monitoring** for production model health — feature skew, prediction drift, and data quality alerts on Vertex AI endpoints
 - **Vertex AI Dashboards** (GA) for real-time model deployment health — usage, throughput, latency, error rates across all Vertex AI endpoints
 
@@ -26,9 +28,10 @@ We will use:
 
 1. **Cloud Monitoring as the backbone** — Vertex AI, GKE, Cloud Run, and BigQuery emit metrics to Cloud Monitoring natively. SLO definitions, alert policies, and uptime checks are configured as GCP resources (Terraform-compatible).
 2. **Cloud Logging with Log Analytics** — structured logs from Vertex AI inference, ADK agent tool calls, and Dataflow pipeline steps land in Cloud Logging. Log Analytics enables SQL-based queries across logs for cost attribution and debugging without exporting to BigQuery.
-3. **Cloud Trace for distributed tracing** — LLM app requests span Cloud Run (API layer) → Vertex AI endpoints → ADK agent tools → AlloyDB or GCS. Cloud Trace provides end-to-end latency breakdown across this chain. Auto-instrumented via OpenTelemetry exporters for Cloud Trace.
-4. **Vertex AI Model Monitoring for drift** — statistical drift detection (feature skew, prediction drift) with automated alerting on Vertex AI managed endpoints. Integrates with Cloud Monitoring for unified alerting.
-5. **Vertex AI Dashboards for deployment health** — purpose-built dashboard for all Vertex AI endpoints: request throughput, p50/p99 latency, error rate, and quota utilisation in a single view without custom dashboard authoring.
+3. **Cloud Trace for distributed tracing** — LLM app requests span Cloud Run (API layer) → Vertex AI endpoints → AlloyDB or GCS. Cloud Trace provides end-to-end latency breakdown across this chain. Auto-instrumented via OpenTelemetry exporters for Cloud Trace.
+4. **Agent Observability for agent-layer tracing** — rather than hand-instrumenting ADK agent tool calls with OpenTelemetry spans, Agent Observability is default-on for ADK agents deployed to Agent Engine, giving end-to-end visibility and latency profiling across agent hops without custom instrumentation.
+5. **Vertex AI Model Monitoring for drift** — statistical drift detection (feature skew, prediction drift) with automated alerting on Vertex AI managed endpoints. Integrates with Cloud Monitoring for unified alerting.
+6. **Vertex AI Dashboards for deployment health** — purpose-built dashboard for all Vertex AI endpoints: request throughput, p50/p99 latency, error rate, and quota utilisation in a single view without custom dashboard authoring.
 
 ## Consequences
 
@@ -62,12 +65,4 @@ We will use:
 3. Custom LLM quality metrics: run Vertex AI Evaluation on a sample of production requests; publish scores (`groundedness`, `coherence`) as Cloud Monitoring custom metrics via `monitoring_v3.MetricServiceClient`
 4. Cloud Logging Log Analytics: use `SELECT json_payload.model_id, COUNT(*) as requests, SUM(CAST(json_payload.input_tokens AS INT64)) as total_input_tokens FROM logs WHERE ...` for token usage attribution
 5. Vertex AI Dashboards: access via Vertex AI console → Model Registry → Deployment; configure alerting policies from Cloud Monitoring on `aiplatform.googleapis.com/prediction/online/error_count` metric
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
+6. Agent Observability: no additional instrumentation required for ADK agents on Agent Engine (default-on); review GCS default trace storage location and DAG span views in the Agent Platform console for latency profiling across agent hops

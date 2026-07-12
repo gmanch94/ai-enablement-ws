@@ -1,7 +1,8 @@
 # ADR-0027: GCP — Compute: Training & Inference
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops] [infra]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -43,7 +44,7 @@ Agent workloads use Agent Engine (see ADR-0023) — no separate compute decision
 ### Negative / Trade-offs
 - Ironwood TPU requires Google's serving frameworks (JAX, PyTorch/XLA) — not all model architectures compile cleanly to TPU; validate compatibility before committing to TPU-based serving
 - A4/A4X VM availability is constrained in some regions — reserve capacity well in advance for planned large training runs
-- Cloud Run + GPUs has a memory limit per container (currently 32GB) — large models (>20B parameters) may not fit; escalate to GKE for large model serving
+- Cloud Run + GPUs' effective model-size ceiling was previously ~32GB per container; with NVIDIA RTX PRO 6000 Blackwell Server Edition (Preview), Cloud Run + GPUs now runs 70B+ parameter models without cluster management — re-verify current container memory limits at deployment time before assuming GKE escalation is required, and treat the 32GB figure as stale for planning purposes
 
 ### Risks
 - [RISK: MED] TPU compilation errors surface late in the model serving pipeline — validate TPU compatibility during model development, not at deployment time
@@ -66,12 +67,4 @@ Agent workloads use Agent Engine (see ADR-0023) — no separate compute decision
 3. RayTurbo: create `RayCluster` CR with `rayVersion: turbo`; use `ray.init(address="ray://[cluster-head]:10001")` from training code
 4. Cluster Director: provision via GCP console or Terraform (`google_cluster_director_cluster` resource); configure topology-aware job scheduling for GPU interconnect locality
 5. A4/A4X: request quota 3–4 weeks in advance; use committed use discounts for sustained training workloads
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
+6. Cloud Run + GPUs for large models: request NVIDIA RTX PRO 6000 Blackwell Server Edition (Preview) quota when serving 70B+ parameter models; this is a Preview capability, so validate stability and current memory limits before relying on it for production SLAs

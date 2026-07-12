@@ -37,7 +37,7 @@ def validate_item_rules(item_json: str) -> str:
 
 item_validator_agent = Agent(
     name="item_validator",
-    model=Gemini(model="gemini-flash-latest"),
+    model=Gemini(model="gemini-3.5-flash"),
     description="Validates catalog item events against quality and compliance rules.",
     instruction=(
         "You are a catalog validation agent for a grocery retailer. "

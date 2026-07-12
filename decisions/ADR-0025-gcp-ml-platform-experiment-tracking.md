@@ -1,7 +1,8 @@
 # ADR-0025: GCP — ML Platform & Experiment Tracking
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -57,11 +58,3 @@ We will use **Vertex AI** as the central ML platform — covering training jobs,
 4. BigQuery ML: `CREATE OR REPLACE MODEL dataset.model_name OPTIONS(model_type='logistic_reg') AS SELECT ...` — wrap in a Vertex AI Pipeline step for versioning and registry integration
 5. Vertex AI Model Registry: register models after training with evaluation metrics as model card metadata; configure approval workflows in the registry for prod promotion
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

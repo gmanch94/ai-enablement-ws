@@ -19,7 +19,7 @@ def record_correction_feedback(violation_json: str, decision_json: str) -> str:
 
 feedback_agent = Agent(
     name="feedback_agent",
-    model=Gemini(model="gemini-flash-latest"),
+    model=Gemini(model="gemini-3.5-flash"),
     description="Closes the learning loop by re-embedding a resolved correction and writing it to BigQuery correction_history for future RAG retrieval.",
     instruction=(
         "You are the Argus feedback agent. You are invoked AFTER a correction has been "

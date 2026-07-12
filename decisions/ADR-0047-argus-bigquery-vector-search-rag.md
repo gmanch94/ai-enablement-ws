@@ -1,6 +1,7 @@
 # ADR-0047: BigQuery Vector Search as Unified RAG and Audit Store
 
 **Date:** 2026-04-29
+**Last reviewed:** 2026-07-11
 **Status:** Accepted
 **Domain:** [rag] [mlops]
 **Author:** AI Architect
@@ -65,7 +66,7 @@ The `FeedbackAgent` re-embeds approved corrections and upserts them, creating a 
 | ADR | Relationship |
 |-----|-------------|
 | [ADR-0046](ADR-0046-argus-adk-multi-agent-orchestration.md) | Orchestration framework that hosts `CorrectionResolverAgent` using this store |
-| [ADR-0048](ADR-0048-argus-three-tier-confidence-routing.md) | Confidence score computed from BQ retrieval results drives tier assignment |
+| [ADR-0051](ADR-0051-argus-four-tier-confidence-routing-compliance-cap.md) | Confidence score computed from BQ retrieval results drives tier assignment; supersedes ADR-0048 |
 | [ADR-0050](ADR-0050-argus-adk-tool-dependency-injection.md) | DI pattern (`_client`) used to test BQ tools without real GCP |
 
 ## Implementation Notes
@@ -73,6 +74,7 @@ The `FeedbackAgent` re-embeds approved corrections and upserts them, creating a 
 1. Table schema: `correction_history` with `embedding ARRAY<FLOAT64>` column for vector storage
 2. Query pattern: `VECTOR_SEARCH(TABLE argus.correction_history, 'embedding', (...), top_k=5, distance_type='COSINE')`
 3. Embedding generation: `app/tools/embeddings.py` — `generate_embedding()` for prod, `synthetic_embedding()` for tests
-4. DI pattern: `search_similar_corrections(embedding, top_k, client=None)` — pass `bigquery.Client` in tests to avoid real GCP calls
+4. DI pattern: `search_similar_corrections(query_embedding, top_k, client=None)` — pass `bigquery.Client` in tests to avoid real GCP calls
 5. Confidence scoring: `Σ(1 - distance_i × approved_i) / k` — computed in `app/tools/confidence_scorer.py` after retrieval
 6. Feedback loop: `FeedbackAgent` calls `insert_correction_record()` after every resolved correction; re-embeds if `applied_fix ≠ proposed_fix`
+7. Hardening in `app/tools/bq_vector_search.py`: `_SAFE_IDENTIFIER` (a regex) validates the `PROJECT`/`DATASET`/`TABLE` identifiers at module load — they cannot be passed as BigQuery query parameters, so they're constrained to a strict identifier pattern instead; `_validate_embedding()` type-checks every element of the query embedding before it reaches the query; `_MAX_TOP_K = 50` hard-caps `top_k` regardless of caller input, defending against runaway query cost.

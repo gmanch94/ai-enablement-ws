@@ -1,7 +1,8 @@
 # ADR-0038: Open-Source — LLM Observability
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -67,11 +68,3 @@ We adopt a **layered LLM observability architecture** built on OpenTelemetry as 
 5. Evidently: ingest LLM logs via `TextEvals` report; run nightly drift reports; alert on `toxicity > 0.05` or response length distribution shift
 6. WhyLabs: configure `whylogs` logger with `LangKit` extension for LLM-specific metrics; enable prompt injection detection via `prompt_injection_score`
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

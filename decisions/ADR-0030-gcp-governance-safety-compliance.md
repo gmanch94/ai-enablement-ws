@@ -1,7 +1,8 @@
 # ADR-0030: GCP — Governance, Safety & Compliance
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [governance]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -22,6 +23,8 @@ We will use:
 - **VPC Service Controls** for perimeter-based data exfiltration prevention around Vertex AI, BigQuery, and GCS
 - **Cloud IAM + Workload Identity Federation** for least-privilege access to ML workloads and CI/CD pipelines
 - **BigQuery Governance** (Preview) for training data asset discovery, classification, and quality enforcement within BigQuery
+- **Agent Gateway** (GA — Jun 18 2026) as the single enforcement point for agent tool-call connectivity (user↔agent, agent↔tool, agent↔agent), integrating with third-party SIEM/DLP
+- **Semantic Governance Policies** (Preview — Jun 29 2026) for runtime intent-gating on agent tool calls — natural-language guardrails that block rogue tool use and data exfiltration without code changes or redeploys
 
 ## Rationale
 
@@ -30,6 +33,7 @@ We will use:
 3. **Dataplex for data lineage and quality** — training data lineage (raw source → curated → training dataset → model) must be traceable for compliance and debugging. Dataplex provides this lineage automatically across GCP data assets, with data quality rules that gate data into the curated zone.
 4. **VPC Service Controls as the hard perimeter** — even with IAM correctly configured, data exfiltration via compromised credentials or misconfigured API calls is a risk. VPC Service Controls enforces that Vertex AI, BigQuery, and GCS API calls can only occur within the defined service perimeter — a network-level control that IAM alone cannot provide.
 5. **Workload Identity Federation for CI/CD** — service account keys in CI/CD pipelines are a persistent security risk. Workload Identity Federation allows GitHub Actions and Cloud Build to impersonate service accounts using short-lived OIDC tokens without key files.
+6. **Agent Gateway and Semantic Governance Policies for agent-specific governance** — Model Armor, Cloud DLP, Dataplex, VPC Service Controls, and IAM govern data and model calls but do not address agent tool-call governance directly. Agent Gateway gives a single enforcement point for all agentic connectivity; Semantic Governance Policies add declarative, NL-authored guardrails (e.g. per-tool/parameter financial limits) that block rogue tool use or data exfiltration without redeploying agent code — closing a gap the existing stack does not cover.
 
 ## Consequences
 
@@ -42,6 +46,7 @@ We will use:
 - Model Armor adds latency per inference call (typically 30–100ms) — budget for this in p99 latency targets for customer-facing applications
 - VPC Service Controls require careful policy authoring — overly restrictive perimeters can block legitimate service-to-service calls; test in `dry-run` mode before enforcing
 - BigQuery Governance is Preview — do not rely on it as the sole governance mechanism for regulated training data; use Dataplex (GA) as the primary layer
+- Semantic Governance Policies is Preview — do not rely on it as the sole control for rogue tool use or data exfiltration in production agent deployments; treat it as a defense-in-depth layer alongside Agent Gateway (GA) until SGP reaches GA
 
 ### Risks
 - [RISK: HIGH] VPC Service Controls misconfiguration — an overly broad `deny` policy can break Vertex AI pipeline steps that access GCS or BigQuery; always validate perimeter changes in `dry-run` mode for 48 hours before enforcement
@@ -64,12 +69,5 @@ We will use:
 3. Dataplex: create lake with zone hierarchy (`raw` → `curated` → `production`); attach GCS and BigQuery assets; configure data quality rules as SQL assertions per dataset
 4. VPC Service Controls: create service perimeter including `aiplatform.googleapis.com`, `bigquery.googleapis.com`, `storage.googleapis.com`; add all ML service accounts and CI/CD runners to the perimeter access level
 5. Workload Identity Federation: `gcloud iam workload-identity-pools create`; configure OIDC provider for GitHub Actions; bind with `roles/iam.workloadIdentityUser` on the ML service account — never create service account keys for CI/CD
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
+6. Agent Gateway: route all agent↔tool and agent↔agent traffic through the gateway; wire SIEM/DLP integrations before production agent launch
+7. Semantic Governance Policies: author NL guardrails per tool/parameter (e.g. financial limits); validate in dry-run mode before enforcing, given Preview status

@@ -35,15 +35,17 @@ ai-enablement-ws/
 │   ├── ai-hr-governance-framework.md       ← HR-specific overlay (EEOC 4/5ths, GDPR Art. 22, NYC LL 144, IL AIVIA)
 │   └── llm-data-strategy.md               ← Data readiness for LLM-based systems (context window vs RAG, eval corpus, distillation economics, source governance)
 │
-├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0041)
-│   ├── ADR-0001-langgraph-multi-agent-orchestration.md
+├── decisions/                         ← Architecture Decision Records (ADR-0001 – ADR-0051; platform ADRs reviewed 2026-07-11)
+│   ├── ADR-0001-langgraph-multi-agent-orchestration.md  [Superseded → ADR-0034]
 │   ├── ADR-0002-retailer-x-azure-primary-ai-platform.md
 │   ├── ADR-0003-retailer-x-agentic-replenishment.md
 │   ├── ADR-0004 – ADR-0012  (Azure: LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
 │   ├── ADR-0013 – ADR-0021  (AWS:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
 │   ├── ADR-0022 – ADR-0030  (GCP:   LLM, Agents, RAG, ML Platform, Data, Compute, Orchestration, Observability, Governance)
-│   ├── ADR-0031-claude-enterprise-rollout.md  [llm][governance] Proposed
-│   └── ADR-0032 – ADR-0041  (OSS:   LLM Selection, Inference, Agents, RAG, Vector DBs, Eval, Observability, MLOps, Fine-Tuning, SDKs)
+│   ├── ADR-0031-claude-enterprise-rollout.md  [llm][governance]
+│   ├── ADR-0032 – ADR-0041  (OSS:   LLM Selection, Inference, Agents, RAG, Vector DBs, Eval, Observability, MLOps, Fine-Tuning, SDKs)
+│   ├── ADR-0042 – ADR-0045  (Policy: Command Security, AI Red-Team, Model Supply-Chain, Retail-ML Preprocessing)
+│   └── ADR-0046 – ADR-0051  (Argus:  ADK Orchestration, BQ Vector RAG, Slack HITL, Tool DI; ADR-0048 → ADR-0051 4-tier + compliance cap)
 │
 ├── templates/
 │   ├── adr/

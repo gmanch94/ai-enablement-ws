@@ -1,7 +1,8 @@
 # ADR-0019: AWS — Workflow Orchestration
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops] [infra]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -61,11 +62,3 @@ We will use:
 4. Lambda functions in ML pipelines: keep stateless; pass data references (S3 URIs) not data payloads; set reserved concurrency to prevent Lambda throttling from cascading to pipeline steps
 5. Pipeline monitoring: use Step Functions execution history + CloudWatch Logs for workflow debugging; enable X-Ray tracing on all Step Functions state machines
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

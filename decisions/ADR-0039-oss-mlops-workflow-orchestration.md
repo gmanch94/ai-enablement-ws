@@ -1,7 +1,8 @@
 # ADR-0039: Open-Source — MLOps Platforms & Workflow Orchestration
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -17,7 +18,7 @@ ML and LLM workloads require experiment tracking, model registry, pipeline orche
 
 We adopt a **function-driven MLOps stack**:
 
-- **Experiment tracking + model registry + GenAI eval:** **MLflow** — lingua franca of experiment tracking; 20K+ GitHub stars; MLflow 3.0 adds LLM tracing and hallucination detection (see ADR-0037 cross-reference).
+- **Experiment tracking + model registry + GenAI eval:** **MLflow** — lingua franca of experiment tracking; 20K+ GitHub stars; MLflow 3.12+ adds LLM tracing and hallucination detection (see ADR-0037 cross-reference).
 - **Cloud-agnostic ML pipelines (primary):** **ZenML** — portable pipelines across any cloud or local; strong governance (audit trails, stack components, step caching) with Apache 2.0 core.
 - **Kubernetes-native ML platform (when K8s is the deployment target):** **Kubeflow** — full ML platform (Pipelines, Training Operator, Katib HPO, KServe) for teams operating Kubernetes clusters.
 - **Complex ML workflows with strict reproducibility:** **Flyte** — type-safe, versioned tasks with data lineage; preferred when workflow correctness guarantees are non-negotiable.
@@ -26,7 +27,7 @@ We adopt a **function-driven MLOps stack**:
 
 ## Rationale
 
-1. **MLflow as the experiment tracking standard** — MLflow is the most widely deployed OSS experiment tracking tool. Its model registry, artifact store, and Projects format create a complete ML lineage record. MLflow 3.0's LLM tracing and eval integration bridges classic MLOps and GenAI workloads.
+1. **MLflow as the experiment tracking standard** — MLflow is the most widely deployed OSS experiment tracking tool. Its model registry, artifact store, and Projects format create a complete ML lineage record. MLflow 3.12+'s LLM tracing and eval integration bridges classic MLOps and GenAI workloads.
 2. **ZenML for portable pipelines** — ZenML's stack abstraction (orchestrator + artifact store + container registry) allows pipelines to run locally, on Kubeflow, on Airflow, or on cloud-managed services without code changes. This satisfies the multi-cloud and portability principle without Kubernetes dependency.
 3. **Kubeflow when K8s is already the platform** — For teams operating Kubernetes production clusters, Kubeflow provides end-to-end ML infrastructure (Pipelines, Training Operator, KServe) without vendor lock-in. Not justified if K8s is not already in the stack.
 4. **Flyte for reproducibility guarantees** — Flyte's type system ensures data contracts between workflow tasks are enforced at compile time, not runtime. Data lineage and version pinning are automatic. The right choice when audit trails of data transformations are a compliance requirement.
@@ -35,7 +36,7 @@ We adopt a **function-driven MLOps stack**:
 ## Consequences
 
 ### Positive
-- MLflow provides a single source of truth for experiment results, model versions, and (with 3.0) LLM evaluation metrics — one platform for the full ML lifecycle
+- MLflow provides a single source of truth for experiment results, model versions, and (with 3.12+) LLM evaluation metrics — one platform for the full ML lifecycle
 - ZenML portability means pipelines developed locally run unchanged on production infrastructure — eliminates "works on my machine" pipeline failures
 - Flyte's data lineage is automatic — audit trails are produced by the framework, not manually maintained
 
@@ -66,12 +67,3 @@ We adopt a **function-driven MLOps stack**:
 4. Flyte: define workflows with `@task` and `@workflow` decorators; use `FlyteFile` and `FlyteDirectory` for data contracts between tasks
 5. Prefect: use `@flow` and `@task` decorators; deploy flows via `prefect deploy`; configure Prefect Cloud or self-hosted server in `prefect.yaml`
 6. Airflow: store DAGs in `dags/` directory; use `KubernetesPodOperator` for ML tasks to ensure clean environments per task run
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

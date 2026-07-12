@@ -1,7 +1,8 @@
 # ADR-0024: GCP — RAG & Vector Retrieval
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [rag]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -15,7 +16,7 @@ RAG pipelines on GCP require a managed retrieval layer that addresses the demo-t
 
 ## Decision
 
-We will use **Vertex AI RAG Engine** (GA, Feb 2025) as the primary managed RAG service — handling chunking, embedding, retrieval, and grounding for knowledge-base workloads. **AlloyDB AI** (GA) is used for operational RAG — where vector search must coexist with transactional data (product catalogs, user profiles, real-time inventory). **MCP Toolbox for Databases** (see ADR-0023) provides agent-to-database access for structured grounding via SQL. **Vertex AI Agent Builder** (via Vertex AI Search) handles enterprise document search agents.
+We will use **Vertex AI RAG Engine** (GA, Feb 2025) as the primary managed RAG service — handling chunking, embedding, retrieval, and grounding for knowledge-base workloads. **AlloyDB AI** (GA) is used for operational RAG — where vector search must coexist with transactional data (product catalogs, user profiles, real-time inventory). **MCP Toolbox for Databases** (see ADR-0023) provides agent-to-database access for structured grounding via SQL. **Vertex AI Agent Builder** (via Vertex AI Search) handles enterprise document search agents. **Vertex AI Vector Search 2.0** (GA, Mar 2026) is adopted as the retrieval engine underneath RAG Engine and for standalone agent-grounding use cases — Collections (unified data + vectors), auto-embeddings, and hybrid search (vector + full-text + semantic re-ranking in one query) replace the legacy Vector Search index/endpoint workflow. RAG Engine's metadata-filtered retrieval (GA, Apr 2026) is used to scope retrieval by document metadata without custom filtering code.
 
 ## Rationale
 
@@ -23,6 +24,7 @@ We will use **Vertex AI RAG Engine** (GA, Feb 2025) as the primary managed RAG s
 2. **AlloyDB AI for operational RAG** — when an agent must combine "find products similar to this embedding" with "where current stock > 0 AND price < $50", a vector-capable relational database is required, not a pure vector store. AlloyDB AI's native Gemini embedding integration and multimodal retrieval alongside PostgreSQL SQL makes it the right choice.
 3. **Vertex AI Search for enterprise document grounding** — for agents grounded in internal documents (PDFs, Drive, SharePoint), Vertex AI Agent Builder's Vertex AI Search provides managed data stores with no custom indexing pipeline.
 4. **MCP Toolbox for agent database access** — rather than giving agents raw database credentials and unparameterised queries, MCP Toolbox provides typed, governed tool definitions that call databases safely.
+5. **Vector Search 2.0 over legacy Vector Search** — Collections and hybrid search (vector + full-text + semantic re-ranking in a single query) remove the need to run separate full-text and vector retrieval passes and stitch results in application code; it is a drop-in replacement for legacy Vector Search with VPC Service Controls support.
 
 ## Consequences
 
@@ -56,12 +58,3 @@ We will use **Vertex AI RAG Engine** (GA, Feb 2025) as the primary managed RAG s
 3. MCP Toolbox: define database tools in `toolbox.yaml` with parameterised queries (no string interpolation); deploy to Cloud Run and connect to ADK agents via MCP
 4. Vertex AI Agent Builder: create data store in Agent Builder console; connect to Drive, GCS, or web crawl; expose as Vertex AI Search tool in ADK agent
 5. Set re-ingestion triggers: Cloud Scheduler job → Cloud Functions → RAG Engine `import_rag_files()` for scheduled freshness; EventArc on GCS upload for event-driven freshness
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

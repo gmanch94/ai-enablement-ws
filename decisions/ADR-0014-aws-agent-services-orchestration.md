@@ -1,7 +1,8 @@
 # ADR-0014: AWS — Agent Services & Orchestration
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [llm] [mlops]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -32,7 +33,7 @@ We will use **Amazon Bedrock AgentCore** (GA) as the primary production agent ru
 - Bidirectional streaming in AgentCore enables real-time agent UIs without polling
 
 ### Negative / Trade-offs
-- AgentCore GA is recent — some complex multi-agent coordination patterns may not yet be natively supported; custom Lambda orchestration remains a fallback
+- AgentCore GA is recent — some complex multi-agent coordination patterns may not yet be natively supported; custom Lambda orchestration remains a fallback, though **Bedrock AgentCore Harness** (GA — Jun 2026, managed orchestration layer for going from agent idea to production-grade agent) narrows the cases where a custom fallback is actually needed
 - Bedrock Flows is no-code — validated flows must be manually translated to code for production AgentCore deployment; there is no direct export path
 - Cedar policy authoring requires a learning curve; teams new to Cedar should allocate time for policy design reviews
 
@@ -56,12 +57,5 @@ We will use **Amazon Bedrock AgentCore** (GA) as the primary production agent ru
 3. Bedrock Agents: connect to Bedrock Knowledge Bases (see ADR-0015) for RAG grounding; define action groups mapping to Lambda functions
 4. Use `amazon-bedrock-agent-runtime` SDK for programmatic agent invocation; `amazon-bedrock-runtime` Converse API for underlying model access
 5. AgentCore memory retention: configure session expiry (default 30 days) and enable PII scrubbing before memory persistence
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
+6. Use **Bedrock AgentCore Harness** (GA — Jun 2026) as the default managed orchestration layer for new agents before reaching for custom Lambda orchestration
+7. Use **Web Search on Bedrock AgentCore** (GA — Jun 2026) as the managed grounding tool when agents need current, cited web knowledge — avoids building/operating a custom search integration

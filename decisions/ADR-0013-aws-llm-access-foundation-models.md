@@ -1,7 +1,8 @@
 # ADR-0013: AWS — LLM Access & Foundation Models
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [llm]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -57,11 +58,3 @@ We will use **Amazon Bedrock** as the primary LLM inference layer, accessed via 
 4. Configure Reserved Throughput for production inference workloads with predictable load; use Flex for burst/batch
 5. Implement token usage logging via CloudWatch custom metrics: `usage.inputTokens`, `usage.outputTokens` per model per team
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

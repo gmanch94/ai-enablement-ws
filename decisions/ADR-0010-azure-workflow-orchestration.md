@@ -1,7 +1,8 @@
 # ADR-0010: Azure — Workflow Orchestration
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops] [infra]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -59,11 +60,3 @@ We will use:
 4. Use pipeline step caching with explicit `input_data` hash parameters — never cache steps that read from mutable data sources
 5. For token cost attribution: tag all Foundry deployments with `team` and `project` cost tags; correlate via Azure Cost Management
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

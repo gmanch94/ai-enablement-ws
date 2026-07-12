@@ -1,7 +1,8 @@
 # ADR-0004: Azure — LLM Access & Foundation Models
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [llm]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -20,7 +21,7 @@ We will use **Azure OpenAI Service** as the primary LLM inference endpoint for G
 ## Rationale
 
 1. **Data privacy guarantee** — Azure OpenAI processes data within the Azure trust boundary; no customer data is used for OpenAI model training. This is a non-negotiable requirement for workloads touching PII or regulated data.
-2. **Unified catalog** — Microsoft Foundry consolidates 1st-party and partner models (including Claude via Azure, Mistral, Meta Llama) under a single API surface (`azure-ai-inference`), eliminating per-provider SDK sprawl.
+2. **Unified catalog** — Microsoft Foundry consolidates 1st-party and partner models (including Claude, Mistral, Meta Llama) under a single API surface (`azure-ai-inference`), eliminating per-provider SDK sprawl. **Claude in Microsoft Foundry is now GA (Jun 2026)** — Anthropic Claude models hosted on Azure via the Messages API, with prompt caching, extended thinking, and tool streaming; billed in Claude Consumption Units (CCU) with MACC drawdown.
 3. **Model Router removes manual routing code** — Model Router dynamically selects the optimal model per prompt based on declared quality/cost targets, reducing token spend without application-layer routing logic.
 4. **SDK alignment** — `azure-ai-inference` supports all Foundry models via a single client; `openai` (Azure-flavoured) for teams requiring direct GPT-4o / o1 access. Both are GA.
 
@@ -56,12 +57,3 @@ We will use **Azure OpenAI Service** as the primary LLM inference endpoint for G
 3. Enable Model Router in Foundry project settings; define cost/quality targets per use-case tier
 4. Log model selection metadata (model used, latency, token count) to Application Insights via `azure-monitor-opentelemetry`
 5. Set up PTU (Provisioned Throughput Units) for latency-sensitive production workloads; use pay-as-you-go for dev/test
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

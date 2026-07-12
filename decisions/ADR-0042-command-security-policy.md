@@ -1,14 +1,15 @@
 # ADR-0042: Custom Command Security Policy
 
-**Status:** Accepted  
-**Domain:** [governance]  
+**Status:** Accepted
+**Domain:** [governance]
 **Date:** 2026-04-22
+**Last reviewed:** 2026-07-11
 
 ---
 
 ## Context
 
-The workspace uses 16 custom slash commands in `.claude/commands/`. Several commands:
+The workspace uses custom skills, canonically in `.claude/skills/<name>/SKILL.md` (27 skills as of this review; the legacy `.claude/commands/` files remain but are frozen — not extended). This policy applies to whichever surface hosts the invocable command; the control text below is enforced in the canonical `SKILL.md` files. Several of these skills:
 
 - Fetch content from external URLs (AWS, Azure, GCP, HuggingFace blogs) and inject it into LLM context before writing to local reference files
 - Accept arbitrary user-supplied prompts or system descriptions for analysis
@@ -67,5 +68,5 @@ All `update-cheatsheet-*` commands already require explicit user approval before
 
 ## Risks Not Fully Mitigated
 
-- [RISK: MED] Command files have no integrity verification (hash/signature). A tampered command file would execute silently. Mitigation: enforce signed commits on `.claude/commands/` via branch protection.
+- [RISK: MED] Skill/command files have no integrity verification (hash/signature). A tampered file would execute silently. Mitigation: enforce signed commits on `.claude/skills/` (and legacy `.claude/commands/`) via branch protection.
 - [RISK: LOW] `<current year>` template token in search queries is unvalidated. Benign in practice but could be abused if command execution is ever automated.

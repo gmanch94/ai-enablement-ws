@@ -1,11 +1,14 @@
 # ADR-0048: Three-Tier Confidence-Based Action Routing (AUTO / PROPOSE / FLAG)
 
 **Date:** 2026-04-29
-**Status:** Accepted
+**Last reviewed:** 2026-07-11
+**Status:** Superseded
 **Domain:** [llm] [governance]
 **Author:** AI Architect
 **Supersedes:** N/A
-**Superseded by:** N/A
+**Superseded by:** ADR-0051
+
+> **Superseded (2026-07-11):** The shipped system implements four tiers (adds `FLAG_SUGGEST`), hardcoded thresholds, and a compliance-field AUTO cap — see [ADR-0051](ADR-0051-argus-four-tier-confidence-routing-compliance-cap.md). This ADR is retained as the historical record of the original three-tier decision.
 
 ---
 

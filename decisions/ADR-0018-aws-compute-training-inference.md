@@ -1,7 +1,8 @@
 # ADR-0018: AWS — Compute: Training & Inference
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [mlops] [infra]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -21,6 +22,7 @@ We will use:
 - **AWS Inferentia 2 + Neuron SDK** for high-throughput, low-cost production LLM inference (alternative to GPU-based serving)
 - **Amazon EKS** for custom model serving infrastructure requiring full orchestration control
 - **EC2 P5 (H100) / G6 (L40S) instances** for workloads requiring NVIDIA silicon specifically (custom CUDA kernels, frameworks not yet Neuron-compatible)
+- **EC2 G7 instances** (Jun 2026 — NVIDIA RTX PRO 4500 Blackwell Server Edition GPUs + 6th-gen Intel Xeon) as the cost-effective mid-tier GPU option for inference and graphics workloads, up to 4.6x AI inference and 2.1x graphics performance vs G6
 - **AWS Batch** for distributed training jobs and large-scale batch inference without persistent cluster management
 
 ## Rationale
@@ -54,6 +56,7 @@ We will use:
 | Raw EC2 GPU instances without SageMaker | High ops burden for health checks, scaling, and job scheduling; use SageMaker HyperPod or AWS Batch instead |
 | AWS Fargate | No GPU support; compute-limited for ML inference; use for non-GPU ML microservices only |
 | EC2 P5 as default (NVIDIA only) | Default to Inferentia 2 for inference and Trainium 2 for training first; P5 reserved for NVIDIA-specific workloads |
+| EC2 G6 as default mid-tier GPU option | G7 (Jun 2026, RTX PRO 4500 Blackwell) supersedes G6 as the cost-effective mid-tier choice for inference/graphics; G6 remains valid for existing workloads not yet migrated |
 | On-premises GPU clusters | Inconsistent with cloud-first direction; no managed scaling or HyperPod resilience features |
 
 ## Implementation Notes
@@ -63,12 +66,3 @@ We will use:
 3. EKS model serving: use NVIDIA Triton Inference Server (GPU) or AWS Neuron serving container (Inferentia); configure KEDA `ScaledObject` on SQS queue depth or custom CloudWatch metric
 4. AWS Batch: define compute environments with spot fleet on P5/G6 or Trainium; configure retry strategy (3 retries, exponential backoff) for spot interruption
 5. Cost optimisation: use Spot instances for training (60–70% savings); Reserved instances for production inference with predictable load
-
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

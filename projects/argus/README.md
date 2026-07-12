@@ -4,7 +4,7 @@ ADK-based 5-agent pipeline for detecting and correcting invalid item setups in a
 
 ## Status
 
-**MVP working end-to-end** ✓ — Flow A demo runs from A2A trigger → Slack approval → BigQuery audit. **143/143 tests pass.**
+**MVP working end-to-end** ✓ — Flow A demo runs from A2A trigger → Slack approval → BigQuery audit. **187/187 tests pass.**
 
 ## Quickstart
 
@@ -18,7 +18,7 @@ gcloud auth application-default set-quota-project <your-gcp-project-id>
 PYTHONUTF8=1 uv run python scripts/setup_bigquery.py    # seed argus.correction_history (50 rows)
 
 # Per session (Windows: PYTHONUTF8=1 required)
-PYTHONUTF8=1 uv run pytest tests/unit tests/integration   # 143 tests
+PYTHONUTF8=1 uv run pytest tests/unit tests/integration   # 187 tests
 PYTHONUTF8=1 uv run uvicorn app.fast_api_app:app --port 8000   # start server
 PYTHONUTF8=1 uv run python scripts/trigger_flow_a.py     # demo Flow A → Slack
 ```

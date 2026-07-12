@@ -1,7 +1,8 @@
 # ADR-0036: Open-Source — Vector Databases
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [rag]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -66,11 +67,3 @@ We adopt a **scale and constraint-driven selection matrix**:
 5. Milvus: deploy `milvus-distributed` on Kubernetes; use `DiskANN` index for datasets that don't fit in memory; configure MinIO for persistent storage
 6. Define embedding model in `config/embedding-config.yaml` — changing embedding model requires full re-ingestion; treat as a versioned infrastructure change
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer

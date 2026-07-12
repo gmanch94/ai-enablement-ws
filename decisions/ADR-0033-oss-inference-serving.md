@@ -1,7 +1,8 @@
 # ADR-0033: Open-Source — LLM Inference & Serving
 
 **Date:** 2026-04-19
-**Status:** Proposed
+**Last reviewed:** 2026-07-11
+**Status:** Accepted
 **Domain:** [llm]
 **Author:** AI Architect
 **Supersedes:** N/A
@@ -66,11 +67,3 @@ All production serving exposes an **OpenAI-compatible REST API** regardless of b
 5. For SGLang: use `python -m sglang.launch_server --model <model> --tp <n>` with `--enable-torch-compile` for additional throughput
 6. Ollama: restrict to `localhost` in developer environments; never expose Ollama port externally without auth proxy
 
-## Review Checklist
-
-- [ ] Aligns with architecture principles in CLAUDE.md
-- [ ] No undocumented PII exposure
-- [ ] Observability plan defined
-- [ ] Fallback/degradation path exists
-- [ ] Cost impact estimated
-- [ ] Reviewed by at least one peer
